@@ -16,7 +16,7 @@
     width: 100%;
     z-index: 10;
     padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-bottom: 3rem;
     display: flex;
     justify-content: space-between;
     gap: 3rem;
@@ -46,8 +46,6 @@ ul.menu {
 
 .nav-wrapper {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .header-menu {
