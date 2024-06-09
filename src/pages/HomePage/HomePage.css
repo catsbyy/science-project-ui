@@ -1,0 +1,21 @@
+/* Introduction */
+
+.intro {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  /*background: url("../../img/bg.jpg") center no-repeat; */
+  background-size: cover;
+}
+
+.bg_overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(40, 42, 48, 0.0);
+}
