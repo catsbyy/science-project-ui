@@ -7,7 +7,7 @@ import LoginPage from "../pages/LoginPage/LoginPage";
 import ResultsPage from "../pages/ResultsPage/ResultsPage";
 
 export const nav = [
-     { path:     "/",         name: "Головна",        element: <HomePage />,       isMenu: true,     isPrivate: false  },
+     { path:     "",         name: "Головна",        element: <HomePage />,       isMenu: true,     isPrivate: false  },
      { path:     "/login",    name: "Увійти",       element: <LoginPage />,      isMenu: false,    isPrivate: false  },
      { path:     "/candidates",  name: "Кандидату",     element: <CandidatesPage />,    isMenu: true,     isPrivate: true  },
      { path:     "/candidate/:id",  name: "Роботодавцю",     element: <CandidateProfilePage />,    isMenu: false,     isPrivate: true  },

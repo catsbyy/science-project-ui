@@ -82,6 +82,8 @@ const Business: React.FC = () => {
     label: `${techAndTool.name}`,
   }));
 
+  console.log(response);
+
   const goToResults = () => {
     let technologies = "";
 

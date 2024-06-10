@@ -10,7 +10,7 @@ import ResultsPage from "../pages/ResultsPage/ResultsPage";
 
 export const router = createBrowserRouter([
     {
-        path: "/",
+        path: "*",
         element: <App />,
         children: [
             { path: "", element: <HomePage /> },
