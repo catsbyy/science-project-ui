@@ -26,13 +26,13 @@ html::-webkit-scrollbar {
 }
 
 html::-webkit-scrollbar-thumb {
-  background-color: rgba(63, 112, 244, 0.3);
+  background-color: rgba(106, 73, 250, 0.4);
   border: 5px;
   border-radius: 4px;
 }
 
 html::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(63, 112, 244, 0.75);
+  background-color: rgba(106, 73, 250, 0.75);
 }
 
 html::-webkit-scrollbar-track {
