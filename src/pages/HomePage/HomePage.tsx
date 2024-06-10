@@ -5,9 +5,12 @@ interface Props {}
 
 function HomePage({}: Props) {
   return (
-    <div>
+    <div className="home-page">
       <div className="intro">
-        <div className="bg_overlay">HomePage</div>
+        <div className="waves">
+          <div className="wave -one"> </div>
+          <div className="wave -two"></div>
+        </div>
       </div>
     </div>
   );

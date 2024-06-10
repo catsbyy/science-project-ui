@@ -37,7 +37,7 @@ export const RenderMenu = () => {
     <header className="site-header">
       <div className="site-branding">
         <NavLink to="/" className="logo">
-          SyncSkill
+          TechWave
         </NavLink>
       </div>
 
