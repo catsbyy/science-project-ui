@@ -72,7 +72,7 @@ const Business: React.FC = () => {
   };
 
   useEffect(() => {
-    fetch("/server")
+    fetch("api/server")
       .then((response) => response.json())
       .then((response) => setResponse(response));
   }, []);
