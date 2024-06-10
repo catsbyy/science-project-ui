@@ -54,7 +54,7 @@
     text-decoration: none;
   }
   
-  a:before, a:after {
+  .menu-item a:before, .menu-item a:after {
     content: '';
     position: absolute;
     width: 0%;
@@ -63,22 +63,22 @@
     background: rgba(106, 73, 250, 1);
   }
   
-  a:before {
+  .menu-item a:before {
     left: 0;
   }
-  a:after {
+  .menu-item a:after {
     right: 0;
     background: rgba(106, 73, 250, 1);
     transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
   }
   
-  a:hover:before {
+  .menu-item a:hover:before {
     background: rgba(106, 73, 250, 1);
     width: 100%;
     transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
   }
   
-  a:hover:after {
+  .menu-item a:hover:after {
     background: transparent;
     width: 100%;
     transition: 0s;
@@ -89,8 +89,68 @@
     text-decoration: none;
     font-size: 32px;
     font-weight: 700;
+    transition: color 0.2s ease-out;
+  }
+
+  .logo:hover {
+    transition: color 0.2s ease-out;
+    color: white;
+  }
+
+  .logo span {
+    display: inline-block;
   }
   
+  .logo:hover span {
+    animation: wave 0.3s alternate ease-in-out;
+  }
+  
+  .logo:hover span:nth-child(1) {
+    animation-delay: 0s;
+  }
+  
+  .logo:hover span:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  
+  .logo:hover span:nth-child(3) {
+    animation-delay: 0.1s;
+  }
+  .logo:hover span:nth-child(4) {
+    animation-delay: 0.15s;
+  }
+  
+  .logo:hover span:nth-child(5) {
+    animation-delay: 0.2s;
+  }
+  
+  .logo:hover span:nth-child(6) {
+    animation-delay: 0.25s;
+  }
+
+  .logo:hover span:nth-child(7) {
+    animation-delay: 0.3s;
+  }
+  
+  .logo:hover span:nth-child(8) {
+    animation-delay: 0.35s;
+  }
+  
+  /* Add animation-delay for other letters as needed */
+  
+  @keyframes wave {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
   .login, .logout {
     margin-left: 20px;
   }
+

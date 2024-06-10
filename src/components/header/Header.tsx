@@ -37,7 +37,14 @@ export const RenderMenu = () => {
     <header className="site-header">
       <div className="site-branding">
         <NavLink to="/" className="logo">
-          TechWave
+          <span>T</span>
+          <span>e</span>
+          <span>c</span>
+          <span>h</span>
+          <span>W</span>
+          <span>a</span>
+          <span>v</span>
+          <span>e</span>
         </NavLink>
       </div>
 
