@@ -10,33 +10,33 @@ const Footer = () => {
   return (
     <footer className="footer">
       <ul className="social-media">
-        <li className="social-icon">
-          <a className="social-icon-link" href="#">
-            <LogoFacebook></LogoFacebook>
+        <li className="social-media-item">
+          <a className="social-media-link" href="#">
+            <LogoFacebook height="30px" width="30px"></LogoFacebook>
           </a>
         </li>
 
-        <li className="social-icon">
-          <a className="social-icon-link" href="#">
-            <LogoTwitter></LogoTwitter>
+        <li className="social-media-item">
+          <a className="social-media-link" href="#">
+            <LogoTwitter height="30px" width="30px"></LogoTwitter>
           </a>
         </li>
 
-        <li className="social-icon">
-          <a className="social-icon-link" href="#">
-            <LogoLinkedin></LogoLinkedin>
+        <li className="social-media-item">
+          <a className="social-media-link" href="#">
+            <LogoLinkedin height="30px" width="30px"></LogoLinkedin>
           </a>
         </li>
 
-        <li className="social-icon">
-          <a className="social-icon-link" href="#">
-            <LogoInstagram></LogoInstagram>
+        <li className="social-media-item">
+          <a className="social-media-link" href="#">
+            <LogoInstagram height="30px" width="30px"></LogoInstagram>
           </a>
         </li>
 
-        <li className="social-icon">
-          <a className="social-icon-link" href="#">
-            <LogoYoutube></LogoYoutube>
+        <li className="social-media-item">
+          <a className="social-media-link" href="#">
+            <LogoYoutube height="30px" width="30px"></LogoYoutube>
           </a>
         </li>
       </ul>
