@@ -38,9 +38,50 @@
     display: flex;
     gap: 1.5rem;
   }
+
+  .menu-item {
+    display: inline-block;
+  }
   
   .menu-item a {
     color: black;
+    position: relative;
+  display: block;
+  }
+
+  a:hover{
+    color: #000;
+    text-decoration: none;
+  }
+  
+  a:before, a:after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: -2px;
+    background: #000;
+  }
+  
+  a:before {
+    left: 0;
+  }
+  a:after {
+    right: 0;
+    background: #000;
+    transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  
+  a:hover:before {
+    background: #000;
+    width: 100%;
+    transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  
+  a:hover:after {
+    background: transparent;
+    width: 100%;
+    transition: 0s;
   }
   
   .logo {
