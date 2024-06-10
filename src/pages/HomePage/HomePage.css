@@ -2,7 +2,7 @@
   width: 100%;
   height: 100vh;
   position: relative;
-  overflow: hidden; /* Ensure waves don't overflow */
+  overflow: hidden; 
 }
 
 .intro {
@@ -26,7 +26,7 @@
 
 .wave {
   position: absolute;
-  opacity: 0.4; /* Adjust opacity for visibility */
+  opacity: 0.4; 
   width: 1500px;
   height: 1300px;
   margin-left: -40%;
@@ -35,12 +35,12 @@
 }
 
 .wave.-one {
-  animation: rotate-one 10s infinite linear; /* Adjust duration for wave animation */
+  animation: rotate-one 10s infinite linear; 
   background: rgba(106, 73, 250, 0.6); 
 }
 
 .wave.-two {
-  animation: rotate-two 6s infinite linear; /* Adjust duration for wave animation */
+  animation: rotate-two 6s infinite linear; 
   background: rgba(106, 73, 250, 0.8); 
 }
 
