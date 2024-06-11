@@ -175,414 +175,426 @@ function CandidatesPage({}: Props) {
   };
 
   return (
-    <main className="students-body">
-      <div className="container">
-        <header>Анкета кандидата</header>
+    <main className="page">
+      <div className="intro">
+        <div className="waves">
+          <div className="wave -one"></div>
+          <div className="wave -two"></div>
+        </div>
+        <div className="container">
+          <header>Анкета кандидата</header>
 
-        <form name="registrationForm" method="post" onSubmit={handleSubmit(addNewStudent)}>
-          {page === 0 && (
-            <div className="form first">
-              <div className="details personal">
-                <span className="title">Персональні дані</span>
+          <form name="registrationForm" method="post" onSubmit={handleSubmit(addNewStudent)}>
+            {page === 0 && (
+              <div className="form first">
+                <div className="details personal">
+                  <span className="title">Персональні дані</span>
 
-                <div className="fields">
-                  <div className="input-field">
-                    <label className={errors?.studentSurname ? "input-label-invalid" : "input-label"}>Прізвище *</label>
-                    <input
-                      {...register("studentSurname", {
-                        required: true,
-                        pattern: inputRegex,
-                      })}
-                      className={errors?.studentSurname ? "input-field-invalid" : ""}
-                      name="studentSurname"
-                      type="text"
-                      placeholder="Введіть ваше прізвище"
-                    />
+                  <div className="fields">
+                    <div className="input-field">
+                      <label className={errors?.studentSurname ? "input-label-invalid" : "input-label"}>
+                        Прізвище *
+                      </label>
+                      <input
+                        {...register("studentSurname", {
+                          required: true,
+                          pattern: inputRegex,
+                        })}
+                        className={errors?.studentSurname ? "input-field-invalid" : ""}
+                        name="studentSurname"
+                        type="text"
+                        placeholder="Введіть ваше прізвище"
+                      />
+                    </div>
+
+                    <div className="input-field">
+                      <label className={errors?.studentName ? "input-label-invalid" : "input-label"}>Ім'я *</label>
+                      <input
+                        {...register("studentName", {
+                          required: true,
+                          pattern: inputRegex,
+                        })}
+                        className={errors?.studentName ? "input-field-invalid" : ""}
+                        type="text"
+                        placeholder="Введіть ваше ім'я"
+                      />
+                    </div>
+
+                    <div className="input-field">
+                      <label className={errors?.studentPatronymic ? "input-label-invalid" : "input-label"}>
+                        По-батькові *
+                      </label>
+                      <input
+                        {...register("studentPatronymic", {
+                          required: true,
+                          pattern: inputRegex,
+                        })}
+                        className={errors?.studentPatronymic ? "input-field-invalid" : ""}
+                        type="text"
+                        placeholder="Введіть ваше по-батькові"
+                      />
+                    </div>
+
+                    <div className="input-field">
+                      <label className={errors?.studentDateOfBirth ? "input-label-invalid" : "input-label"}>
+                        Дата народження *
+                      </label>
+                      <input
+                        {...register("studentDateOfBirth", {
+                          required: true,
+                          validate: (dateValue) => new Date(dateValue) < new Date(),
+                        })}
+                        className={errors?.studentDateOfBirth ? "input-field-invalid" : ""}
+                        type="date"
+                        placeholder="Enter birth date"
+                      />
+                    </div>
+
+                    <div className="input-field">
+                      <label className={errors?.studentMobNumber ? "input-label-invalid" : "input-label"}>
+                        Мобільний номер *
+                      </label>
+                      <input
+                        {...register("studentMobNumber", {
+                          required: true,
+                          pattern: phoneRegex,
+                        })}
+                        className={errors?.studentMobNumber ? "input-field-invalid" : ""}
+                        type="text"
+                        placeholder="Введіть мобільний номер"
+                      />
+                    </div>
+
+                    <div className="input-field">
+                      <label className={errors?.studentEmail ? "input-label-invalid" : "input-label"}>
+                        Електронна пошта *
+                      </label>
+                      <input
+                        {...register("studentEmail", {
+                          required: true,
+                          pattern: emailRegex,
+                        })}
+                        className={errors?.studentEmail ? "input-field-invalid" : ""}
+                        type="text"
+                        placeholder="Введіть електронну пошту"
+                      />
+                    </div>
                   </div>
+                </div>
 
-                  <div className="input-field">
-                    <label className={errors?.studentName ? "input-label-invalid" : "input-label"}>Ім'я *</label>
-                    <input
-                      {...register("studentName", {
-                        required: true,
-                        pattern: inputRegex,
-                      })}
-                      className={errors?.studentName ? "input-field-invalid" : ""}
-                      type="text"
-                      placeholder="Введіть ваше ім'я"
-                    />
-                  </div>
+                <div className="details ID">
+                  <span className="title">Адреса проживання</span>
 
-                  <div className="input-field">
-                    <label className={errors?.studentPatronymic ? "input-label-invalid" : "input-label"}>
-                      По-батькові *
-                    </label>
-                    <input
-                      {...register("studentPatronymic", {
-                        required: true,
-                        pattern: inputRegex,
-                      })}
-                      className={errors?.studentPatronymic ? "input-field-invalid" : ""}
-                      type="text"
-                      placeholder="Введіть ваше по-батькові"
-                    />
-                  </div>
+                  <div className="fields">
+                    <div className="input-field">
+                      <label className={errors?.studentRegion ? "input-label-invalid" : "input-label"}>Область *</label>
+                      <select
+                        {...register("studentRegion", {
+                          required: true,
+                        })}
+                        className={errors?.studentRegion ? "input-field-invalid" : ""}
+                      >
+                        <option disabled selected value="">
+                          Область
+                        </option>
+                        {response.regions?.map((region) => (
+                          <option key={region.id} value={region.name}>
+                            {region.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-                  <div className="input-field">
-                    <label className={errors?.studentDateOfBirth ? "input-label-invalid" : "input-label"}>
-                      Дата народження *
-                    </label>
-                    <input
-                      {...register("studentDateOfBirth", {
-                        required: true,
-                        validate: (dateValue) => new Date(dateValue) < new Date(),
-                      })}
-                      className={errors?.studentDateOfBirth ? "input-field-invalid" : ""}
-                      type="date"
-                      placeholder="Enter birth date"
-                    />
-                  </div>
+                    <div className="input-field">
+                      <label className={errors?.studentCity ? "input-label-invalid" : "input-label"}>Місто *</label>
+                      <input
+                        {...register("studentCity", {
+                          required: true,
+                          pattern: inputRegex,
+                        })}
+                        className={errors?.studentCity ? "input-field-invalid" : ""}
+                        type="text"
+                        placeholder="Введіть ваше місто"
+                      />
+                    </div>
 
-                  <div className="input-field">
-                    <label className={errors?.studentMobNumber ? "input-label-invalid" : "input-label"}>
-                      Мобільний номер *
-                    </label>
-                    <input
-                      {...register("studentMobNumber", {
-                        required: true,
-                        pattern: phoneRegex,
-                      })}
-                      className={errors?.studentMobNumber ? "input-field-invalid" : ""}
-                      type="text"
-                      placeholder="Введіть мобільний номер"
-                    />
-                  </div>
+                    <div className="input-field">
+                      <label className={errors?.studentStreet ? "input-label-invalid" : "input-label"}>Вулиця *</label>
+                      <input
+                        {...register("studentStreet", {
+                          required: true,
+                          pattern: inputRegex,
+                        })}
+                        className={errors?.studentStreet ? "input-field-invalid" : ""}
+                        type="text"
+                        placeholder="Введіть вашу вулицю"
+                      />
+                    </div>
 
-                  <div className="input-field">
-                    <label className={errors?.studentEmail ? "input-label-invalid" : "input-label"}>
-                      Електронна пошта *
-                    </label>
-                    <input
-                      {...register("studentEmail", {
-                        required: true,
-                        pattern: emailRegex,
-                      })}
-                      className={errors?.studentEmail ? "input-field-invalid" : ""}
-                      type="text"
-                      placeholder="Введіть електронну пошту"
-                    />
+                    <div className="input-field">
+                      <label className={errors?.studentHouseNum ? "input-label-invalid" : "input-label"}>
+                        Номер будинку *
+                      </label>
+                      <input
+                        {...register("studentHouseNum", {
+                          required: true,
+                          pattern: inputRegex,
+                        })}
+                        className={errors?.studentHouseNum ? "input-field-invalid" : ""}
+                        type="text"
+                        placeholder="Введіть номер будинку"
+                      />
+                    </div>
+
+                    <div className="input-field">
+                      <label className="input-label">Номер квартири</label>
+                      <input {...register("studentHouseNum")} type="text" placeholder="Введіть номер квартири" />
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <div className="details ID">
-                <span className="title">Адреса проживання</span>
-
-                <div className="fields">
-                  <div className="input-field">
-                    <label className={errors?.studentRegion ? "input-label-invalid" : "input-label"}>Область *</label>
-                    <select
-                      {...register("studentRegion", {
-                        required: true,
-                      })}
-                      className={errors?.studentRegion ? "input-field-invalid" : ""}
-                    >
-                      <option disabled selected value="">
-                        Область
-                      </option>
-                      {response.regions?.map((region) => (
-                        <option key={region.id} value={region.name}>
-                          {region.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="input-field">
-                    <label className={errors?.studentCity ? "input-label-invalid" : "input-label"}>Місто *</label>
-                    <input
-                      {...register("studentCity", {
-                        required: true,
-                        pattern: inputRegex,
-                      })}
-                      className={errors?.studentCity ? "input-field-invalid" : ""}
-                      type="text"
-                      placeholder="Введіть ваше місто"
-                    />
-                  </div>
-
-                  <div className="input-field">
-                    <label className={errors?.studentStreet ? "input-label-invalid" : "input-label"}>Вулиця *</label>
-                    <input
-                      {...register("studentStreet", {
-                        required: true,
-                        pattern: inputRegex,
-                      })}
-                      className={errors?.studentStreet ? "input-field-invalid" : ""}
-                      type="text"
-                      placeholder="Введіть вашу вулицю"
-                    />
-                  </div>
-
-                  <div className="input-field">
-                    <label className={errors?.studentHouseNum ? "input-label-invalid" : "input-label"}>
-                      Номер будинку *
-                    </label>
-                    <input
-                      {...register("studentHouseNum", {
-                        required: true,
-                        pattern: inputRegex,
-                      })}
-                      className={errors?.studentHouseNum ? "input-field-invalid" : ""}
-                      type="text"
-                      placeholder="Введіть номер будинку"
-                    />
-                  </div>
-
-                  <div className="input-field">
-                    <label className="input-label">Номер квартири</label>
-                    <input {...register("studentHouseNum")} type="text" placeholder="Введіть номер квартири" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {page === 1 && (
-            <div className="form second">
-              <div className="details education">
-                <span className="title">Освіта</span>
-
-                <div className="fields">
-                  <div className="input-field">
-                    <label className={errors?.studentEducation ? "input-label-invalid" : "input-label"}>Освіта *</label>
-                    <select
-                      {...register("studentEducation", {
-                        required: true,
-                      })}
-                      className={errors?.studentEducation ? "input-field-invalid" : ""}
-                    >
-                      <option disabled selected value="">
-                        Освіта
-                      </option>
-                      {education?.map((option) => (
-                        <option key={option.id} value={option.id}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="input-field">
-                    <label className={errors?.studentUniversity ? "input-label-invalid" : "input-label"}>
-                      Навчальний заклад *
-                    </label>
-                    <input
-                      {...register("studentUniversity", {
-                        required: true,
-                        pattern: inputRegex,
-                      })}
-                      className={errors?.studentUniversity ? "input-field-invalid" : ""}
-                      type="text"
-                      placeholder="Введіть ваш навчальний заклад"
-                    />
-                  </div>
-
-                  <div className="input-field">
-                    <label className="input-label">Спеціальність</label>
-                    <input {...register("studentSpecialty")} type="text" placeholder="Введіть вашу спеціальність" />
-                  </div>
-
-                  <div className="input-field">
-                    <label className={errors?.studentEnglish ? "input-label-invalid" : "input-label"}>
-                      Рівень англійської *
-                    </label>
-                    <select
-                      {...register("studentEnglish", {
-                        required: true,
-                      })}
-                      className={errors?.studentEnglish ? "input-field-invalid" : ""}
-                    >
-                      <option disabled selected value="">
-                        Рівень англійської
-                      </option>
-                      {englishLevels?.map((option) => (
-                        <option key={option.id} value={option.id}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="input-field">
-                    <label className="input-label">Коротка біографія</label>
-                    <textarea {...register("studentSummary")} placeholder="Розкажіть про себе"></textarea>
-                  </div>
-                </div>
-              </div>
-
-              <div className="details more">
-                <span className="title">Деталі</span>
-
-                <div className="fields">
-                  <div className="input-field">
-                    <label className={errors?.studentPosition ? "input-label-invalid" : "input-label"}>Посада *</label>
-                    <select
-                      {...register("studentPosition", {
-                        required: true,
-                      })}
-                      className={errors?.studentPosition ? "input-field-invalid" : ""}
-                    >
-                      <option disabled selected value="">
-                        Посада
-                      </option>
-                      {positions?.map((option) => (
-                        <option key={option.id} value={option.id}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="input-field">
-                    <label className={errors?.studentWorkExp ? "input-label-invalid" : "input-label"}>
-                      Досвід роботи *
-                    </label>
-                    <select
-                      {...register("studentWorkExp", {
-                        required: true,
-                      })}
-                      className={errors?.studentWorkExp ? "input-field-invalid" : ""}
-                    >
-                      <option disabled selected value="">
-                        Досвід роботи
-                      </option>
-                      {workExps?.map((option) => (
-                        <option key={option.id} value={option.id}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="input-field">
-                    <label className={errors?.studentWorkArea ? "input-label-invalid" : "input-label"}>
-                      Сфера роботи *
-                    </label>
-                    <select
-                      {...register("studentWorkArea", {
-                        required: true,
-                      })}
-                      className={errors?.studentWorkArea ? "input-field-invalid" : ""}
-                    >
-                      <option disabled selected value="">
-                        Сфера роботи
-                      </option>
-                      {workAreas?.map((option) => (
-                        <option key={option.id} value={option.id}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="input-field">
-                    <label className="input-label">Бажана зарплата</label>
-                    <select {...register("studentSalary")}>
-                      <option disabled selected value="">
-                        Бажана зарплата
-                      </option>
-                      {salaries?.map((option) => (
-                        <option key={option.id} value={option.id}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="input-field">
-                    <label className="input-label">Інструменти та технології</label>
-                    <Select
-                      options={techAndToolsOptions}
-                      onChange={handleSelect}
-                      isMulti
-                      closeMenuOnSelect={false}
-                      placeholder="Обрані інструменти та технології"
-                    />
-                  </div>
-
-                  <div className="input-field">
-                    <label className="input-label">Місце роботи</label>
-                    <select {...register("studentWorkplace")}>
-                      <option disabled selected value="">
-                        Місце роботи
-                      </option>
-                      {workplaces?.map((option) => (
-                        <option key={option.id} value={option.id}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="input-field">
-                    <label className="input-label">Посилання на профіль</label>
-                    <input {...register("studentLinkedin")} type="text" placeholder="Linkedin" />
-                  </div>
-
-                  <div className="input-field">
-                    <label className="input-label">Посилання на Github</label>
-                    <input {...register("studentGithub")} type="text" placeholder="Github" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {page === 2 && (
-            <div className="form third">
-              <div className="details review">
-                <span className="title">Підтвердження</span>
-
-                <div className="fields">
-                  <div className="input-field">
-                    <label className="input-label">Фото профілю</label>
-                    <input {...register("studentProfilePic")} type="text" placeholder="Посилання на фото профілю" />
-                  </div>
-
-                  <div className="input-field">
-                    <button type="submit" className="submit-button">
-                      Підтвердити
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="navigation-buttons">
-            {page > 0 && (
-              <button type="button" onClick={() => setPage(page - 1)}>
-                Назад
-                <img src={arrowRight} alt="Next" className="arrow-left"/>
-              </button>
             )}
 
-            {page < 2 && (
-              <button type="button" onClick={() => setPage(page + 1)}>
-                Далі
-                <img src={arrowRight} alt="Next" />
-              </button>
-            )}
-          </div>
-        </form>
+            {page === 1 && (
+              <div className="form second">
+                <div className="details education">
+                  <span className="title">Освіта</span>
 
-        {isFormInvalid && (
-          <div className="form-invalid">
-            <img src={warning} alt="Warning" />
-            <span>Форма заповнена некоректно</span>
-          </div>
-        )}
+                  <div className="fields">
+                    <div className="input-field">
+                      <label className={errors?.studentEducation ? "input-label-invalid" : "input-label"}>
+                        Освіта *
+                      </label>
+                      <select
+                        {...register("studentEducation", {
+                          required: true,
+                        })}
+                        className={errors?.studentEducation ? "input-field-invalid" : ""}
+                      >
+                        <option disabled selected value="">
+                          Освіта
+                        </option>
+                        {education?.map((option) => (
+                          <option key={option.id} value={option.id}>
+                            {option.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="input-field">
+                      <label className={errors?.studentUniversity ? "input-label-invalid" : "input-label"}>
+                        Навчальний заклад *
+                      </label>
+                      <input
+                        {...register("studentUniversity", {
+                          required: true,
+                          pattern: inputRegex,
+                        })}
+                        className={errors?.studentUniversity ? "input-field-invalid" : ""}
+                        type="text"
+                        placeholder="Введіть ваш навчальний заклад"
+                      />
+                    </div>
+
+                    <div className="input-field">
+                      <label className="input-label">Спеціальність</label>
+                      <input {...register("studentSpecialty")} type="text" placeholder="Введіть вашу спеціальність" />
+                    </div>
+
+                    <div className="input-field">
+                      <label className={errors?.studentEnglish ? "input-label-invalid" : "input-label"}>
+                        Рівень англійської *
+                      </label>
+                      <select
+                        {...register("studentEnglish", {
+                          required: true,
+                        })}
+                        className={errors?.studentEnglish ? "input-field-invalid" : ""}
+                      >
+                        <option disabled selected value="">
+                          Рівень англійської
+                        </option>
+                        {englishLevels?.map((option) => (
+                          <option key={option.id} value={option.id}>
+                            {option.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="input-field">
+                      <label className="input-label">Коротка біографія</label>
+                      <textarea {...register("studentSummary")} placeholder="Розкажіть про себе"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="details more">
+                  <span className="title">Деталі</span>
+
+                  <div className="fields">
+                    <div className="input-field">
+                      <label className={errors?.studentPosition ? "input-label-invalid" : "input-label"}>
+                        Посада *
+                      </label>
+                      <select
+                        {...register("studentPosition", {
+                          required: true,
+                        })}
+                        className={errors?.studentPosition ? "input-field-invalid" : ""}
+                      >
+                        <option disabled selected value="">
+                          Посада
+                        </option>
+                        {positions?.map((option) => (
+                          <option key={option.id} value={option.id}>
+                            {option.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="input-field">
+                      <label className={errors?.studentWorkExp ? "input-label-invalid" : "input-label"}>
+                        Досвід роботи *
+                      </label>
+                      <select
+                        {...register("studentWorkExp", {
+                          required: true,
+                        })}
+                        className={errors?.studentWorkExp ? "input-field-invalid" : ""}
+                      >
+                        <option disabled selected value="">
+                          Досвід роботи
+                        </option>
+                        {workExps?.map((option) => (
+                          <option key={option.id} value={option.id}>
+                            {option.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="input-field">
+                      <label className={errors?.studentWorkArea ? "input-label-invalid" : "input-label"}>
+                        Сфера роботи *
+                      </label>
+                      <select
+                        {...register("studentWorkArea", {
+                          required: true,
+                        })}
+                        className={errors?.studentWorkArea ? "input-field-invalid" : ""}
+                      >
+                        <option disabled selected value="">
+                          Сфера роботи
+                        </option>
+                        {workAreas?.map((option) => (
+                          <option key={option.id} value={option.id}>
+                            {option.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="input-field">
+                      <label className="input-label">Бажана зарплата</label>
+                      <select {...register("studentSalary")}>
+                        <option disabled selected value="">
+                          Бажана зарплата
+                        </option>
+                        {salaries?.map((option) => (
+                          <option key={option.id} value={option.id}>
+                            {option.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="input-field">
+                      <label className="input-label">Інструменти та технології</label>
+                      <Select
+                        options={techAndToolsOptions}
+                        onChange={handleSelect}
+                        isMulti
+                        closeMenuOnSelect={false}
+                        placeholder="Обрані інструменти та технології"
+                      />
+                    </div>
+
+                    <div className="input-field">
+                      <label className="input-label">Місце роботи</label>
+                      <select {...register("studentWorkplace")}>
+                        <option disabled selected value="">
+                          Місце роботи
+                        </option>
+                        {workplaces?.map((option) => (
+                          <option key={option.id} value={option.id}>
+                            {option.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="input-field">
+                      <label className="input-label">Посилання на профіль</label>
+                      <input {...register("studentLinkedin")} type="text" placeholder="Linkedin" />
+                    </div>
+
+                    <div className="input-field">
+                      <label className="input-label">Посилання на Github</label>
+                      <input {...register("studentGithub")} type="text" placeholder="Github" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {page === 2 && (
+              <div className="form third">
+                <div className="details review">
+                  <span className="title">Підтвердження</span>
+
+                  <div className="fields">
+                    <div className="input-field">
+                      <label className="input-label">Фото профілю</label>
+                      <input {...register("studentProfilePic")} type="text" placeholder="Посилання на фото профілю" />
+                    </div>
+
+                    <div className="input-field">
+                      <button type="submit" className="submit-button">
+                        Підтвердити
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="navigation-buttons">
+              {page > 0 && (
+                <button type="button" onClick={() => setPage(page - 1)}>
+                  Назад
+                  <img src={arrowRight} alt="Next" className="arrow-left" />
+                </button>
+              )}
+
+              {page < 2 && (
+                <button type="button" onClick={() => setPage(page + 1)}>
+                  Далі
+                  <img src={arrowRight} alt="Next" />
+                </button>
+              )}
+            </div>
+          </form>
+
+          {isFormInvalid && (
+            <div className="form-invalid">
+              <img src={warning} alt="Warning" />
+              <span>Форма заповнена некоректно</span>
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );

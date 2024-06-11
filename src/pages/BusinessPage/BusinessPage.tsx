@@ -109,7 +109,7 @@ const BusinessPage: React.FC = () => {
   };
 
   return (
-    <div className="page">
+    <main className="page">
       <div className="intro">
         <div className="waves">
           <div className="wave -one"></div>
@@ -263,7 +263,7 @@ const BusinessPage: React.FC = () => {
           </form>
         </div>
       </div>
-    </div>
+    </main>
   );
 
   /*
