@@ -2,6 +2,8 @@ import React from "react";
 import { NavLink, Routes, Route } from "react-router-dom";
 import { useAuth } from "../../auth/AuthWrapper";
 import { nav } from "../../routes/navigation";
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import "./Header.css";
 
 // Function to render routes
@@ -24,6 +26,12 @@ export const RenderRoutes = () => {
 // Function to render menu
 export const RenderMenu = () => {
   const { user, logout } = useAuth();
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   const MenuItem = ({ r }: { r: (typeof nav)[0] }) => {
     return (

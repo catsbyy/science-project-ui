@@ -5,7 +5,7 @@ interface Props {}
 
 function HomePage({}: Props) {
   return (
-    <div className="page">
+    <div className="home-page">
       <div className="intro">
         <div className="waves">
           <div className="wave -one"> </div>

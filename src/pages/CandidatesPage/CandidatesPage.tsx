@@ -14,7 +14,10 @@ import { emailRegex } from "../../helpers/emailRegex";
 import { linkRegex } from "../../helpers/linkRegex";
 import { phoneRegex } from "../../helpers/phoneRegex";
 
-import arrowRight from "../../img/icons/arrow-right-solid.svg";
+import { ArrowForwardOutline } from "react-ionicons";
+import { ArrowBackOutline } from "react-ionicons";
+import { CheckmarkOutline } from 'react-ionicons';
+
 import warning from "../../img/icons/warning.svg";
 
 interface Props {}
@@ -564,6 +567,7 @@ function CandidatesPage({}: Props) {
                     <div className="input-field">
                       <button type="submit" className="submit-button">
                         Підтвердити
+                        <CheckmarkOutline color={"#00000"} title={"submit"} height="25px" width="25px" />
                       </button>
                     </div>
                   </div>
@@ -575,14 +579,14 @@ function CandidatesPage({}: Props) {
               {page > 0 && (
                 <button type="button" onClick={() => setPage(page - 1)}>
                   Назад
-                  <img src={arrowRight} alt="Next" className="arrow-left" />
+                  <ArrowBackOutline color={"#00000"} title={"back"} height="25px" width="25px" />
                 </button>
               )}
 
               {page < 2 && (
                 <button type="button" onClick={() => setPage(page + 1)}>
                   Далі
-                  <img src={arrowRight} alt="Next" />
+                  <ArrowForwardOutline color={"#00000"} title={"forward"} height="25px" width="25px" />
                 </button>
               )}
             </div>
