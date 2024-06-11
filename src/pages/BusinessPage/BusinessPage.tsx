@@ -39,7 +39,7 @@ interface SelectOption {
   label: string;
 }
 
-const Business: React.FC = () => {
+const BusinessPage: React.FC = () => {
   /*
    */
   const navigate = useNavigate();
@@ -135,7 +135,6 @@ const Business: React.FC = () => {
                     ))}
                   </select>
                 </div>
-
                 <div className="input-field">
                   <label>Область роботи</label>
                   <select name="studentWorkArea" required onChange={handleChange} defaultValue={0}>
@@ -149,7 +148,6 @@ const Business: React.FC = () => {
                     ))}
                   </select>
                 </div>
-
                 <div className="input-field">
                   <label>Досвід роботи</label>
                   <select name="studentWorkExp" required onChange={handleChange} defaultValue={0}>
@@ -159,90 +157,6 @@ const Business: React.FC = () => {
                     {workExps.map((workExp) => (
                       <option key={workExp.id} value={workExp.id}>
                         {workExp.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="input-field">
-                  <label>Область проживання</label>
-                  <select name="studentRegion" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть область проживання
-                    </option>
-                    {response.regions.map((region) => (
-                      <option key={region.id} value={region.id}>
-                        {region.region_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="input-field">
-                  <label>Місто проживання</label>
-                  <input
-                    type="text"
-                    name="studentCity"
-                    placeholder="Введіть місто проживання"
-                    required
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="input-field">
-                  <label>Освіта</label>
-                  <select name="studentEducation" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть рівень освіти
-                    </option>
-                    {education.map((edu) => (
-                      <option key={edu.id} value={edu.id}>
-                        {edu.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="section-title">Додаткові параметри</div>
-              <div className="fields">
-                <div className="input-field">
-                  <label>Знання англійської</label>
-                  <select name="studentEnglish" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть рівень знань
-                    </option>
-                    {englishLevels.map((englishLevel) => (
-                      <option key={englishLevel.id} value={englishLevel.id}>
-                        {englishLevel.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="input-field">
-                  <label>Бажаний рівень зп</label>
-                  <select name="studentSalary" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть рівень зп
-                    </option>
-                    {salaries.map((salary) => (
-                      <option key={salary.id} value={salary.id}>
-                        {salary.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="input-field">
-                  <label>Бажане місце роботи</label>
-                  <select name="studentWorkplace" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть місце роботи
-                    </option>
-                    {workplaces.map((workplace) => (
-                      <option key={workplace.id} value={workplace.id}>
-                        {workplace.name}
                       </option>
                     ))}
                   </select>
@@ -260,12 +174,89 @@ const Business: React.FC = () => {
                     className="select"
                   />
                 </div>
+
+                <div className="input-field">
+                  <label>Рівень англійської</label>
+                  <select name="studentEnglish" required onChange={handleChange} defaultValue={0}>
+                    <option disabled value={0}>
+                      Оберіть рівень англійської
+                    </option>
+                    {englishLevels.map((englishLevel) => (
+                      <option key={englishLevel.id} value={englishLevel.id}>
+                        {englishLevel.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="input-field">
+                  <label>Рівень освіти</label>
+                  <select name="studentEducation" required onChange={handleChange} defaultValue={0}>
+                    <option disabled value={0}>
+                      Оберіть рівень освіти
+                    </option>
+                    {education.map((edu) => (
+                      <option key={edu.id} value={edu.id}>
+                        {edu.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="section-title">Додаткові параметри</div>
+              <div className="fields">
+                <div className="input-field">
+                  <label>Область</label>
+                  <select name="studentRegion" required onChange={handleChange} defaultValue={0}>
+                    <option disabled value={0}>
+                      Оберіть вашу область
+                    </option>
+                    {response.regions.map((region) => (
+                      <option key={region.id} value={region.id}>
+                        {region.region_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="input-field">
+                  <label>Місто</label>
+                  <input type="text" name="studentCity" placeholder="Введіть місто" required onChange={handleChange} />
+                </div>
+
+                <div className="input-field">
+                  <label>Місце роботи</label>
+                  <select name="studentWorkplace" required onChange={handleChange} defaultValue={0}>
+                    <option disabled value={0}>
+                      Оберіть місце роботи
+                    </option>
+                    {workplaces.map((workplace) => (
+                      <option key={workplace.id} value={workplace.id}>
+                        {workplace.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="input-field">
+                  <label>Заробітна плата</label>
+                  <select name="studentSalary" required onChange={handleChange} defaultValue={0}>
+                    <option disabled value={0}>
+                      Оберіть заробітну плату ($)
+                    </option>
+                    {salaries.map((salary) => (
+                      <option key={salary.id} value={salary.id}>
+                        {salary.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div className="button-container">
                 <button className="sumbit" type="submit" onClick={goToResults}>
                   Знайти
-                  <SearchOutline width="20px" height="20px" color={"000000"}/>
+                  <SearchOutline width="20px" height="20px" color={"000000"} />
                 </button>
               </div>
             </div>
@@ -309,4 +300,4 @@ const Business: React.FC = () => {
   */
 };
 
-export default Business;
+export default BusinessPage;
