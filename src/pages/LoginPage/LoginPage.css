@@ -43,7 +43,7 @@
 }
 
 .input {
-    display: flex;
+    /*display: flex;*/
     align-items: center;
     margin: auto;
     width: 480px;
