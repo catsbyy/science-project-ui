@@ -11,6 +11,7 @@ import { SearchOutline } from "react-ionicons";
 import "./BusinessPage.css";
 import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent } from "@mui/material";
 import FormControlSelect from "../../components/FormControlSelect/FormControlSelect";
+import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 
 interface TechAndToolsOption {
   id: string;
@@ -178,20 +179,15 @@ const BusinessPage: React.FC = () => {
                   onChange={handleSelect}
                 />
 
-                <div>
-                  <TextField
-                    sx={{ width: 360 }}
-                    id="outlined-basic"
-                    label="Місто"
-                    variant="outlined"
-                    size="small"
-                    helperText="Введіть місто"
-                    name="studentCity"
-                    value={student.studentCity}
-                    onChange={handleChange}
-                    color="secondary"
-                  />
-                </div>
+                <FormControlTextField
+                  id="outlined-basic"
+                  label="Місто"
+                  variant="outlined"
+                  helperText="Введіть місто"
+                  name="studentCity"
+                  value={student.studentCity}
+                  onChange={handleChange}
+                />
 
                 <FormControlSelect
                   label="Місце роботи"
