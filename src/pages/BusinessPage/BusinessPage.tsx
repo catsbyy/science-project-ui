@@ -1,6 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate, createSearchParams } from "react-router-dom";
-import Select, { MultiValue, ActionMeta } from "react-select";
 import { education } from "../../helpers/educationOptionsList";
 import { englishLevels } from "../../helpers/englishLevelsList";
 import { positions } from "../../helpers/positionOptionsList";
@@ -10,6 +9,8 @@ import { salaries } from "../../helpers/salaryOptionsList";
 import { workplaces } from "../../helpers/workplaceOptionsList";
 import { SearchOutline } from "react-ionicons";
 import "./BusinessPage.css";
+import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent } from "@mui/material";
+import FormControlSelect from "../../components/FormControlSelect/FormControlSelect";
 
 interface TechAndToolsOption {
   id: string;
@@ -40,11 +41,8 @@ interface SelectOption {
 }
 
 const BusinessPage: React.FC = () => {
-  /*
-   */
   const navigate = useNavigate();
 
-  const [selectedTechAndToolsOptions, setSelectedTechAndToolsOptions] = useState<MultiValue<SelectOption>>([]);
   const [response, setResponse] = useState<{ regions: Region[]; techAndTools: TechAndToolsOption[] }>({
     regions: [],
     techAndTools: [],
@@ -63,12 +61,14 @@ const BusinessPage: React.FC = () => {
     studentWorkplace: "",
   });
 
-  const handleChange = (event: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    setStudent({ ...student, [event.target.name]: event.target.value });
+  const handleSelect = (event: SelectChangeEvent<string>) => {
+    const { name, value } = event.target;
+    setStudent({ ...student, [name]: value });
   };
 
-  const handleSelect = (data: MultiValue<SelectOption>, actionMeta: ActionMeta<SelectOption>) => {
-    setSelectedTechAndToolsOptions(data);
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setStudent({ ...student, [name]: value });
   };
 
   useEffect(() => {
@@ -85,16 +85,6 @@ const BusinessPage: React.FC = () => {
   console.log(response);
 
   const goToResults = () => {
-    let technologies = "";
-
-    if (selectedTechAndToolsOptions.length > 0) {
-      selectedTechAndToolsOptions.forEach((item) => {
-        technologies += `${item.value};`;
-      });
-    }
-
-    student.studentTechAndTools = technologies;
-
     navigate({
       pathname: "/results",
       search: `?${createSearchParams(
@@ -122,135 +112,104 @@ const BusinessPage: React.FC = () => {
             <div className="form">
               <div className="section-title">Основні параметри</div>
               <div className="fields">
-                <div className="input-field">
-                  <label>Посада</label>
-                  <select name="studentPosition" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть необхідну посаду
-                    </option>
-                    {positions.map((position) => (
-                      <option key={position.id} value={position.id}>
-                        {position.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="input-field">
-                  <label>Область роботи</label>
-                  <select name="studentWorkArea" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть область роботи
-                    </option>
-                    {workAreas.map((workArea) => (
-                      <option key={workArea.id} value={workArea.id}>
-                        {workArea.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="input-field">
-                  <label>Досвід роботи</label>
-                  <select name="studentWorkExp" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть досвід роботи
-                    </option>
-                    {workExps.map((workExp) => (
-                      <option key={workExp.id} value={workExp.id}>
-                        {workExp.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <FormControlSelect
+                  label="Посада"
+                  name="studentPosition"
+                  placeholder="Оберіть необхідну посаду"
+                  value={student.studentPosition}
+                  options={positions}
+                  onChange={handleSelect}
+                />
 
-                <div className="input-field">
-                  <label>Технології та інструменти</label>
-                  <Select
-                    options={techAndToolsOptions}
-                    placeholder="Оберіть технології та інструменти"
-                    value={selectedTechAndToolsOptions}
-                    onChange={handleSelect}
-                    isMulti
-                    isSearchable
-                    className="select"
-                  />
-                </div>
+                <FormControlSelect
+                  label="Область роботи"
+                  name="studentWorkArea"
+                  placeholder="Оберіть область роботи"
+                  value={student.studentWorkArea}
+                  options={workAreas}
+                  onChange={handleSelect}
+                />
 
-                <div className="input-field">
-                  <label>Рівень англійської</label>
-                  <select name="studentEnglish" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть рівень англійської
-                    </option>
-                    {englishLevels.map((englishLevel) => (
-                      <option key={englishLevel.id} value={englishLevel.id}>
-                        {englishLevel.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="input-field">
-                  <label>Рівень освіти</label>
-                  <select name="studentEducation" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть рівень освіти
-                    </option>
-                    {education.map((edu) => (
-                      <option key={edu.id} value={edu.id}>
-                        {edu.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <FormControlSelect
+                  label="Досвід роботи"
+                  name="studentWorkExp"
+                  placeholder="Оберіть досвід роботи"
+                  value={student.studentWorkExp}
+                  options={workExps}
+                  onChange={handleSelect}
+                />
+
+                <FormControlSelect
+                  label="Технології та інструменти"
+                  name="studentTechAndTools"
+                  placeholder="Оберіть технології та інструменти"
+                  value={student.studentTechAndTools}
+                  options={/*techAndToolsOptions*/ []}
+                  onChange={handleSelect}
+                />
+
+                <FormControlSelect
+                  label="Рівень англійської"
+                  name="studentEnglish"
+                  placeholder="Оберіть рівень англійської"
+                  value={student.studentEnglish}
+                  options={englishLevels}
+                  onChange={handleSelect}
+                />
+
+                <FormControlSelect
+                  label="Рівень освіти"
+                  name="studentEducation"
+                  placeholder="Оберіть рівень освіти"
+                  value={student.studentEducation}
+                  options={education}
+                  onChange={handleSelect}
+                />
               </div>
 
               <div className="section-title">Додаткові параметри</div>
               <div className="fields">
-                <div className="input-field">
-                  <label>Область</label>
-                  <select name="studentRegion" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть вашу область
-                    </option>
-                    {response.regions.map((region) => (
-                      <option key={region.id} value={region.id}>
-                        {region.region_name}
-                      </option>
-                    ))}
-                  </select>
+                <FormControlSelect
+                  label="Область"
+                  name="studentRegion"
+                  placeholder="Оберіть вашу область"
+                  value={student.studentRegion}
+                  options={response.regions}
+                  onChange={handleSelect}
+                />
+
+                <div>
+                  <TextField
+                    sx={{ width: 360 }}
+                    id="outlined-basic"
+                    label="Місто"
+                    variant="outlined"
+                    size="small"
+                    helperText="Введіть місто"
+                    name="studentCity"
+                    value={student.studentCity}
+                    onChange={handleChange}
+                    color="secondary"
+                  />
                 </div>
 
-                <div className="input-field">
-                  <label>Місто</label>
-                  <input type="text" name="studentCity" placeholder="Введіть місто" required onChange={handleChange} />
-                </div>
+                <FormControlSelect
+                  label="Місце роботи"
+                  name="studentWorkplace"
+                  placeholder="Оберіть місце роботи"
+                  value={student.studentWorkplace}
+                  options={workplaces}
+                  onChange={handleSelect}
+                />
 
-                <div className="input-field">
-                  <label>Місце роботи</label>
-                  <select name="studentWorkplace" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть місце роботи
-                    </option>
-                    {workplaces.map((workplace) => (
-                      <option key={workplace.id} value={workplace.id}>
-                        {workplace.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="input-field">
-                  <label>Заробітна плата</label>
-                  <select name="studentSalary" required onChange={handleChange} defaultValue={0}>
-                    <option disabled value={0}>
-                      Оберіть заробітну плату ($)
-                    </option>
-                    {salaries.map((salary) => (
-                      <option key={salary.id} value={salary.id}>
-                        {salary.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <FormControlSelect
+                  label="Заробітна плата"
+                  name="studentSalary"
+                  placeholder="Оберіть заробітну плату ($)"
+                  value={student.studentSalary}
+                  options={salaries}
+                  onChange={handleSelect}
+                />
               </div>
 
               <div className="button-container">
@@ -265,39 +224,6 @@ const BusinessPage: React.FC = () => {
       </div>
     </main>
   );
-
-  /*
-  return (
-    <div className="home-page">
-      <div className="intro">
-        <div className="waves">
-          <div className="wave -one"></div>
-          <div className="wave -two"></div>
-        </div>
-        <div className="form-container">
-          <form onSubmit={handleSubmit}>
-            <div className="form-field">
-              <label htmlFor="name">Name</label>
-              <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
-            </div>
-            <div className="form-field">
-              <label htmlFor="email">Email</label>
-              <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
-            </div>
-            <div className="form-field">
-              <label htmlFor="message">Message</label>
-              <textarea id="message" name="message" value={formData.message} onChange={handleChange} required></textarea>
-            </div>
-            <div className="form-field">
-              <button type="submit">Submit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-
-  */
 };
 
 export default BusinessPage;
