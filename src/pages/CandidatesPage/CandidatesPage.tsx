@@ -27,31 +27,31 @@ interface TechAndToolOption {
   label: string;
 }
 
-interface StudentData {
-  studentSurname: string;
-  studentName: string;
-  studentPatronymic: string;
-  studentDateOfBirth: string;
-  studentMobNumber: string;
-  studentEmail: string;
-  studentRegion: string;
-  studentCity: string;
-  studentStreet: string;
-  studentHouseNum: string;
-  studentLinkedin?: string;
-  studentGithub?: string;
-  studentEducation: string;
-  studentUniversity: string;
-  studentSpecialty?: string;
-  studentTechAndTools?: string;
-  studentEnglish: string;
-  studentSummary?: string;
-  studentPosition: string;
-  studentWorkExp: string;
-  studentWorkArea: string;
-  studentSalary?: string;
-  studentWorkplace?: string;
-  studentProfilePic?: string;
+interface CandidateData {
+  candidateSurname: string;
+  candidateName: string;
+  candidatePatronymic: string;
+  candidateDateOfBirth: string;
+  candidateMobNumber: string;
+  candidateEmail: string;
+  candidateRegion: string;
+  candidateCity: string;
+  candidateStreet: string;
+  candidateHouseNum: string;
+  candidateLinkedin?: string;
+  candidateGithub?: string;
+  candidateEducation: string;
+  candidateUniversity: string;
+  candidateSpecialty?: string;
+  candidateTechAndTools?: string;
+  candidateEnglish: string;
+  candidateSummary?: string;
+  candidatePosition: string;
+  candidateWorkExp: string;
+  candidateWorkArea: string;
+  candidateSalary?: string;
+  candidateWorkplace?: string;
+  candidateProfilePic?: string;
 }
 interface Option {
   value: string;
@@ -80,26 +80,26 @@ function CandidatesPage({}: Props) {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<StudentData>({ mode: "all" });
+  } = useForm<CandidateData>({ mode: "all" });
 
   const handleSelect = (data: MultiValue<TechAndToolOption>) => {
     setSelectedTechAndToolsOptions(data);
   };
 
-  const addNewStudent: SubmitHandler<StudentData> = (data) => {
-    const student: StudentData = {
+  const addNewCandidate: SubmitHandler<CandidateData> = (data) => {
+    const candidate: CandidateData = {
       ...data,
-      studentTechAndTools: selectedTechAndToolsOptions?.map((option: Option) => option.value).join(";"),
-      studentWorkplace: data.studentWorkplace || "3",
-      studentProfilePic:
-        data.studentProfilePic ||
+      candidateTechAndTools: selectedTechAndToolsOptions?.map((option: Option) => option.value).join(";"),
+      candidateWorkplace: data.candidateWorkplace || "3",
+      candidateProfilePic:
+        data.candidateProfilePic ||
         "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png",
     };
 
-    if (!isDataInvalid(student)) {
-      fetch("/students", {
+    if (!isDataInvalid(candidate)) {
+      fetch("/candidates", {
         method: "POST",
-        body: JSON.stringify(student),
+        body: JSON.stringify(candidate),
         headers: {
           "Content-Type": "application/json",
         },
@@ -112,31 +112,31 @@ function CandidatesPage({}: Props) {
     }
   };
 
-  const isDataInvalid = (student: StudentData): boolean => {
+  const isDataInvalid = (candidate: CandidateData): boolean => {
     const optionalFields = [
-      "studentLinkedin",
-      "studentGithub",
-      "studentSpecialty",
-      "studentSummary",
-      "studentSalary",
-      "studentWorkplace",
-      "studentProfilePic",
+      "candidateLinkedin",
+      "candidateGithub",
+      "candidateSpecialty",
+      "candidateSummary",
+      "candidateSalary",
+      "candidateWorkplace",
+      "candidateProfilePic",
     ];
 
     const textFields = [
-      "studentSurname",
-      "studentName",
-      "studentPatronymic",
-      "studentCity",
-      "studentStreet",
-      "studentHouseNum",
-      "studentEducation",
-      "studentUniversity",
+      "candidateSurname",
+      "candidateName",
+      "candidatePatronymic",
+      "candidateCity",
+      "candidateStreet",
+      "candidateHouseNum",
+      "candidateEducation",
+      "candidateUniversity",
     ];
 
     let isInvalid = false;
 
-    for (const [key, value] of Object.entries(student)) {
+    for (const [key, value] of Object.entries(candidate)) {
       const isValueNotEmpty = value !== "" && value !== null && value !== undefined;
 
       if (!optionalFields.includes(key)) {
@@ -145,15 +145,15 @@ function CandidatesPage({}: Props) {
             if (!inputRegex.test(value)) {
               isInvalid = true;
             }
-          } else if (key === "studentDateOfBirth") {
+          } else if (key === "candidateDateOfBirth") {
             if (new Date(value) >= new Date()) {
               isInvalid = true;
             }
-          } else if (key === "studentMobNumber") {
+          } else if (key === "candidateMobNumber") {
             if (!phoneRegex.test(value)) {
               isInvalid = true;
             }
-          } else if (key === "studentEmail") {
+          } else if (key === "candidateEmail") {
             if (!emailRegex.test(value)) {
               isInvalid = true;
             }
@@ -162,11 +162,11 @@ function CandidatesPage({}: Props) {
           isInvalid = true;
         }
       } else {
-        if (isValueNotEmpty && ["studentLinkedin", "studentGithub", "studentProfilePic"].includes(key)) {
+        if (isValueNotEmpty && ["candidateLinkedin", "candidateGithub", "candidateProfilePic"].includes(key)) {
           if (!linkRegex.test(value)) {
             isInvalid = true;
           }
-        } else if (isValueNotEmpty && ["studentSpecialty", "studentSummary"].includes(key)) {
+        } else if (isValueNotEmpty && ["candidateSpecialty", "candidateSummary"].includes(key)) {
           if (!inputRegex.test(value)) {
             isInvalid = true;
           }
@@ -187,7 +187,7 @@ function CandidatesPage({}: Props) {
         <div className="container">
           <header>Анкета кандидата</header>
 
-          <form name="registrationForm" method="post" onSubmit={handleSubmit(addNewStudent)}>
+          <form name="registrationForm" method="post" onSubmit={handleSubmit(addNewCandidate)}>
             {page === 0 && (
               <div className="form first">
                 <div className="details personal">
@@ -195,89 +195,89 @@ function CandidatesPage({}: Props) {
 
                   <div className="fields">
                     <div className="input-field">
-                      <label className={errors?.studentSurname ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidateSurname ? "input-label-invalid" : "input-label"}>
                         Прізвище *
                       </label>
                       <input
-                        {...register("studentSurname", {
+                        {...register("candidateSurname", {
                           required: true,
                           pattern: inputRegex,
                         })}
-                        className={errors?.studentSurname ? "input-field-invalid" : ""}
-                        name="studentSurname"
+                        className={errors?.candidateSurname ? "input-field-invalid" : ""}
+                        name="candidateSurname"
                         type="text"
                         placeholder="Введіть ваше прізвище"
                       />
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentName ? "input-label-invalid" : "input-label"}>Ім'я *</label>
+                      <label className={errors?.candidateName ? "input-label-invalid" : "input-label"}>Ім'я *</label>
                       <input
-                        {...register("studentName", {
+                        {...register("candidateName", {
                           required: true,
                           pattern: inputRegex,
                         })}
-                        className={errors?.studentName ? "input-field-invalid" : ""}
+                        className={errors?.candidateName ? "input-field-invalid" : ""}
                         type="text"
                         placeholder="Введіть ваше ім'я"
                       />
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentPatronymic ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidatePatronymic ? "input-label-invalid" : "input-label"}>
                         По-батькові *
                       </label>
                       <input
-                        {...register("studentPatronymic", {
+                        {...register("candidatePatronymic", {
                           required: true,
                           pattern: inputRegex,
                         })}
-                        className={errors?.studentPatronymic ? "input-field-invalid" : ""}
+                        className={errors?.candidatePatronymic ? "input-field-invalid" : ""}
                         type="text"
                         placeholder="Введіть ваше по-батькові"
                       />
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentDateOfBirth ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidateDateOfBirth ? "input-label-invalid" : "input-label"}>
                         Дата народження *
                       </label>
                       <input
-                        {...register("studentDateOfBirth", {
+                        {...register("candidateDateOfBirth", {
                           required: true,
                           validate: (dateValue) => new Date(dateValue) < new Date(),
                         })}
-                        className={errors?.studentDateOfBirth ? "input-field-invalid" : ""}
+                        className={errors?.candidateDateOfBirth ? "input-field-invalid" : ""}
                         type="date"
                         placeholder="Enter birth date"
                       />
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentMobNumber ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidateMobNumber ? "input-label-invalid" : "input-label"}>
                         Мобільний номер *
                       </label>
                       <input
-                        {...register("studentMobNumber", {
+                        {...register("candidateMobNumber", {
                           required: true,
                           pattern: phoneRegex,
                         })}
-                        className={errors?.studentMobNumber ? "input-field-invalid" : ""}
+                        className={errors?.candidateMobNumber ? "input-field-invalid" : ""}
                         type="text"
                         placeholder="Введіть мобільний номер"
                       />
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentEmail ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidateEmail ? "input-label-invalid" : "input-label"}>
                         Електронна пошта *
                       </label>
                       <input
-                        {...register("studentEmail", {
+                        {...register("candidateEmail", {
                           required: true,
                           pattern: emailRegex,
                         })}
-                        className={errors?.studentEmail ? "input-field-invalid" : ""}
+                        className={errors?.candidateEmail ? "input-field-invalid" : ""}
                         type="text"
                         placeholder="Введіть електронну пошту"
                       />
@@ -290,12 +290,12 @@ function CandidatesPage({}: Props) {
 
                   <div className="fields">
                     <div className="input-field">
-                      <label className={errors?.studentRegion ? "input-label-invalid" : "input-label"}>Область *</label>
+                      <label className={errors?.candidateRegion ? "input-label-invalid" : "input-label"}>Область *</label>
                       <select
-                        {...register("studentRegion", {
+                        {...register("candidateRegion", {
                           required: true,
                         })}
-                        className={errors?.studentRegion ? "input-field-invalid" : ""}
+                        className={errors?.candidateRegion ? "input-field-invalid" : ""}
                       >
                         <option disabled selected value="">
                           Область
@@ -309,41 +309,41 @@ function CandidatesPage({}: Props) {
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentCity ? "input-label-invalid" : "input-label"}>Місто *</label>
+                      <label className={errors?.candidateCity ? "input-label-invalid" : "input-label"}>Місто *</label>
                       <input
-                        {...register("studentCity", {
+                        {...register("candidateCity", {
                           required: true,
                           pattern: inputRegex,
                         })}
-                        className={errors?.studentCity ? "input-field-invalid" : ""}
+                        className={errors?.candidateCity ? "input-field-invalid" : ""}
                         type="text"
                         placeholder="Введіть ваше місто"
                       />
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentStreet ? "input-label-invalid" : "input-label"}>Вулиця *</label>
+                      <label className={errors?.candidateStreet ? "input-label-invalid" : "input-label"}>Вулиця *</label>
                       <input
-                        {...register("studentStreet", {
+                        {...register("candidateStreet", {
                           required: true,
                           pattern: inputRegex,
                         })}
-                        className={errors?.studentStreet ? "input-field-invalid" : ""}
+                        className={errors?.candidateStreet ? "input-field-invalid" : ""}
                         type="text"
                         placeholder="Введіть вашу вулицю"
                       />
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentHouseNum ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidateHouseNum ? "input-label-invalid" : "input-label"}>
                         Номер будинку *
                       </label>
                       <input
-                        {...register("studentHouseNum", {
+                        {...register("candidateHouseNum", {
                           required: true,
                           pattern: inputRegex,
                         })}
-                        className={errors?.studentHouseNum ? "input-field-invalid" : ""}
+                        className={errors?.candidateHouseNum ? "input-field-invalid" : ""}
                         type="text"
                         placeholder="Введіть номер будинку"
                       />
@@ -351,7 +351,7 @@ function CandidatesPage({}: Props) {
 
                     <div className="input-field">
                       <label className="input-label">Номер квартири</label>
-                      <input {...register("studentHouseNum")} type="text" placeholder="Введіть номер квартири" />
+                      <input {...register("candidateHouseNum")} type="text" placeholder="Введіть номер квартири" />
                     </div>
                   </div>
                 </div>
@@ -365,14 +365,14 @@ function CandidatesPage({}: Props) {
 
                   <div className="fields">
                     <div className="input-field">
-                      <label className={errors?.studentEducation ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidateEducation ? "input-label-invalid" : "input-label"}>
                         Освіта *
                       </label>
                       <select
-                        {...register("studentEducation", {
+                        {...register("candidateEducation", {
                           required: true,
                         })}
-                        className={errors?.studentEducation ? "input-field-invalid" : ""}
+                        className={errors?.candidateEducation ? "input-field-invalid" : ""}
                       >
                         <option disabled selected value="">
                           Освіта
@@ -386,15 +386,15 @@ function CandidatesPage({}: Props) {
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentUniversity ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidateUniversity ? "input-label-invalid" : "input-label"}>
                         Навчальний заклад *
                       </label>
                       <input
-                        {...register("studentUniversity", {
+                        {...register("candidateUniversity", {
                           required: true,
                           pattern: inputRegex,
                         })}
-                        className={errors?.studentUniversity ? "input-field-invalid" : ""}
+                        className={errors?.candidateUniversity ? "input-field-invalid" : ""}
                         type="text"
                         placeholder="Введіть ваш навчальний заклад"
                       />
@@ -402,18 +402,18 @@ function CandidatesPage({}: Props) {
 
                     <div className="input-field">
                       <label className="input-label">Спеціальність</label>
-                      <input {...register("studentSpecialty")} type="text" placeholder="Введіть вашу спеціальність" />
+                      <input {...register("candidateSpecialty")} type="text" placeholder="Введіть вашу спеціальність" />
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentEnglish ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidateEnglish ? "input-label-invalid" : "input-label"}>
                         Рівень англійської *
                       </label>
                       <select
-                        {...register("studentEnglish", {
+                        {...register("candidateEnglish", {
                           required: true,
                         })}
-                        className={errors?.studentEnglish ? "input-field-invalid" : ""}
+                        className={errors?.candidateEnglish ? "input-field-invalid" : ""}
                       >
                         <option disabled selected value="">
                           Рівень англійської
@@ -428,7 +428,7 @@ function CandidatesPage({}: Props) {
 
                     <div className="input-field">
                       <label className="input-label">Коротка біографія</label>
-                      <textarea {...register("studentSummary")} placeholder="Розкажіть про себе"></textarea>
+                      <textarea {...register("candidateSummary")} placeholder="Розкажіть про себе"></textarea>
                     </div>
                   </div>
                 </div>
@@ -438,14 +438,14 @@ function CandidatesPage({}: Props) {
 
                   <div className="fields">
                     <div className="input-field">
-                      <label className={errors?.studentPosition ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidatePosition ? "input-label-invalid" : "input-label"}>
                         Посада *
                       </label>
                       <select
-                        {...register("studentPosition", {
+                        {...register("candidatePosition", {
                           required: true,
                         })}
-                        className={errors?.studentPosition ? "input-field-invalid" : ""}
+                        className={errors?.candidatePosition ? "input-field-invalid" : ""}
                       >
                         <option disabled selected value="">
                           Посада
@@ -459,14 +459,14 @@ function CandidatesPage({}: Props) {
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentWorkExp ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidateWorkExp ? "input-label-invalid" : "input-label"}>
                         Досвід роботи *
                       </label>
                       <select
-                        {...register("studentWorkExp", {
+                        {...register("candidateWorkExp", {
                           required: true,
                         })}
-                        className={errors?.studentWorkExp ? "input-field-invalid" : ""}
+                        className={errors?.candidateWorkExp ? "input-field-invalid" : ""}
                       >
                         <option disabled selected value="">
                           Досвід роботи
@@ -480,14 +480,14 @@ function CandidatesPage({}: Props) {
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.studentWorkArea ? "input-label-invalid" : "input-label"}>
+                      <label className={errors?.candidateWorkArea ? "input-label-invalid" : "input-label"}>
                         Сфера роботи *
                       </label>
                       <select
-                        {...register("studentWorkArea", {
+                        {...register("candidateWorkArea", {
                           required: true,
                         })}
-                        className={errors?.studentWorkArea ? "input-field-invalid" : ""}
+                        className={errors?.candidateWorkArea ? "input-field-invalid" : ""}
                       >
                         <option disabled selected value="">
                           Сфера роботи
@@ -502,7 +502,7 @@ function CandidatesPage({}: Props) {
 
                     <div className="input-field">
                       <label className="input-label">Бажана зарплата</label>
-                      <select {...register("studentSalary")}>
+                      <select {...register("candidateSalary")}>
                         <option disabled selected value="">
                           Бажана зарплата
                         </option>
@@ -527,7 +527,7 @@ function CandidatesPage({}: Props) {
 
                     <div className="input-field">
                       <label className="input-label">Місце роботи</label>
-                      <select {...register("studentWorkplace")}>
+                      <select {...register("candidateWorkplace")}>
                         <option disabled selected value="">
                           Місце роботи
                         </option>
@@ -541,12 +541,12 @@ function CandidatesPage({}: Props) {
 
                     <div className="input-field">
                       <label className="input-label">Посилання на профіль</label>
-                      <input {...register("studentLinkedin")} type="text" placeholder="Linkedin" />
+                      <input {...register("candidateLinkedin")} type="text" placeholder="Linkedin" />
                     </div>
 
                     <div className="input-field">
                       <label className="input-label">Посилання на Github</label>
-                      <input {...register("studentGithub")} type="text" placeholder="Github" />
+                      <input {...register("candidateGithub")} type="text" placeholder="Github" />
                     </div>
                   </div>
                 </div>
@@ -561,7 +561,7 @@ function CandidatesPage({}: Props) {
                   <div className="fields">
                     <div className="input-field">
                       <label className="input-label">Фото профілю</label>
-                      <input {...register("studentProfilePic")} type="text" placeholder="Посилання на фото профілю" />
+                      <input {...register("candidateProfilePic")} type="text" placeholder="Посилання на фото профілю" />
                     </div>
 
                     <div className="input-field">

@@ -23,17 +23,17 @@ interface Region {
   region_name: string;
 }
 
-interface Student {
-  studentRegion: string;
-  studentCity: string;
-  studentEducation: string;
-  studentTechAndTools: string;
-  studentEnglish: string;
-  studentPosition: string;
-  studentWorkExp: string;
-  studentWorkArea: string;
-  studentSalary: string;
-  studentWorkplace: string;
+interface Candidate {
+  candidateRegion: string;
+  candidateCity: string;
+  candidateEducation: string;
+  candidateTechAndTools: string;
+  candidateEnglish: string;
+  candidatePosition: string;
+  candidateWorkExp: string;
+  candidateWorkArea: string;
+  candidateSalary: string;
+  candidateWorkplace: string;
 }
 
 interface SelectOption {
@@ -49,31 +49,31 @@ const BusinessPage: React.FC = () => {
     techAndTools: [],
   });
 
-  const [student, setStudent] = useState<Student>({
-    studentRegion: "",
-    studentCity: "",
-    studentEducation: "",
-    studentTechAndTools: "",
-    studentEnglish: "",
-    studentPosition: "",
-    studentWorkExp: "",
-    studentWorkArea: "",
-    studentSalary: "",
-    studentWorkplace: "",
+  const [candidate, setCandidate] = useState<Candidate>({
+    candidateRegion: "",
+    candidateCity: "",
+    candidateEducation: "",
+    candidateTechAndTools: "",
+    candidateEnglish: "",
+    candidatePosition: "",
+    candidateWorkExp: "",
+    candidateWorkArea: "",
+    candidateSalary: "",
+    candidateWorkplace: "",
   });
 
   const handleSelect = (event: SelectChangeEvent<string>) => {
     const { name, value } = event.target;
-    setStudent({ ...student, [name]: value });
+    setCandidate({ ...candidate, [name]: value });
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
-    setStudent({ ...student, [name]: value });
+    setCandidate({ ...candidate, [name]: value });
   };
 
   useEffect(() => {
-    fetch("/api/server")
+    fetch("/api/get-meta-data")
       .then((response) => response.json())
       .then((response) => setResponse(response));
   }, []);
@@ -89,14 +89,14 @@ const BusinessPage: React.FC = () => {
     navigate({
       pathname: "/results",
       search: `?${createSearchParams(
-        Object.fromEntries(Object.entries(student).filter(([key, value]) => value !== ""))
+        Object.fromEntries(Object.entries(candidate).filter(([key, value]) => value !== ""))
       )}`,
     });
   };
 
   const searchCandidates = (e: FormEvent) => {
     e.preventDefault();
-    console.log("student", student);
+    console.log("candidate", candidate);
   };
 
   return (
@@ -115,54 +115,54 @@ const BusinessPage: React.FC = () => {
               <div className="fields">
                 <FormControlSelect
                   label="Посада"
-                  name="studentPosition"
+                  name="candidatePosition"
                   placeholder="Оберіть необхідну посаду"
-                  value={student.studentPosition}
+                  value={candidate.candidatePosition}
                   options={positions}
                   onChange={handleSelect}
                 />
 
                 <FormControlSelect
                   label="Область роботи"
-                  name="studentWorkArea"
+                  name="candidateWorkArea"
                   placeholder="Оберіть область роботи"
-                  value={student.studentWorkArea}
+                  value={candidate.candidateWorkArea}
                   options={workAreas}
                   onChange={handleSelect}
                 />
 
                 <FormControlSelect
                   label="Досвід роботи"
-                  name="studentWorkExp"
+                  name="candidateWorkExp"
                   placeholder="Оберіть досвід роботи"
-                  value={student.studentWorkExp}
+                  value={candidate.candidateWorkExp}
                   options={workExps}
                   onChange={handleSelect}
                 />
 
                 <FormControlSelect
                   label="Технології та інструменти"
-                  name="studentTechAndTools"
+                  name="candidateTechAndTools"
                   placeholder="Оберіть технології та інструменти"
-                  value={student.studentTechAndTools}
+                  value={candidate.candidateTechAndTools}
                   options={/*techAndToolsOptions*/ []}
                   onChange={handleSelect}
                 />
 
                 <FormControlSelect
                   label="Рівень англійської"
-                  name="studentEnglish"
+                  name="candidateEnglish"
                   placeholder="Оберіть рівень англійської"
-                  value={student.studentEnglish}
+                  value={candidate.candidateEnglish}
                   options={englishLevels}
                   onChange={handleSelect}
                 />
 
                 <FormControlSelect
                   label="Рівень освіти"
-                  name="studentEducation"
+                  name="candidateEducation"
                   placeholder="Оберіть рівень освіти"
-                  value={student.studentEducation}
+                  value={candidate.candidateEducation}
                   options={education}
                   onChange={handleSelect}
                 />
@@ -172,9 +172,9 @@ const BusinessPage: React.FC = () => {
               <div className="fields">
                 <FormControlSelect
                   label="Область"
-                  name="studentRegion"
+                  name="candidateRegion"
                   placeholder="Оберіть вашу область"
-                  value={student.studentRegion}
+                  value={candidate.candidateRegion}
                   options={response.regions}
                   onChange={handleSelect}
                 />
@@ -184,25 +184,25 @@ const BusinessPage: React.FC = () => {
                   label="Місто"
                   variant="outlined"
                   helperText="Введіть місто"
-                  name="studentCity"
-                  value={student.studentCity}
+                  name="candidateCity"
+                  value={candidate.candidateCity}
                   onChange={handleChange}
                 />
 
                 <FormControlSelect
                   label="Місце роботи"
-                  name="studentWorkplace"
+                  name="candidateWorkplace"
                   placeholder="Оберіть місце роботи"
-                  value={student.studentWorkplace}
+                  value={candidate.candidateWorkplace}
                   options={workplaces}
                   onChange={handleSelect}
                 />
 
                 <FormControlSelect
                   label="Заробітна плата"
-                  name="studentSalary"
+                  name="candidateSalary"
                   placeholder="Оберіть заробітну плату ($)"
-                  value={student.studentSalary}
+                  value={candidate.candidateSalary}
                   options={salaries}
                   onChange={handleSelect}
                 />
