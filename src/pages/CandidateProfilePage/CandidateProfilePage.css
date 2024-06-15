@@ -6,6 +6,8 @@
   }
   
   .profile-section-wrapper {
+    margin-top: calc(35vh - 150px); /* Adjust as needed */
+    margin-bottom: calc(35vh - 150px); /* Adjust as needed */
     display: grid;
     max-width: 1200px;
     min-height: 611px;
