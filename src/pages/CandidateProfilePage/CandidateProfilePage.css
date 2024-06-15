@@ -117,10 +117,10 @@
   }
   
   .profile-contacts-details-buttons a:hover {
-    transform: scale(1.15);
+    transform: translateY(-8px);
     transition: all 0.2s ease-in;
   }
-  
+
   .profile-picture {
     border-radius: 50%;
     width: 150px;
@@ -153,17 +153,4 @@
   .profile-specialty div,
   .profile-english div {
     padding-top: 5px;
-  }
-  
-  .phone-icon,
-  .mail-icon,
-  .location-icon,
-  .cake-icon {
-    width: 24px;
-    height: 24px;
-  }
-  .github,
-  .linkedin {
-    width: 32px;
-    height: 32px;
   }

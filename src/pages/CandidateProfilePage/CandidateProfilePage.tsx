@@ -9,13 +9,9 @@ import { workExps } from "../../helpers/workExpOptionsList";
 import { workAreas } from "../../helpers/workAreaOptionsList";
 import { salaries } from "../../helpers/salaryOptionsList";
 import { workplaces } from "../../helpers/workplaceOptionsList";
-import locationIcon from "../../img/icons/pinlocation.svg";
-import phoneIcon from "../../img/icons/callphone.svg";
-import mailIcon from "../../img/icons/mail.svg";
-//import linkedinIcon from "../../img/icons/linkedin--negative.svg";
-//import githubIcon from "../../img/icons/github--negative.svg";
-import frameIcon from "../../img/icons/ellipse-1@2x.png";
-import cakeIcon from "../../img/icons/cake2.svg";
+import { LogoLinkedin } from "react-ionicons";
+import { LogoGithub } from "react-ionicons";
+import { LocationOutline, MailOutline, PhonePortraitOutline, CalendarOutline } from "react-ionicons";
 import "./CandidateProfilePage.css";
 
 interface Candidate {
@@ -137,12 +133,12 @@ const CandidateProfilePage: React.FC = () => {
 
             <div className="profile-contacts-details-wrapper">
               <div className="profile-contacts-details-div">
-                <img className="cake-icon" alt="" src={cakeIcon} />
+                <CalendarOutline color={"#fff"} title={"birthday"} height="24px" width="24px" />
                 <p className="profile-contacts-details">{birthday}</p>
               </div>
 
               <div className="profile-contacts-details-div">
-                <img className="location-icon" alt="" src={locationIcon} />
+                <LocationOutline color={"#fff"} title={"location"} height="24px" width="24px" />
                 <div>
                   <p className="profile-contacts-details">{candidate.city},</p>
                   <p className="profile-contacts-details">{region}</p>
@@ -150,24 +146,24 @@ const CandidateProfilePage: React.FC = () => {
               </div>
 
               <div className="profile-contacts-details-div">
-                <img className="mail-icon" alt="" src={mailIcon} />
+                <MailOutline color={"#fff"} title={"mail"} height="24px" width="24px" />
                 <p className="profile-contacts-details">{candidate.email}</p>
               </div>
 
               <div className="profile-contacts-details-div">
-                <img className="phone-icon" alt="" src={phoneIcon} />
+                <PhonePortraitOutline color={"#fff"} title={"phone"} height="24px" width="24px" />
                 <p className="profile-contacts-details">{candidate.mobile_number}</p>
               </div>
 
               <div className="profile-contacts-details-buttons">
                 {candidate.linkedin && (
                   <a href={candidate.linkedin}>
-                    <img className="linkedin" alt="" src={""} />
+                    <LogoLinkedin height="30px" width="30px" color={"#fff"}></LogoLinkedin>
                   </a>
                 )}
                 {candidate.github && (
                   <a href={candidate.github}>
-                    <img className="github" alt="" src={""} />
+                    <LogoGithub height="30px" width="30px" color={"#fff"}></LogoGithub>
                   </a>
                 )}
               </div>
