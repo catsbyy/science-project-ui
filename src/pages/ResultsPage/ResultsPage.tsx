@@ -72,12 +72,14 @@ const Results: React.FC = () => {
           <div className="wave -two"></div>
         </div>
       </div>
-      <h2 className="landing-title">Рекомендовані кандидати</h2>
-      <ul className="result-candidates">
-        {candidates.map((candidate) => (
-          <CandidateCard key={candidate.id} candidate={candidate} techAndToolsData={techAndTools} />
-        ))}
-      </ul>
+      <div className="results-section">
+        <h2 className="landing-title">Рекомендовані кандидати</h2>
+        <ul className="result-candidates">
+          {candidates.map((candidate) => (
+            <CandidateCard key={candidate.id} candidate={candidate} techAndToolsData={techAndTools} />
+          ))}
+        </ul>
+      </div>
     </main>
   );
 };

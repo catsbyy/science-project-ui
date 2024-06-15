@@ -3,7 +3,9 @@
   font-size: 40px;
   text-align: center;
   position: relative;
+  margin-bottom: 40px;
 }
+
 .landing-title::before {
   content: "";
   position: absolute;
@@ -12,15 +14,17 @@
   height: 5px;
   width: 60px;
   border-radius: 8px;
-  background-color: #4070f4;
+  background-color:  rgba(106, 73, 250, 0.6);
 }
 
-result-candidates {
+.result-candidates {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px; /* Optional: add some space between cards */
 }
 
-result-candidates li {
-  flex-grow: 1;
-  width: 33%;
+.results-section {
+    margin-top: calc(35vh - 150px); /* Adjust as needed */
+    margin-bottom: calc(35vh - 150px); /* Adjust as needed */
 }

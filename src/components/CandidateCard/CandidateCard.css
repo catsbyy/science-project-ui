@@ -12,7 +12,7 @@
     text-align: center;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 5px 10px rgb(0 0 0 / 10%);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
     cursor: pointer;
   }
   
