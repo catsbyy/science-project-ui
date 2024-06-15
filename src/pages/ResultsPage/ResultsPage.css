@@ -1,0 +1,26 @@
+.landing-title {
+  font-weight: 600;
+  font-size: 40px;
+  text-align: center;
+  position: relative;
+}
+.landing-title::before {
+  content: "";
+  position: absolute;
+  left: 62;
+  bottom: -4px;
+  height: 5px;
+  width: 60px;
+  border-radius: 8px;
+  background-color: #4070f4;
+}
+
+result-candidates {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+result-candidates li {
+  flex-grow: 1;
+  width: 33%;
+}

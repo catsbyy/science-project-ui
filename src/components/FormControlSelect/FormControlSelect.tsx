@@ -3,7 +3,8 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChange
 
 interface SelectOption {
   id: string | number;
-  [key: string]: any;
+  name?: string; // Make this optional
+  region_name?: string; // Make this optional
 }
 
 interface FormControlSelectProps {
@@ -41,11 +42,11 @@ const FormControlSelect: React.FC<FormControlSelectProps> = ({
           }}
         >
           <MenuItem value="">
-            <em>‎ </em>
+            <em>{placeholder || "Select an option"}</em>
           </MenuItem>
           {options.map((option) => (
             <MenuItem key={option.id} value={option.id}>
-              {option.name}
+              {option.name || option.region_name}
             </MenuItem>
           ))}
         </Select>

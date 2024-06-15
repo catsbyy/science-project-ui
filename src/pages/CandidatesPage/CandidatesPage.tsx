@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
-import Select, { MultiValue } from "react-select";
 import { education } from "../../helpers/educationOptionsList";
 import { englishLevels } from "../../helpers/englishLevelsList";
 import { positions } from "../../helpers/positionOptionsList";
@@ -13,6 +12,9 @@ import { inputRegex } from "../../helpers/inputRegex";
 import { emailRegex } from "../../helpers/emailRegex";
 import { linkRegex } from "../../helpers/linkRegex";
 import { phoneRegex } from "../../helpers/phoneRegex";
+import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent } from "@mui/material";
+import FormControlSelect from "../../components/FormControlSelect/FormControlSelect";
+import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 
 import { ArrowForwardOutline } from "react-ionicons";
 import { ArrowBackOutline } from "react-ionicons";
@@ -81,10 +83,18 @@ function CandidatesPage({}: Props) {
     formState: { errors },
     handleSubmit,
   } = useForm<CandidateData>({ mode: "all" });
-
-  const handleSelect = (data: MultiValue<TechAndToolOption>) => {
-    setSelectedTechAndToolsOptions(data);
+/* 
+  
+  const handleSelect = (event: SelectChangeEvent<string>) => {
+    const { name, value } = event.target;
+    setCandidate({ ...candidate, [name]: value });
   };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setCandidate({ ...candidate, [name]: value });
+  };
+  */
 
   const addNewCandidate: SubmitHandler<CandidateData> = (data) => {
     const candidate: CandidateData = {
@@ -194,6 +204,7 @@ function CandidatesPage({}: Props) {
                   <span className="title">Персональні дані</span>
 
                   <div className="fields">
+                    
                     <div className="input-field">
                       <label className={errors?.candidateSurname ? "input-label-invalid" : "input-label"}>
                         Прізвище *
@@ -518,7 +529,7 @@ function CandidatesPage({}: Props) {
                       <label className="input-label">Інструменти та технології</label>
                       <Select
                         options={techAndToolsOptions}
-                        onChange={handleSelect}
+                        onChange={()=> {}}
                         isMulti
                         closeMenuOnSelect={false}
                         placeholder="Обрані інструменти та технології"

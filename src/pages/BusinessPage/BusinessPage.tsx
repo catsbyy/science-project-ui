@@ -83,7 +83,7 @@ const BusinessPage: React.FC = () => {
     label: `${techAndTool.name}`,
   }));
 
-  console.log(response);
+  console.log(response.regions);
 
   const goToResults = () => {
     navigate({
