@@ -68,7 +68,7 @@ function CandidatesPage({}: Props) {
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
   useEffect(() => {
-    fetch("/api/server")
+    fetch("/api/get-meta-data")
       .then((response) => response.json())
       .then((response) => setResponse(response));
   }, []);
