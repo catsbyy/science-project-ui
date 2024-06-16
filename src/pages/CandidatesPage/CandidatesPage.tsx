@@ -526,21 +526,6 @@ function CandidatesPage({}: Props) {
               </div>
             )}
 
-            {page === 2 && (
-              <div className="form third">
-                <div className="details review">
-                  <span className="title">Підтвердження</span>
-
-                  <div className="fields">
-                    <div className="input-field">
-                      <label className="input-label">Фото профілю</label>
-                      <input {...register("candidateProfilePic")} type="text" placeholder="Посилання на фото профілю" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
             <div className="navigation-buttons">
               {page > 0 && (
                 <div>
@@ -548,12 +533,10 @@ function CandidatesPage({}: Props) {
                     Назад
                     <ArrowBackOutline color={"#00000"} title={"back"} height="25px" width="25px" />
                   </button>
-                  <div className="input-field">
-                    <button type="submit" className="form-button">
-                      Підтвердити
-                      <CheckmarkOutline color={"#00000"} title={"submit"} height="25px" width="25px" />
-                    </button>
-                  </div>
+                  <button type="submit" className="form-button">
+                    Підтвердити
+                    <CheckmarkOutline color={"#00000"} title={"submit"} height="25px" width="25px" />
+                  </button>
                 </div>
               )}
 
