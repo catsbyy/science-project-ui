@@ -14,6 +14,7 @@ interface FormControlSelectProps {
   value: string;
   options: SelectOption[];
   onChange: (event: SelectChangeEvent<string>) => void;
+  isRequired?: boolean;
 }
 
 const FormControlSelect: React.FC<FormControlSelectProps> = ({
@@ -23,10 +24,11 @@ const FormControlSelect: React.FC<FormControlSelectProps> = ({
   value,
   options,
   onChange,
+  isRequired = false
 }) => {
   return (
     <div>
-      <FormControl sx={{ minWidth: 360 }}>
+      <FormControl sx={{ minWidth: 360 }} required={isRequired}>
         <InputLabel color="secondary" size="small">
           {label}
         </InputLabel>

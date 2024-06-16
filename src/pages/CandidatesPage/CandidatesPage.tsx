@@ -13,12 +13,16 @@ import { emailRegex } from "../../helpers/emailRegex";
 import { linkRegex } from "../../helpers/linkRegex";
 import { phoneRegex } from "../../helpers/phoneRegex";
 import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 import FormControlSelect from "../../components/FormControlSelect/FormControlSelect";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 
 import { ArrowForwardOutline } from "react-ionicons";
 import { ArrowBackOutline } from "react-ionicons";
-import { CheckmarkOutline } from 'react-ionicons';
+import { CheckmarkOutline } from "react-ionicons";
 
 import warning from "../../img/icons/warning.svg";
 
@@ -29,11 +33,11 @@ interface TechAndToolOption {
   label: string;
 }
 
-interface CandidateData {
+interface Candidate {
   candidateSurname: string;
   candidateName: string;
   candidatePatronymic: string;
-  candidateDateOfBirth: string;
+  candidateDateOfBirth: Dayjs | null;
   candidateMobNumber: string;
   candidateEmail: string;
   candidateRegion: string;
@@ -62,7 +66,7 @@ interface Option {
 
 function CandidatesPage({}: Props) {
   const [response, setResponse] = useState<{ regions: any[]; techAndTools: any[] }>({ regions: [], techAndTools: [] });
-  const [selectedTechAndToolsOptions, setSelectedTechAndToolsOptions] = useState<MultiValue<TechAndToolOption>>();
+  //const [selectedTechAndToolsOptions, setSelectedTechAndToolsOptions] = useState<MultiValue<TechAndToolOption>>();
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const [isFormInvalid, setIsFormInvalid] = useState(false);
@@ -82,9 +86,27 @@ function CandidatesPage({}: Props) {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<CandidateData>({ mode: "all" });
-/* 
-  
+  } = useForm<Candidate>({ mode: "all" });
+
+  const [candidate, setCandidate] = useState<Candidate>({
+    candidateSurname: "",
+    candidateName: "",
+    candidatePatronymic: "",
+    candidateDateOfBirth: null,
+    candidateMobNumber: "",
+    candidateEmail: "",
+    candidateRegion: "",
+    candidateCity: "",
+    candidateStreet: "",
+    candidateHouseNum: "",
+    candidateEducation: "",
+    candidateUniversity: "",
+    candidateEnglish: "",
+    candidatePosition: "",
+    candidateWorkExp: "",
+    candidateWorkArea: "",
+  });
+
   const handleSelect = (event: SelectChangeEvent<string>) => {
     const { name, value } = event.target;
     setCandidate({ ...candidate, [name]: value });
@@ -94,12 +116,16 @@ function CandidatesPage({}: Props) {
     const { name, value } = event.target;
     setCandidate({ ...candidate, [name]: value });
   };
-  */
 
-  const addNewCandidate: SubmitHandler<CandidateData> = (data) => {
-    const candidate: CandidateData = {
+  const handleDateChange = (event: Dayjs | null) => {
+    const { name, value } = event.target;
+    setCandidate({ ...candidate, [name]: value });
+  };
+
+  const addNewCandidate: SubmitHandler<Candidate> = (data) => {
+    const candidate: Candidate = {
       ...data,
-      candidateTechAndTools: selectedTechAndToolsOptions?.map((option: Option) => option.value).join(";"),
+      //candidateTechAndTools: selectedTechAndToolsOptions?.map((option: Option) => option.value).join(";"),
       candidateWorkplace: data.candidateWorkplace || "3",
       candidateProfilePic:
         data.candidateProfilePic ||
@@ -122,7 +148,7 @@ function CandidatesPage({}: Props) {
     }
   };
 
-  const isDataInvalid = (candidate: CandidateData): boolean => {
+  const isDataInvalid = (candidate: Candidate): boolean => {
     const optionalFields = [
       "candidateLinkedin",
       "candidateGithub",
@@ -204,65 +230,61 @@ function CandidatesPage({}: Props) {
                   <span className="title">Персональні дані</span>
 
                   <div className="fields">
-                    
-                    <div className="input-field">
-                      <label className={errors?.candidateSurname ? "input-label-invalid" : "input-label"}>
-                        Прізвище *
-                      </label>
-                      <input
-                        {...register("candidateSurname", {
-                          required: true,
-                          pattern: inputRegex,
-                        })}
-                        className={errors?.candidateSurname ? "input-field-invalid" : ""}
-                        name="candidateSurname"
-                        type="text"
-                        placeholder="Введіть ваше прізвище"
-                      />
-                    </div>
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Прізвище"
+                      variant="outlined"
+                      helperText="Введіть ваше прізвище"
+                      name="candidateSurname"
+                      value={candidate.candidateSurname}
+                      onChange={handleChange}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className={errors?.candidateName ? "input-label-invalid" : "input-label"}>Ім'я *</label>
-                      <input
-                        {...register("candidateName", {
-                          required: true,
-                          pattern: inputRegex,
-                        })}
-                        className={errors?.candidateName ? "input-field-invalid" : ""}
-                        type="text"
-                        placeholder="Введіть ваше ім'я"
-                      />
-                    </div>
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Ім'я"
+                      variant="outlined"
+                      helperText="Введіть ваше ім'я"
+                      name="candidateName"
+                      value={candidate.candidateName}
+                      onChange={handleChange}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className={errors?.candidatePatronymic ? "input-label-invalid" : "input-label"}>
-                        По-батькові *
-                      </label>
-                      <input
-                        {...register("candidatePatronymic", {
-                          required: true,
-                          pattern: inputRegex,
-                        })}
-                        className={errors?.candidatePatronymic ? "input-field-invalid" : ""}
-                        type="text"
-                        placeholder="Введіть ваше по-батькові"
-                      />
-                    </div>
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="По-батькові"
+                      variant="outlined"
+                      helperText="Введіть ваше по-батькові"
+                      name="candidatePatronymic"
+                      value={candidate.candidatePatronymic}
+                      onChange={handleChange}
+                      isRequired={false}
+                    />
 
-                    <div className="input-field">
-                      <label className={errors?.candidateDateOfBirth ? "input-label-invalid" : "input-label"}>
-                        Дата народження *
-                      </label>
-                      <input
-                        {...register("candidateDateOfBirth", {
-                          required: true,
-                          validate: (dateValue) => new Date(dateValue) < new Date(),
-                        })}
-                        className={errors?.candidateDateOfBirth ? "input-field-invalid" : ""}
-                        type="date"
-                        placeholder="Enter birth date"
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Дата народження"
+                        value={candidate.candidateDateOfBirth}
+                        onChange={handleDateChange}
+                        slotProps={{
+                          textField: { size: "small", color: "secondary", helperText: "Оберіть дату народження" },
+                        }}
                       />
-                    </div>
+                    </LocalizationProvider>
+
+                    {/*regex*/}
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Мобільний номер"
+                      variant="outlined"
+                      helperText="Введіть мобільний номер"
+                      name="candidateMobNumber"
+                      value={candidate.candidateMobNumber}
+                      onChange={handleChange}
+                      isRequired={true}
+                    />
 
                     <div className="input-field">
                       <label className={errors?.candidateMobNumber ? "input-label-invalid" : "input-label"}>
@@ -301,7 +323,9 @@ function CandidatesPage({}: Props) {
 
                   <div className="fields">
                     <div className="input-field">
-                      <label className={errors?.candidateRegion ? "input-label-invalid" : "input-label"}>Область *</label>
+                      <label className={errors?.candidateRegion ? "input-label-invalid" : "input-label"}>
+                        Область *
+                      </label>
                       <select
                         {...register("candidateRegion", {
                           required: true,
@@ -333,7 +357,9 @@ function CandidatesPage({}: Props) {
                     </div>
 
                     <div className="input-field">
-                      <label className={errors?.candidateStreet ? "input-label-invalid" : "input-label"}>Вулиця *</label>
+                      <label className={errors?.candidateStreet ? "input-label-invalid" : "input-label"}>
+                        Вулиця *
+                      </label>
                       <input
                         {...register("candidateStreet", {
                           required: true,
@@ -529,7 +555,7 @@ function CandidatesPage({}: Props) {
                       <label className="input-label">Інструменти та технології</label>
                       <Select
                         options={techAndToolsOptions}
-                        onChange={()=> {}}
+                        onChange={() => {}}
                         isMulti
                         closeMenuOnSelect={false}
                         placeholder="Обрані інструменти та технології"
@@ -576,7 +602,7 @@ function CandidatesPage({}: Props) {
                     </div>
 
                     <div className="input-field">
-                      <button type="submit" className="submit-button">
+                      <button type="submit" className="form-button">
                         Підтвердити
                         <CheckmarkOutline color={"#00000"} title={"submit"} height="25px" width="25px" />
                       </button>
@@ -588,14 +614,14 @@ function CandidatesPage({}: Props) {
 
             <div className="navigation-buttons">
               {page > 0 && (
-                <button type="button" onClick={() => setPage(page - 1)}>
+                <button type="button" onClick={() => setPage(page - 1)} className="form-button">
                   Назад
                   <ArrowBackOutline color={"#00000"} title={"back"} height="25px" width="25px" />
                 </button>
               )}
 
               {page < 2 && (
-                <button type="button" onClick={() => setPage(page + 1)}>
+                <button type="button" onClick={() => setPage(page + 1)} className="form-button">
                   Далі
                   <ArrowForwardOutline color={"#00000"} title={"forward"} height="25px" width="25px" />
                 </button>

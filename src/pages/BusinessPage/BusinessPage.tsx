@@ -209,7 +209,7 @@ const BusinessPage: React.FC = () => {
               </div>
 
               <div className="button-container">
-                <button className="sumbit" type="submit" onClick={goToResults}>
+                <button className="sumbit form-button" type="submit" onClick={goToResults} >
                   Знайти
                   <SearchOutline width="20px" height="20px" color={"000000"} />
                 </button>

@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField } from "@mui/material";
+import { FormControl, TextField } from "@mui/material";
 
 interface FormControlTextFieldProps {
   id: string;
@@ -12,6 +12,7 @@ interface FormControlTextFieldProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   color?: "primary" | "secondary" | "error" | "info" | "success" | "warning";
   width?: string | number;
+  isRequired?: boolean;
 }
 
 const FormControlTextField: React.FC<FormControlTextFieldProps> = ({
@@ -25,20 +26,24 @@ const FormControlTextField: React.FC<FormControlTextFieldProps> = ({
   onChange,
   color = "secondary",
   width = 360,
+  isRequired = false,
 }) => {
   return (
-    <TextField
-      id={id}
-      label={label}
-      variant={variant}
-      size={size}
-      helperText={helperText}
-      name={name}
-      value={value}
-      onChange={onChange}
-      color={color}
-      sx={{ width }}
-    />
+    <FormControl sx={{ minWidth: 360 }} required={isRequired}>
+      <TextField
+        id={id}
+        label={label}
+        variant={variant}
+        size={size}
+        helperText={helperText}
+        name={name}
+        value={value}
+        onChange={onChange}
+        color={color}
+        sx={{ width }}
+        required={isRequired}
+      />
+    </FormControl>
   );
 };
 
