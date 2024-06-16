@@ -13,6 +13,7 @@ interface FormControlTextFieldProps {
   color?: "primary" | "secondary" | "error" | "info" | "success" | "warning";
   width?: string | number;
   isRequired?: boolean;
+  isTextArea?: boolean;
 }
 
 const FormControlTextField: React.FC<FormControlTextFieldProps> = ({
@@ -27,6 +28,7 @@ const FormControlTextField: React.FC<FormControlTextFieldProps> = ({
   color = "secondary",
   width = 360,
   isRequired = false,
+  isTextArea = false
 }) => {
   return (
     <FormControl sx={{ minWidth: 360 }} required={isRequired}>
@@ -42,6 +44,8 @@ const FormControlTextField: React.FC<FormControlTextFieldProps> = ({
         color={color}
         sx={{ width }}
         required={isRequired}
+        multiline={isTextArea}
+        rows={Infinity}
       />
     </FormControl>
   );

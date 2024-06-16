@@ -12,7 +12,15 @@ import { inputRegex } from "../../helpers/inputRegex";
 import { emailRegex } from "../../helpers/emailRegex";
 import { linkRegex } from "../../helpers/linkRegex";
 import { phoneRegex } from "../../helpers/phoneRegex";
-import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent } from "@mui/material";
+import {
+  TextField,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  SelectChangeEvent,
+  TextareaAutosize,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -105,6 +113,8 @@ function CandidatesPage({}: Props) {
     candidatePosition: "",
     candidateWorkExp: "",
     candidateWorkArea: "",
+    candidateLinkedin: "",
+    candidateGithub: "",
   });
 
   const handleSelect = (event: SelectChangeEvent<string>) => {
@@ -286,110 +296,89 @@ function CandidatesPage({}: Props) {
                       isRequired={true}
                     />
 
-                    <div className="input-field">
-                      <label className={errors?.candidateMobNumber ? "input-label-invalid" : "input-label"}>
-                        Мобільний номер *
-                      </label>
-                      <input
-                        {...register("candidateMobNumber", {
-                          required: true,
-                          pattern: phoneRegex,
-                        })}
-                        className={errors?.candidateMobNumber ? "input-field-invalid" : ""}
-                        type="text"
-                        placeholder="Введіть мобільний номер"
-                      />
-                    </div>
-
-                    <div className="input-field">
-                      <label className={errors?.candidateEmail ? "input-label-invalid" : "input-label"}>
-                        Електронна пошта *
-                      </label>
-                      <input
-                        {...register("candidateEmail", {
-                          required: true,
-                          pattern: emailRegex,
-                        })}
-                        className={errors?.candidateEmail ? "input-field-invalid" : ""}
-                        type="text"
-                        placeholder="Введіть електронну пошту"
-                      />
-                    </div>
+                    {/*regex*/}
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Електронна пошта"
+                      variant="outlined"
+                      helperText="Введіть електронну пошту"
+                      name="candidateEmail"
+                      value={candidate.candidateEmail}
+                      onChange={handleChange}
+                      isRequired={true}
+                    />
                   </div>
                 </div>
 
                 <div className="details ID">
-                  <span className="title">Адреса проживання</span>
+                  <span className="title">Адреса та додаткові контакти</span>
 
                   <div className="fields">
-                    <div className="input-field">
-                      <label className={errors?.candidateRegion ? "input-label-invalid" : "input-label"}>
-                        Область *
-                      </label>
-                      <select
-                        {...register("candidateRegion", {
-                          required: true,
-                        })}
-                        className={errors?.candidateRegion ? "input-field-invalid" : ""}
-                      >
-                        <option disabled selected value="">
-                          Область
-                        </option>
-                        {response.regions?.map((region) => (
-                          <option key={region.id} value={region.name}>
-                            {region.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <FormControlSelect
+                      label="Область"
+                      name="candidateRegion"
+                      placeholder="Оберіть область"
+                      value={candidate.candidateRegion}
+                      options={response.regions}
+                      onChange={handleSelect}
+                    />
 
-                    <div className="input-field">
-                      <label className={errors?.candidateCity ? "input-label-invalid" : "input-label"}>Місто *</label>
-                      <input
-                        {...register("candidateCity", {
-                          required: true,
-                          pattern: inputRegex,
-                        })}
-                        className={errors?.candidateCity ? "input-field-invalid" : ""}
-                        type="text"
-                        placeholder="Введіть ваше місто"
-                      />
-                    </div>
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Місто"
+                      variant="outlined"
+                      helperText="Введіть ваше місто"
+                      name="candidateCity"
+                      value={candidate.candidateCity}
+                      onChange={handleChange}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className={errors?.candidateStreet ? "input-label-invalid" : "input-label"}>
-                        Вулиця *
-                      </label>
-                      <input
-                        {...register("candidateStreet", {
-                          required: true,
-                          pattern: inputRegex,
-                        })}
-                        className={errors?.candidateStreet ? "input-field-invalid" : ""}
-                        type="text"
-                        placeholder="Введіть вашу вулицю"
-                      />
-                    </div>
+                    {/*regex inputRegex*/}
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Вулиця"
+                      variant="outlined"
+                      helperText="Введіть вашу вулицю"
+                      name="candidateStreet"
+                      value={candidate.candidateStreet}
+                      onChange={handleChange}
+                      isRequired={false}
+                    />
 
-                    <div className="input-field">
-                      <label className={errors?.candidateHouseNum ? "input-label-invalid" : "input-label"}>
-                        Номер будинку *
-                      </label>
-                      <input
-                        {...register("candidateHouseNum", {
-                          required: true,
-                          pattern: inputRegex,
-                        })}
-                        className={errors?.candidateHouseNum ? "input-field-invalid" : ""}
-                        type="text"
-                        placeholder="Введіть номер будинку"
-                      />
-                    </div>
+                    {/*regex inputRegex*/}
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Номер будинку"
+                      variant="outlined"
+                      helperText="Введіть номер будинку"
+                      name="candidateHouseNum"
+                      value={candidate.candidateHouseNum}
+                      onChange={handleChange}
+                      isRequired={false}
+                    />
 
-                    <div className="input-field">
-                      <label className="input-label">Номер квартири</label>
-                      <input {...register("candidateHouseNum")} type="text" placeholder="Введіть номер квартири" />
-                    </div>
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Linkedin"
+                      variant="outlined"
+                      helperText="Посилання на профіль"
+                      name="candidateLinkedin"
+                      value={candidate.candidateLinkedin}
+                      onChange={handleChange}
+                      isRequired={false}
+                    />
+
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Github"
+                      variant="outlined"
+                      helperText="Посилання на профіль"
+                      name="candidateGithub"
+                      value={candidate.candidateGithub}
+                      onChange={handleChange}
+                      isRequired={false}
+                    />
                   </div>
                 </div>
               </div>
@@ -401,190 +390,137 @@ function CandidatesPage({}: Props) {
                   <span className="title">Освіта</span>
 
                   <div className="fields">
-                    <div className="input-field">
-                      <label className={errors?.candidateEducation ? "input-label-invalid" : "input-label"}>
-                        Освіта *
-                      </label>
-                      <select
-                        {...register("candidateEducation", {
-                          required: true,
-                        })}
-                        className={errors?.candidateEducation ? "input-field-invalid" : ""}
-                      >
-                        <option disabled selected value="">
-                          Освіта
-                        </option>
-                        {education?.map((option) => (
-                          <option key={option.id} value={option.id}>
-                            {option.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <FormControlSelect
+                      label="Освіта"
+                      name="candidateEducation"
+                      placeholder="Оберіть освіту"
+                      value={candidate.candidateEducation}
+                      options={education}
+                      onChange={handleSelect}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className={errors?.candidateUniversity ? "input-label-invalid" : "input-label"}>
-                        Навчальний заклад *
-                      </label>
-                      <input
-                        {...register("candidateUniversity", {
-                          required: true,
-                          pattern: inputRegex,
-                        })}
-                        className={errors?.candidateUniversity ? "input-field-invalid" : ""}
-                        type="text"
-                        placeholder="Введіть ваш навчальний заклад"
-                      />
-                    </div>
+                    {/*regex input..*/}
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Навчальний заклад"
+                      variant="outlined"
+                      helperText="Введіть ваш навчальний заклад"
+                      name="candidateUniversity"
+                      value={candidate.candidateUniversity}
+                      onChange={handleChange}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className="input-label">Спеціальність</label>
-                      <input {...register("candidateSpecialty")} type="text" placeholder="Введіть вашу спеціальність" />
-                    </div>
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Спеціальність"
+                      variant="outlined"
+                      helperText="Введіть вашу спеціальність"
+                      name="candidateSpecialty"
+                      value={candidate.candidateSpecialty}
+                      onChange={handleChange}
+                      isRequired={false}
+                    />
 
-                    <div className="input-field">
-                      <label className={errors?.candidateEnglish ? "input-label-invalid" : "input-label"}>
-                        Рівень англійської *
-                      </label>
-                      <select
-                        {...register("candidateEnglish", {
-                          required: true,
-                        })}
-                        className={errors?.candidateEnglish ? "input-field-invalid" : ""}
-                      >
-                        <option disabled selected value="">
-                          Рівень англійської
-                        </option>
-                        {englishLevels?.map((option) => (
-                          <option key={option.id} value={option.id}>
-                            {option.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <FormControlSelect
+                      label="Технології та інструменти"
+                      name="candidateTechAndTools"
+                      placeholder="Оберіть технології та інструменти"
+                      value={candidate.candidateTechAndTools}
+                      options={techAndToolsOptions}
+                      onChange={handleSelect}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className="input-label">Коротка біографія</label>
-                      <textarea {...register("candidateSummary")} placeholder="Розкажіть про себе"></textarea>
-                    </div>
+                    <FormControlSelect
+                      label="Рівень англійської"
+                      name="candidateEnglish"
+                      placeholder="Оберіть рівень англійської"
+                      value={candidate.candidateEnglish}
+                      options={englishLevels}
+                      onChange={handleSelect}
+                      isRequired={true}
+                    />
+
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Коротка біографія"
+                      variant="outlined"
+                      helperText="Розкажіть про себе"
+                      name="candidateSummary"
+                      value={candidate.candidateSummary}
+                      onChange={handleChange}
+                      isRequired={false}
+                      isTextArea={true}
+                    />
                   </div>
                 </div>
 
                 <div className="details more">
-                  <span className="title">Деталі</span>
+                  <span className="title">Робота</span>
 
                   <div className="fields">
-                    <div className="input-field">
-                      <label className={errors?.candidatePosition ? "input-label-invalid" : "input-label"}>
-                        Посада *
-                      </label>
-                      <select
-                        {...register("candidatePosition", {
-                          required: true,
-                        })}
-                        className={errors?.candidatePosition ? "input-field-invalid" : ""}
-                      >
-                        <option disabled selected value="">
-                          Посада
-                        </option>
-                        {positions?.map((option) => (
-                          <option key={option.id} value={option.id}>
-                            {option.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <FormControlSelect
+                      label="Посада"
+                      name="candidatePosition"
+                      placeholder="Оберіть бажану посаду"
+                      value={candidate.candidatePosition}
+                      options={positions}
+                      onChange={handleSelect}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className={errors?.candidateWorkExp ? "input-label-invalid" : "input-label"}>
-                        Досвід роботи *
-                      </label>
-                      <select
-                        {...register("candidateWorkExp", {
-                          required: true,
-                        })}
-                        className={errors?.candidateWorkExp ? "input-field-invalid" : ""}
-                      >
-                        <option disabled selected value="">
-                          Досвід роботи
-                        </option>
-                        {workExps?.map((option) => (
-                          <option key={option.id} value={option.id}>
-                            {option.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <FormControlSelect
+                      label="Досвід роботи"
+                      name="candidateWorkExp"
+                      placeholder="Оберіть досвід роботи"
+                      value={candidate.candidateWorkExp}
+                      options={workExps}
+                      onChange={handleSelect}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className={errors?.candidateWorkArea ? "input-label-invalid" : "input-label"}>
-                        Сфера роботи *
-                      </label>
-                      <select
-                        {...register("candidateWorkArea", {
-                          required: true,
-                        })}
-                        className={errors?.candidateWorkArea ? "input-field-invalid" : ""}
-                      >
-                        <option disabled selected value="">
-                          Сфера роботи
-                        </option>
-                        {workAreas?.map((option) => (
-                          <option key={option.id} value={option.id}>
-                            {option.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <FormControlSelect
+                      label="Область роботи"
+                      name="candidateWorkArea"
+                      placeholder="Оберіть область роботи"
+                      value={candidate.candidateWorkArea}
+                      options={workAreas}
+                      onChange={handleSelect}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className="input-label">Бажана зарплата</label>
-                      <select {...register("candidateSalary")}>
-                        <option disabled selected value="">
-                          Бажана зарплата
-                        </option>
-                        {salaries?.map((option) => (
-                          <option key={option.id} value={option.id}>
-                            {option.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <FormControlSelect
+                      label="Бажана заробітна плата"
+                      name="candidateSalary"
+                      placeholder="Оберіть заробітну плату"
+                      value={candidate.candidateSalary}
+                      options={salaries}
+                      onChange={handleSelect}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className="input-label">Інструменти та технології</label>
-                      <Select
-                        options={techAndToolsOptions}
-                        onChange={() => {}}
-                        isMulti
-                        closeMenuOnSelect={false}
-                        placeholder="Обрані інструменти та технології"
-                      />
-                    </div>
+                    <FormControlSelect
+                      label="Місце роботи"
+                      name="candidateWorkplace"
+                      placeholder="Оберіть місце роботи"
+                      value={candidate.candidateWorkplace}
+                      options={workplaces}
+                      onChange={handleSelect}
+                      isRequired={true}
+                    />
 
-                    <div className="input-field">
-                      <label className="input-label">Місце роботи</label>
-                      <select {...register("candidateWorkplace")}>
-                        <option disabled selected value="">
-                          Місце роботи
-                        </option>
-                        {workplaces?.map((option) => (
-                          <option key={option.id} value={option.id}>
-                            {option.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="input-field">
-                      <label className="input-label">Посилання на профіль</label>
-                      <input {...register("candidateLinkedin")} type="text" placeholder="Linkedin" />
-                    </div>
-
-                    <div className="input-field">
-                      <label className="input-label">Посилання на Github</label>
-                      <input {...register("candidateGithub")} type="text" placeholder="Github" />
-                    </div>
+                    <FormControlTextField
+                      id="outlined-basic"
+                      label="Профільна картинка"
+                      variant="outlined"
+                      helperText="Посилання на фото профілю"
+                      name="candidateProfilePic"
+                      value={candidate.candidateProfilePic}
+                      onChange={handleChange}
+                      isRequired={false}
+                    />
                   </div>
                 </div>
               </div>
@@ -600,13 +536,6 @@ function CandidatesPage({}: Props) {
                       <label className="input-label">Фото профілю</label>
                       <input {...register("candidateProfilePic")} type="text" placeholder="Посилання на фото профілю" />
                     </div>
-
-                    <div className="input-field">
-                      <button type="submit" className="form-button">
-                        Підтвердити
-                        <CheckmarkOutline color={"#00000"} title={"submit"} height="25px" width="25px" />
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -614,13 +543,21 @@ function CandidatesPage({}: Props) {
 
             <div className="navigation-buttons">
               {page > 0 && (
-                <button type="button" onClick={() => setPage(page - 1)} className="form-button">
-                  Назад
-                  <ArrowBackOutline color={"#00000"} title={"back"} height="25px" width="25px" />
-                </button>
+                <div>
+                  <button type="button" onClick={() => setPage(page - 1)} className="form-button">
+                    Назад
+                    <ArrowBackOutline color={"#00000"} title={"back"} height="25px" width="25px" />
+                  </button>
+                  <div className="input-field">
+                    <button type="submit" className="form-button">
+                      Підтвердити
+                      <CheckmarkOutline color={"#00000"} title={"submit"} height="25px" width="25px" />
+                    </button>
+                  </div>
+                </div>
               )}
 
-              {page < 2 && (
+              {page < 1 && (
                 <button type="button" onClick={() => setPage(page + 1)} className="form-button">
                   Далі
                   <ArrowForwardOutline color={"#00000"} title={"forward"} height="25px" width="25px" />
