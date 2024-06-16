@@ -9,7 +9,7 @@ import { salaries } from "../../helpers/salaryOptionsList";
 import { workplaces } from "../../helpers/workplaceOptionsList";
 import { SearchOutline } from "react-ionicons";
 import "./BusinessPage.css";
-import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent } from "@mui/material";
+import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Autocomplete } from "@mui/material";
 import FormControlSelect from "../../components/FormControlSelect/FormControlSelect";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 
@@ -149,6 +149,25 @@ const BusinessPage: React.FC = () => {
                   onChange={handleSelect}
                 />
 
+                <Autocomplete
+                  multiple
+                  id="tags-outlined"
+                  options={techAndToolsOptions}
+                  getOptionLabel={(option) => option.label}
+                  value={[]}
+                  filterSelectedOptions
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      sx={{ minWidth: 360 }}
+                      label="Технології та інструменти"
+                      helperText="Оберіть технології та інструменти"
+                      color="secondary"
+                      size="small"
+                    />
+                  )}
+                />
+
                 <FormControlSelect
                   label="Рівень англійської"
                   name="candidateEnglish"
@@ -209,7 +228,7 @@ const BusinessPage: React.FC = () => {
               </div>
 
               <div className="button-container">
-                <button className="sumbit form-button" type="submit" onClick={goToResults} >
+                <button className="sumbit form-button" type="submit" onClick={goToResults}>
                   Знайти
                   <SearchOutline width="20px" height="20px" color={"000000"} />
                 </button>

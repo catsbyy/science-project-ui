@@ -20,6 +20,7 @@ import {
   Select,
   SelectChangeEvent,
   TextareaAutosize,
+  Autocomplete,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -422,15 +423,17 @@ function CandidatesPage({}: Props) {
                       onChange={handleChange}
                       isRequired={false}
                     />
-
-                    <FormControlSelect
-                      label="Технології та інструменти"
-                      name="candidateTechAndTools"
-                      placeholder="Оберіть технології та інструменти"
-                      value={candidate.candidateTechAndTools}
+                    
+                    <Autocomplete
+                      multiple
+                      id="tags-outlined"
                       options={techAndToolsOptions}
-                      onChange={handleSelect}
-                      isRequired={true}
+                      getOptionLabel={(option) => option.label}
+                      value={[]}
+                      filterSelectedOptions
+                      renderInput={(params) => (
+                        <TextField {...params} sx={{ minWidth: 360 }} label="Технології та інструменти" helperText="Оберіть технології та інструменти" color="secondary" size="small" />
+                      )}
                     />
 
                     <FormControlSelect
