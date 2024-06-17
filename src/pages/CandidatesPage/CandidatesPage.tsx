@@ -58,7 +58,7 @@ interface Candidate {
   candidateEducation: string;
   candidateUniversity: string;
   candidateSpecialty?: string;
-  candidateTechAndTools?: string;
+  candidateTechAndTools: string[];
   candidateEnglish: string;
   candidateSummary?: string;
   candidatePosition: string;
@@ -116,6 +116,7 @@ function CandidatesPage({}: Props) {
     candidateWorkArea: "",
     candidateLinkedin: "",
     candidateGithub: "",
+    candidateTechAndTools: [] as string[],
   });
 
   const handleSelect = (event: SelectChangeEvent<string>) => {
@@ -131,6 +132,15 @@ function CandidatesPage({}: Props) {
   const handleDateChange = (event: Dayjs | null) => {
     const { name, value } = event.target;
     setCandidate({ ...candidate, [name]: value });
+  };
+
+  const handleTechAndToolsChange = (event: any, newValue: TechAndToolOption[]) => {
+    const values = newValue.map((option) => option.value);
+    setCandidate({ ...candidate, candidateTechAndTools: values });
+  };
+
+  const getSelectedOptions = (values: string[], options: TechAndToolOption[]) => {
+    return options.filter((option) => values.includes(option.value));
   };
 
   const addNewCandidate: SubmitHandler<Candidate> = (data) => {
@@ -280,7 +290,12 @@ function CandidatesPage({}: Props) {
                         value={candidate.candidateDateOfBirth}
                         onChange={handleDateChange}
                         slotProps={{
-                          textField: { size: "small", color: "secondary", helperText: "Оберіть дату народження" },
+                          textField: {
+                            size: "small",
+                            color: "secondary",
+                            helperText: "Оберіть дату народження",
+                            sx: { minWidth: 360 },
+                          },
                         }}
                       />
                     </LocalizationProvider>
@@ -423,16 +438,26 @@ function CandidatesPage({}: Props) {
                       onChange={handleChange}
                       isRequired={false}
                     />
-                    
+
                     <Autocomplete
                       multiple
                       id="tags-outlined"
                       options={techAndToolsOptions}
                       getOptionLabel={(option) => option.label}
-                      value={[]}
+                      value={techAndToolsOptions.filter((option) =>
+                        candidate.candidateTechAndTools.includes(option.value)
+                      )}
                       filterSelectedOptions
+                      onChange={handleTechAndToolsChange}
                       renderInput={(params) => (
-                        <TextField {...params} sx={{ minWidth: 360 }} label="Технології та інструменти" helperText="Оберіть технології та інструменти" color="secondary" size="small" />
+                        <TextField
+                          {...params}
+                          sx={{ width: 360 }}
+                          label="Технології та інструменти"
+                          helperText="Оберіть технології та інструменти"
+                          color="secondary"
+                          size="small"
+                        />
                       )}
                     />
 

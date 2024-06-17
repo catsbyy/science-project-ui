@@ -27,7 +27,7 @@ interface Candidate {
   candidateRegion: string;
   candidateCity: string;
   candidateEducation: string;
-  candidateTechAndTools: string;
+  candidateTechAndTools: string[];
   candidateEnglish: string;
   candidatePosition: string;
   candidateWorkExp: string;
@@ -37,6 +37,11 @@ interface Candidate {
 }
 
 interface SelectOption {
+  value: string;
+  label: string;
+}
+
+interface TechAndToolOption {
   value: string;
   label: string;
 }
@@ -53,7 +58,7 @@ const BusinessPage: React.FC = () => {
     candidateRegion: "",
     candidateCity: "",
     candidateEducation: "",
-    candidateTechAndTools: "",
+    candidateTechAndTools: [] as string[],
     candidateEnglish: "",
     candidatePosition: "",
     candidateWorkExp: "",
@@ -70,6 +75,11 @@ const BusinessPage: React.FC = () => {
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setCandidate({ ...candidate, [name]: value });
+  };
+
+  const handleTechAndToolsChange = (event: any, newValue: TechAndToolOption[]) => {
+    const values = newValue.map((option) => option.value);
+    setCandidate({ ...candidate, candidateTechAndTools: values });
   };
 
   useEffect(() => {
@@ -140,26 +150,18 @@ const BusinessPage: React.FC = () => {
                   onChange={handleSelect}
                 />
 
-                <FormControlSelect
-                  label="Технології та інструменти"
-                  name="candidateTechAndTools"
-                  placeholder="Оберіть технології та інструменти"
-                  value={candidate.candidateTechAndTools}
-                  options={/*techAndToolsOptions*/ []}
-                  onChange={handleSelect}
-                />
-
                 <Autocomplete
                   multiple
                   id="tags-outlined"
                   options={techAndToolsOptions}
                   getOptionLabel={(option) => option.label}
-                  value={[]}
+                  value={techAndToolsOptions.filter((option) => candidate.candidateTechAndTools.includes(option.value))}
                   filterSelectedOptions
+                  onChange={handleTechAndToolsChange}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      sx={{ minWidth: 360 }}
+                      sx={{ width: 360 }}
                       label="Технології та інструменти"
                       helperText="Оберіть технології та інструменти"
                       color="secondary"
