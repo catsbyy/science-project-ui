@@ -1,13 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { education } from "../../helpers/educationOptionsList";
-import { englishLevels } from "../../helpers/englishLevelsList";
-import { positions } from "../../helpers/positionOptionsList";
-import { workExps } from "../../helpers/workExpOptionsList";
-import { workAreas } from "../../helpers/workAreaOptionsList";
-import { salaries } from "../../helpers/salaryOptionsList";
-import { workplaces } from "../../helpers/workplaceOptionsList";
 import { inputRegex } from "../../helpers/inputRegex";
 import { emailRegex } from "../../helpers/emailRegex";
 import { linkRegex } from "../../helpers/linkRegex";
@@ -28,53 +21,29 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import FormControlSelect from "../../components/FormControlSelect/FormControlSelect";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
+/* types */
+import { Response } from "../../types/Response";
+import { Option } from "../../types/Option";
+import { Candidate } from "../../types/Candidate";
 
-import { ArrowForwardOutline } from "react-ionicons";
-import { ArrowBackOutline } from "react-ionicons";
-import { CheckmarkOutline } from "react-ionicons";
+import { ArrowForwardOutline, ArrowBackOutline, CheckmarkOutline } from "react-ionicons";
 
 import warning from "../../img/icons/warning.svg";
 
 interface Props {}
 
-interface TechAndToolOption {
-  value: string;
-  label: string;
-}
-
-interface Candidate {
-  candidateSurname: string;
-  candidateName: string;
-  candidatePatronymic: string;
-  candidateDateOfBirth: Dayjs | null;
-  candidateMobNumber: string;
-  candidateEmail: string;
-  candidateRegion: string;
-  candidateCity: string;
-  candidateStreet: string;
-  candidateHouseNum: string;
-  candidateLinkedin?: string;
-  candidateGithub?: string;
-  candidateEducation: string;
-  candidateUniversity: string;
-  candidateSpecialty?: string;
-  candidateTechAndTools: string[];
-  candidateEnglish: string;
-  candidateSummary?: string;
-  candidatePosition: string;
-  candidateWorkExp: string;
-  candidateWorkArea: string;
-  candidateSalary?: string;
-  candidateWorkplace?: string;
-  candidateProfilePic?: string;
-}
-interface Option {
-  value: string;
-  label: string;
-}
-
 function CandidatesPage({}: Props) {
-  const [response, setResponse] = useState<{ regions: any[]; techAndTools: any[] }>({ regions: [], techAndTools: [] });
+  const [response, setResponse] = useState<Response>({
+    regions: [],
+    techAndTools: [],
+    english: [],
+    education: [],
+    position: [],
+    salary: [],
+    workArea: [],
+    workExp: [],
+    workplace: [],
+  });
   //const [selectedTechAndToolsOptions, setSelectedTechAndToolsOptions] = useState<MultiValue<TechAndToolOption>>();
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
@@ -86,10 +55,14 @@ function CandidatesPage({}: Props) {
       .then((response) => setResponse(response));
   }, []);
 
-  const techAndToolsOptions: TechAndToolOption[] = response.techAndTools.map((techAndTool) => ({
-    value: `${techAndTool.id}`,
-    label: `${techAndTool.name}`,
-  }));
+  console.log(response);
+
+  const techAndToolsOptions: Option[] = response.techAndTools
+    ? response.techAndTools.map((techAndTool) => ({
+        id: techAndTool.id,
+        name: techAndTool.name,
+      }))
+    : [];
 
   const {
     register,
@@ -116,7 +89,7 @@ function CandidatesPage({}: Props) {
     candidateWorkArea: "",
     candidateLinkedin: "",
     candidateGithub: "",
-    candidateTechAndTools: [] as string[],
+    candidateTechAndTools: [] as number[],
   });
 
   const handleSelect = (event: SelectChangeEvent<string>) => {
@@ -129,18 +102,15 @@ function CandidatesPage({}: Props) {
     setCandidate({ ...candidate, [name]: value });
   };
 
-  const handleDateChange = (event: Dayjs | null) => {
-    const { name, value } = event.target;
-    setCandidate({ ...candidate, [name]: value });
+  const handleDateChange = (date: Dayjs | null) => {
+    if (date !== null) {
+      setCandidate({ ...candidate, candidateDateOfBirth: date });
+    }
   };
 
-  const handleTechAndToolsChange = (event: any, newValue: TechAndToolOption[]) => {
-    const values = newValue.map((option) => option.value);
-    setCandidate({ ...candidate, candidateTechAndTools: values });
-  };
-
-  const getSelectedOptions = (values: string[], options: TechAndToolOption[]) => {
-    return options.filter((option) => values.includes(option.value));
+  const handleTechAndToolsChange = (event: any, newValue: Option[]) => {
+    const ids = newValue.map((option) => option.id);
+    setCandidate({ ...candidate, candidateTechAndTools: ids });
   };
 
   const addNewCandidate: SubmitHandler<Candidate> = (data) => {
@@ -336,6 +306,7 @@ function CandidatesPage({}: Props) {
                       placeholder="Оберіть область"
                       value={candidate.candidateRegion}
                       options={response.regions}
+                      displayKey="region_name"
                       onChange={handleSelect}
                     />
 
@@ -380,7 +351,7 @@ function CandidatesPage({}: Props) {
                       variant="outlined"
                       helperText="Посилання на профіль"
                       name="candidateLinkedin"
-                      value={candidate.candidateLinkedin}
+                      value={candidate.candidateLinkedin || ""}
                       onChange={handleChange}
                       isRequired={false}
                     />
@@ -391,7 +362,7 @@ function CandidatesPage({}: Props) {
                       variant="outlined"
                       helperText="Посилання на профіль"
                       name="candidateGithub"
-                      value={candidate.candidateGithub}
+                      value={candidate.candidateGithub || ""}
                       onChange={handleChange}
                       isRequired={false}
                     />
@@ -411,7 +382,8 @@ function CandidatesPage({}: Props) {
                       name="candidateEducation"
                       placeholder="Оберіть освіту"
                       value={candidate.candidateEducation}
-                      options={education}
+                      options={response.education}
+                      displayKey="education_level"
                       onChange={handleSelect}
                       isRequired={true}
                     />
@@ -434,7 +406,7 @@ function CandidatesPage({}: Props) {
                       variant="outlined"
                       helperText="Введіть вашу спеціальність"
                       name="candidateSpecialty"
-                      value={candidate.candidateSpecialty}
+                      value={candidate.candidateSpecialty || ""}
                       onChange={handleChange}
                       isRequired={false}
                     />
@@ -443,11 +415,10 @@ function CandidatesPage({}: Props) {
                       multiple
                       id="tags-outlined"
                       options={techAndToolsOptions}
-                      getOptionLabel={(option) => option.label}
+                      getOptionLabel={(option) => option.name}
                       value={techAndToolsOptions.filter((option) =>
-                        candidate.candidateTechAndTools.includes(option.value)
+                        candidate.candidateTechAndTools.includes(option.id)
                       )}
-                      filterSelectedOptions
                       onChange={handleTechAndToolsChange}
                       renderInput={(params) => (
                         <TextField
@@ -466,7 +437,8 @@ function CandidatesPage({}: Props) {
                       name="candidateEnglish"
                       placeholder="Оберіть рівень англійської"
                       value={candidate.candidateEnglish}
-                      options={englishLevels}
+                      options={response.english}
+                      displayKey="english_level"
                       onChange={handleSelect}
                       isRequired={true}
                     />
@@ -494,7 +466,8 @@ function CandidatesPage({}: Props) {
                       name="candidatePosition"
                       placeholder="Оберіть бажану посаду"
                       value={candidate.candidatePosition}
-                      options={positions}
+                      options={response.position}
+                      displayKey="position"
                       onChange={handleSelect}
                       isRequired={true}
                     />
@@ -504,7 +477,8 @@ function CandidatesPage({}: Props) {
                       name="candidateWorkExp"
                       placeholder="Оберіть досвід роботи"
                       value={candidate.candidateWorkExp}
-                      options={workExps}
+                      options={response.workExp}
+                      displayKey="work_experience"
                       onChange={handleSelect}
                       isRequired={true}
                     />
@@ -514,7 +488,8 @@ function CandidatesPage({}: Props) {
                       name="candidateWorkArea"
                       placeholder="Оберіть область роботи"
                       value={candidate.candidateWorkArea}
-                      options={workAreas}
+                      options={response.workArea}
+                      displayKey="work_area"
                       onChange={handleSelect}
                       isRequired={true}
                     />
@@ -523,8 +498,9 @@ function CandidatesPage({}: Props) {
                       label="Бажана заробітна плата"
                       name="candidateSalary"
                       placeholder="Оберіть заробітну плату"
-                      value={candidate.candidateSalary}
-                      options={salaries}
+                      value={candidate.candidateSalary || ""}
+                      options={response.salary}
+                      displayKey="salary"
                       onChange={handleSelect}
                       isRequired={true}
                     />
@@ -533,8 +509,9 @@ function CandidatesPage({}: Props) {
                       label="Місце роботи"
                       name="candidateWorkplace"
                       placeholder="Оберіть місце роботи"
-                      value={candidate.candidateWorkplace}
-                      options={workplaces}
+                      value={candidate.candidateWorkplace || ""}
+                      options={response.workplace}
+                      displayKey="workplace"
                       onChange={handleSelect}
                       isRequired={true}
                     />
@@ -545,7 +522,7 @@ function CandidatesPage({}: Props) {
                       variant="outlined"
                       helperText="Посилання на фото профілю"
                       name="candidateProfilePic"
-                      value={candidate.candidateProfilePic}
+                      value={candidate.candidateProfilePic || ""}
                       onChange={handleChange}
                       isRequired={false}
                     />

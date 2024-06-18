@@ -1,18 +1,21 @@
 import React from "react";
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-
-interface SelectOption {
-  id: string | number;
-  name?: string; // Make this optional
-  region_name?: string; // Make this optional
-}
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+import { Option } from "../../types/Option";
 
 interface FormControlSelectProps {
   label: string;
   placeholder?: string;
   name: string;
   value: string;
-  options: SelectOption[];
+  options: Option[];
+  displayKey: string;
   onChange: (event: SelectChangeEvent<string>) => void;
   isRequired?: boolean;
 }
@@ -23,8 +26,9 @@ const FormControlSelect: React.FC<FormControlSelectProps> = ({
   name,
   value,
   options,
+  displayKey,
   onChange,
-  isRequired = false
+  isRequired = false,
 }) => {
   return (
     <div>
@@ -46,11 +50,12 @@ const FormControlSelect: React.FC<FormControlSelectProps> = ({
           <MenuItem value="">
             <em>{placeholder || "Select an option"}</em>
           </MenuItem>
-          {options.map((option) => (
-            <MenuItem key={option.id} value={option.id}>
-              {option.name || option.region_name}
-            </MenuItem>
-          ))}
+          {options &&
+            options.map((option) => (
+              <MenuItem key={option.id} value={option.id}>
+                {option[displayKey]}
+              </MenuItem>
+            ))}
         </Select>
         <FormHelperText>{placeholder}</FormHelperText>
       </FormControl>

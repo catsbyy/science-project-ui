@@ -12,53 +12,31 @@ import "./BusinessPage.css";
 import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Autocomplete } from "@mui/material";
 import FormControlSelect from "../../components/FormControlSelect/FormControlSelect";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
-
-interface TechAndToolsOption {
-  id: string;
-  name: string;
-}
-
-interface Region {
-  id: string;
-  region_name: string;
-}
-
-interface Candidate {
-  candidateRegion: string;
-  candidateCity: string;
-  candidateEducation: string;
-  candidateTechAndTools: string[];
-  candidateEnglish: string;
-  candidatePosition: string;
-  candidateWorkExp: string;
-  candidateWorkArea: string;
-  candidateSalary: string;
-  candidateWorkplace: string;
-}
-
-interface SelectOption {
-  value: string;
-  label: string;
-}
-
-interface TechAndToolOption {
-  value: string;
-  label: string;
-}
+/* types */
+import { Response } from "../../types/Response";
+import { Option } from "../../types/Option";
+import { BusinessCandidate } from "../../types/BusinessCandidate.ts";
 
 const BusinessPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const [response, setResponse] = useState<{ regions: Region[]; techAndTools: TechAndToolsOption[] }>({
+  const [response, setResponse] = useState<Response>({
     regions: [],
     techAndTools: [],
+    english: [],
+    education: [],
+    position: [],
+    salary: [],
+    workArea: [],
+    workExp: [],
+    workplace: [],
   });
 
-  const [candidate, setCandidate] = useState<Candidate>({
+  const [candidate, setCandidate] = useState<BusinessCandidate>({
     candidateRegion: "",
     candidateCity: "",
     candidateEducation: "",
-    candidateTechAndTools: [] as string[],
+    candidateTechAndTools: [] as number[],
     candidateEnglish: "",
     candidatePosition: "",
     candidateWorkExp: "",
@@ -77,9 +55,9 @@ const BusinessPage: React.FC = () => {
     setCandidate({ ...candidate, [name]: value });
   };
 
-  const handleTechAndToolsChange = (event: any, newValue: TechAndToolOption[]) => {
-    const values = newValue.map((option) => option.value);
-    setCandidate({ ...candidate, candidateTechAndTools: values });
+  const handleTechAndToolsChange = (event: any, newValue: Option[]) => {
+    const ids = newValue.map((option) => option.id);
+    setCandidate({ ...candidate, candidateTechAndTools: ids });
   };
 
   useEffect(() => {
@@ -88,20 +66,36 @@ const BusinessPage: React.FC = () => {
       .then((response) => setResponse(response));
   }, []);
 
-  const techAndToolsOptions: SelectOption[] = response.techAndTools.map((techAndTool) => ({
-    value: `${techAndTool.id}`,
-    label: `${techAndTool.name}`,
-  }));
+  const techAndToolsOptions: Option[] = response.techAndTools
+    ? response.techAndTools.map((techAndTool) => ({
+        id: techAndTool.id,
+        name: techAndTool.name,
+      }))
+    : [];
 
   console.log(response.regions);
 
-  const goToResults = () => {
-    navigate({
-      pathname: "/results",
-      search: `?${createSearchParams(
-        Object.fromEntries(Object.entries(candidate).filter(([key, value]) => value !== ""))
-      )}`,
-    });
+  const goToResults = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    // Filter out properties with empty values
+    const queryParams: Record<string, string | string[]> = Object.fromEntries(
+      Object.entries(candidate).filter(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value.length > 0; // Filter out empty arrays
+        }
+        return value !== ""; // Filter out empty strings
+      })
+    );
+  
+    // Convert candidateTechAndTools to comma-separated string
+    if (queryParams.candidateTechAndTools) {
+      queryParams.candidateTechAndTools = queryParams.candidateTechAndTools.join(";");
+    }
+  
+    const searchParams = new URLSearchParams(queryParams).toString();
+  
+    navigate(`/results?${searchParams}`);
   };
 
   const searchCandidates = (e: FormEvent) => {
@@ -128,7 +122,8 @@ const BusinessPage: React.FC = () => {
                   name="candidatePosition"
                   placeholder="Оберіть необхідну посаду"
                   value={candidate.candidatePosition}
-                  options={positions}
+                  options={response.position}
+                  displayKey="position"
                   onChange={handleSelect}
                 />
 
@@ -137,7 +132,8 @@ const BusinessPage: React.FC = () => {
                   name="candidateWorkArea"
                   placeholder="Оберіть область роботи"
                   value={candidate.candidateWorkArea}
-                  options={workAreas}
+                  options={response.workArea}
+                  displayKey="work_area"
                   onChange={handleSelect}
                 />
 
@@ -146,7 +142,8 @@ const BusinessPage: React.FC = () => {
                   name="candidateWorkExp"
                   placeholder="Оберіть досвід роботи"
                   value={candidate.candidateWorkExp}
-                  options={workExps}
+                  options={response.workExp}
+                  displayKey="work_experience"
                   onChange={handleSelect}
                 />
 
@@ -154,9 +151,8 @@ const BusinessPage: React.FC = () => {
                   multiple
                   id="tags-outlined"
                   options={techAndToolsOptions}
-                  getOptionLabel={(option) => option.label}
-                  value={techAndToolsOptions.filter((option) => candidate.candidateTechAndTools.includes(option.value))}
-                  filterSelectedOptions
+                  getOptionLabel={(option) => option.name}
+                  value={techAndToolsOptions.filter((option) => candidate.candidateTechAndTools.includes(option.id))}
                   onChange={handleTechAndToolsChange}
                   renderInput={(params) => (
                     <TextField
@@ -175,7 +171,8 @@ const BusinessPage: React.FC = () => {
                   name="candidateEnglish"
                   placeholder="Оберіть рівень англійської"
                   value={candidate.candidateEnglish}
-                  options={englishLevels}
+                  options={response.english}
+                  displayKey="english_level"
                   onChange={handleSelect}
                 />
 
@@ -184,7 +181,8 @@ const BusinessPage: React.FC = () => {
                   name="candidateEducation"
                   placeholder="Оберіть рівень освіти"
                   value={candidate.candidateEducation}
-                  options={education}
+                  options={response.education}
+                  displayKey="education_level"
                   onChange={handleSelect}
                 />
               </div>
@@ -197,6 +195,7 @@ const BusinessPage: React.FC = () => {
                   placeholder="Оберіть вашу область"
                   value={candidate.candidateRegion}
                   options={response.regions}
+                  displayKey="region_name"
                   onChange={handleSelect}
                 />
 
@@ -215,7 +214,8 @@ const BusinessPage: React.FC = () => {
                   name="candidateWorkplace"
                   placeholder="Оберіть місце роботи"
                   value={candidate.candidateWorkplace}
-                  options={workplaces}
+                  options={response.workplace}
+                  displayKey="workplace"
                   onChange={handleSelect}
                 />
 
@@ -224,7 +224,8 @@ const BusinessPage: React.FC = () => {
                   name="candidateSalary"
                   placeholder="Оберіть заробітну плату ($)"
                   value={candidate.candidateSalary}
-                  options={salaries}
+                  options={response.salary}
+                  displayKey="salary"
                   onChange={handleSelect}
                 />
               </div>
