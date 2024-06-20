@@ -14,7 +14,6 @@ import { Candidate } from "../../types/Candidate.ts";
   }
 
 const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) => {
-  console.log("candidate" + candidate);
   const mobileNumber = "tel:" + candidate.candidateMobNumber;
   const email = "mailto:" + candidate.candidateEmail;
   const englishIndex = Number(candidate.candidateEnglish) - 1;

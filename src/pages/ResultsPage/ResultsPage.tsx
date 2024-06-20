@@ -34,7 +34,6 @@ const Results: React.FC = () => {
         const data = await response.json();
         const mappedCandidates = data.candidates.map(mapApiResponseToCandidate);
         setCandidates(mappedCandidates);
-        console.log("BLUAT: ", candidates);
       } catch (error) {
         console.error("Failed to fetch candidates:", error);
       }

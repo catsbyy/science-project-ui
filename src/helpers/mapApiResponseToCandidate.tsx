@@ -19,7 +19,7 @@ const mapApiResponseToCandidate = (apiCandidate: any): Candidate => {
     candidateEducation: apiCandidate.education_level_id,
     candidateUniversity: apiCandidate.university,
     candidateSpecialty: apiCandidate.specialty,
-    candidateTechAndTools: apiCandidate.technologies_and_tools,
+    candidateTechAndTools: apiCandidate.technologies_and_tools.split(',').map(Number),
     //candidateTechAndTools: apiCandidate.technologies_and_tools.split(',').map(Number),
     candidateEnglish: apiCandidate.english_level_id,
     candidateSummary: apiCandidate.summary,
