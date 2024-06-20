@@ -24,6 +24,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) =>
   const workExpIndex = Number(candidate.candidateWorkExp) - 1;
   const workExperience = metaData.workExp[workExpIndex] ? metaData.workExp[workExpIndex].work_experience : "Unknown";
 
+  const workAreaIndex = Number(candidate.candidateWorkArea) - 1;
+  const workArea = metaData.workArea[workAreaIndex] ? metaData.workArea[workAreaIndex].work_area : "Unknown";
+
   const candidateTechAndTools = Array.isArray(candidate.candidateTechAndTools) ? candidate.candidateTechAndTools : [];
   const techAndToolsNames = metaData.techAndTools.filter((item) => candidateTechAndTools.includes(item.id));
 
@@ -61,9 +64,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) =>
           <h3 className="name">
             {candidate.candidateName} {candidate.candidateSurname}
           </h3>
-          <h4 className="position">{metaData.position[Number(candidate.candidatePosition) - 1]?.position}</h4>
+          <h4 className="position">{metaData.position[Number(candidate.candidatePosition) - 1].position}</h4>
           <p className="info">
-            &#128187; {workExperience} / &#128188; {workExp} /{" "}
+            &#128187; {workArea} / &#128188; {workExp} /{" "}
             <ReactCountryFlag countryCode="GB" svg /> {englishLevel}
           </p>
         </div>
