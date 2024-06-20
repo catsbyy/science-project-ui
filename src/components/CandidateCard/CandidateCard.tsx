@@ -21,6 +21,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) =>
   const englishLevel = metaData.english[englishIndex] ? metaData.english[englishIndex].english_level.split(" - ")[1] : "Unknown";
   //.split(" - ")[1];
 
+  const positionIndex = Number(candidate.candidatePosition) - 1;
+  const position = metaData.position[positionIndex] ? metaData.position[positionIndex].position : "Unknown";
+
   const workExpIndex = Number(candidate.candidateWorkExp) - 1;
   const workExperience = metaData.workExp[workExpIndex] ? metaData.workExp[workExpIndex].work_experience : "Unknown";
 
@@ -64,7 +67,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) =>
           <h3 className="name">
             {candidate.candidateName} {candidate.candidateSurname}
           </h3>
-          <h4 className="position">{metaData.position[Number(candidate.candidatePosition) - 1].position}</h4>
+          <h4 className="position">{position}</h4>
           <p className="info">
             &#128187; {workArea} / &#128188; {workExp} /{" "}
             <ReactCountryFlag countryCode="GB" svg /> {englishLevel}
