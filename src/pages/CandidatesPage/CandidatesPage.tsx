@@ -71,6 +71,7 @@ function CandidatesPage({}: Props) {
   } = useForm<Candidate>({ mode: "all" });
 
   const [candidate, setCandidate] = useState<Candidate>({
+    candidateId: null,
     candidateSurname: "",
     candidateName: "",
     candidatePatronymic: "",
@@ -113,22 +114,22 @@ function CandidatesPage({}: Props) {
     setCandidate({ ...candidate, candidateTechAndTools: ids });
   };
 
-  const addNewCandidate: SubmitHandler<Candidate> = (data) => {
-    console.log(data);
-    const candidate: Candidate = {
-      ...data,
-      //candidateTechAndTools: selectedTechAndToolsOptions?.map((option: Option) => option.value).join(";"),
-      candidateWorkplace: data.candidateWorkplace || "3",
+  const addNewCandidate = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(candidate);
+    const newCandidate: Candidate = {
+      ...candidate,
+      candidateWorkplace: candidate.candidateWorkplace || "3",
       candidateProfilePic:
-        data.candidateProfilePic ||
+        candidate.candidateProfilePic ||
         "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png",
     };
 
-    if (!isDataInvalid(candidate)) {
-      console.log(candidate);
+    if (true) {
+      console.log(newCandidate);
       fetch("/api/candidates/add-candidate", {
         method: "POST",
-        body: JSON.stringify(candidate),
+        body: JSON.stringify(newCandidate),
         headers: {
           "Content-Type": "application/json",
         },
@@ -216,7 +217,7 @@ function CandidatesPage({}: Props) {
         <div className="container">
           <header>Анкета кандидата</header>
 
-          <form name="registrationForm" method="post" onSubmit={handleSubmit(addNewCandidate)}>
+          <form name="registrationForm" method="post" onSubmit={addNewCandidate}>
             {page === 0 && (
               <div className="form first">
                 <div className="details personal">

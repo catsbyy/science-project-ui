@@ -1,60 +1,34 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import ReactCountryFlag from "react-country-flag";
-import { education } from "../../helpers/educationOptionsList";
-import { englishLevels } from "../../helpers/englishLevelsList";
-import { positions } from "../../helpers/positionOptionsList";
-import { workExps } from "../../helpers/workExpOptionsList";
-import { workAreas } from "../../helpers/workAreaOptionsList";
-import { salaries } from "../../helpers/salaryOptionsList";
-import { workplaces } from "../../helpers/workplaceOptionsList";
 import "./CandidateCard.css";
+/* types */
+import { Response } from "../../types/Response";
+import { Option } from "../../types/Option";
+import { Candidate } from "../../types/Candidate.ts";
 
-// interfaces.ts
-export interface Candidate {
-    id: number;
-    name: string;
-    surname: string;
-    profile_picture: string;
-    position_id: number;
-    work_area_id: number;
-    work_experience_id: number;
-    english_level_id: number;
-    summary: string;
-    technologies_and_tools: string;
-    mobile_number: string;
-    email: string;
-    github: string;
-    linkedin: string;
-  }
-  
-  export interface TechAndTool {
-    id: number;
-    name: string;
-  }
   
   export interface CandidateCardProps {
     candidate: Candidate;
-    techAndToolsData: TechAndTool[];
+    metaData: Response;
   }
 
-const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, techAndToolsData }) => {
-  const mobileNumber = "tel:" + candidate.mobile_number;
-  const email = "mailto:" + candidate.email;
-  const englishLevel = englishLevels[candidate.english_level_id - 1].name.split(" - ")[1];
+const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) => {
+  console.log("candidate" + candidate);
+  const mobileNumber = "tel:" + candidate.candidateMobNumber;
+  const email = "mailto:" + candidate.candidateEmail;
+  const englishIndex = Number(candidate.candidateEnglish) - 1;
+  const englishLevel = metaData.english[englishIndex] ? metaData.english[englishIndex].english_level : "Unknown";
+  //.split(" - ")[1];
 
-  let techAndToolsIds: number[] = [];
-  if (candidate.technologies_and_tools) {
-    techAndToolsIds = candidate.technologies_and_tools
-      .split(",")
-      .filter((el) => el !== "")
-      .map(Number);
-  }
+  const workExpIndex = Number(candidate.candidateWorkExp) - 1;
+  const workExperience = metaData.workExp[workExpIndex] ? metaData.workExp[workExpIndex].work_experience : "Unknown";
 
-  const techAndToolsNames = techAndToolsData.filter((item) => techAndToolsIds.includes(item.id));
+  const candidateTechAndTools = Array.isArray(candidate.candidateTechAndTools) ? candidate.candidateTechAndTools : [];
+  const techAndToolsNames = metaData.techAndTools.filter((item) => candidateTechAndTools.includes(item.id));
 
-  const candidateWorkExpId = candidate.work_experience_id - 1;
-  let workExp = workExps[candidateWorkExpId].name;
+  const candidateWorkExpId = Number(candidate.candidateWorkExp) - 1;
+  let workExp = workExperience;
   switch (candidateWorkExpId) {
     case 0:
       workExp = "без досвіду";
@@ -79,22 +53,22 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, techAndToolsDa
 
   return (
     <div className="result-card">
-      <NavLink to={`/candidate/${candidate.id}`} className="result-card-link">
+      <NavLink to={`/candidate/${candidate.candidateId}`} className="result-card-link">
         <div className="picture">
-          <img className="img-fluid" src={candidate.profile_picture} alt={`${candidate.name} ${candidate.surname}`} />
+          <img className="img-fluid" src={candidate.candidateProfilePic} alt={`${candidate.candidateName} ${candidate.candidateSurname}`} />
         </div>
         <div className="result-content">
           <h3 className="name">
-            {candidate.name} {candidate.surname}
+            {candidate.candidateName} {candidate.candidateSurname}
           </h3>
-          <h4 className="position">{positions[candidate.position_id - 1].name}</h4>
+          <h4 className="position">{metaData.position[Number(candidate.candidatePosition) - 1]?.position}</h4>
           <p className="info">
-            &#128187; {workAreas[candidate.work_area_id - 1].name} / &#128188; {workExp} /{" "}
+            &#128187; {workExperience} / &#128188; {workExp} /{" "}
             <ReactCountryFlag countryCode="GB" svg /> {englishLevel}
           </p>
         </div>
         <br />
-        <p className="result-summary">{candidate.summary}</p>
+        <p className="result-summary">{candidate.candidateSummary}</p>
         <ul className="skills-section">
           {techAndToolsNames.map((techAndTool) => (
             <li key={techAndTool.id}>{techAndTool.name}</li>
@@ -109,10 +83,10 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, techAndToolsDa
           <a href={email} className="fa fa-envelope" aria-hidden="true"></a>
         </li>
         <li>
-          <a href={candidate.github} className="fa fa-github" aria-hidden="true"></a>
+          <a href={candidate.candidateGithub} className="fa fa-github" aria-hidden="true"></a>
         </li>
         <li>
-          <a href={candidate.linkedin} className="fa fa-linkedin" aria-hidden="true"></a>
+          <a href={candidate.candidateLinkedin} className="fa fa-linkedin" aria-hidden="true"></a>
         </li>
       </ul>
     </div>

@@ -1,6 +1,7 @@
 import { Dayjs } from 'dayjs';
 
 export interface Candidate {
+  candidateId?: number | null;
   candidateSurname: string;
   candidateName: string;
   candidatePatronymic: string;
