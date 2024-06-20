@@ -18,7 +18,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) =>
   const mobileNumber = "tel:" + candidate.candidateMobNumber;
   const email = "mailto:" + candidate.candidateEmail;
   const englishIndex = Number(candidate.candidateEnglish) - 1;
-  const englishLevel = metaData.english[englishIndex] ? metaData.english[englishIndex].english_level : "Unknown";
+  const englishLevel = metaData.english[englishIndex] ? metaData.english[englishIndex].english_level.split(" - ")[1] : "Unknown";
   //.split(" - ")[1];
 
   const workExpIndex = Number(candidate.candidateWorkExp) - 1;
