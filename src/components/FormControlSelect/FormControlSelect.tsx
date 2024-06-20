@@ -4,9 +4,9 @@ import {
   FormHelperText,
   InputLabel,
   MenuItem,
-  Select,
-  SelectChangeEvent,
+  Select
 } from "@mui/material";
+import { SelectChangeEvent } from "@mui/material/Select";
 import { Option } from "../../types/Option";
 
 interface FormControlSelectProps {

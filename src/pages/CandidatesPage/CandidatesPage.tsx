@@ -114,6 +114,7 @@ function CandidatesPage({}: Props) {
   };
 
   const addNewCandidate: SubmitHandler<Candidate> = (data) => {
+    console.log(data);
     const candidate: Candidate = {
       ...data,
       //candidateTechAndTools: selectedTechAndToolsOptions?.map((option: Option) => option.value).join(";"),
@@ -124,7 +125,8 @@ function CandidatesPage({}: Props) {
     };
 
     if (!isDataInvalid(candidate)) {
-      fetch("/candidates", {
+      console.log(candidate);
+      fetch("/api/candidates/add-candidate", {
         method: "POST",
         body: JSON.stringify(candidate),
         headers: {
@@ -308,6 +310,7 @@ function CandidatesPage({}: Props) {
                       options={response.regions}
                       displayKey="region_name"
                       onChange={handleSelect}
+                      isRequired={true}
                     />
 
                     <FormControlTextField
