@@ -225,7 +225,7 @@ function CandidatesPage({}: Props) {
 
                   <div className="fields">
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-surname"
                       label="Прізвище"
                       variant="outlined"
                       helperText="Введіть ваше прізвище"
@@ -236,7 +236,7 @@ function CandidatesPage({}: Props) {
                     />
 
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-name"
                       label="Ім'я"
                       variant="outlined"
                       helperText="Введіть ваше ім'я"
@@ -247,7 +247,7 @@ function CandidatesPage({}: Props) {
                     />
 
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-patronymic"
                       label="По-батькові"
                       variant="outlined"
                       helperText="Введіть ваше по-батькові"
@@ -275,7 +275,7 @@ function CandidatesPage({}: Props) {
 
                     {/*regex*/}
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-phone-number"
                       label="Мобільний номер"
                       variant="outlined"
                       helperText="Введіть мобільний номер"
@@ -287,7 +287,7 @@ function CandidatesPage({}: Props) {
 
                     {/*regex*/}
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-email"
                       label="Електронна пошта"
                       variant="outlined"
                       helperText="Введіть електронну пошту"
@@ -315,7 +315,7 @@ function CandidatesPage({}: Props) {
                     />
 
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-city"
                       label="Місто"
                       variant="outlined"
                       helperText="Введіть ваше місто"
@@ -327,7 +327,7 @@ function CandidatesPage({}: Props) {
 
                     {/*regex inputRegex*/}
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-street"
                       label="Вулиця"
                       variant="outlined"
                       helperText="Введіть вашу вулицю"
@@ -339,7 +339,7 @@ function CandidatesPage({}: Props) {
 
                     {/*regex inputRegex*/}
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-house"
                       label="Номер будинку"
                       variant="outlined"
                       helperText="Введіть номер будинку"
@@ -350,7 +350,7 @@ function CandidatesPage({}: Props) {
                     />
 
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-linkedin"
                       label="Linkedin"
                       variant="outlined"
                       helperText="Посилання на профіль"
@@ -361,7 +361,7 @@ function CandidatesPage({}: Props) {
                     />
 
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-github"
                       label="Github"
                       variant="outlined"
                       helperText="Посилання на профіль"
@@ -394,7 +394,7 @@ function CandidatesPage({}: Props) {
 
                     {/*regex input..*/}
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-university"
                       label="Навчальний заклад"
                       variant="outlined"
                       helperText="Введіть ваш навчальний заклад"
@@ -405,7 +405,7 @@ function CandidatesPage({}: Props) {
                     />
 
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-specialty"
                       label="Спеціальність"
                       variant="outlined"
                       helperText="Введіть вашу спеціальність"
@@ -417,7 +417,7 @@ function CandidatesPage({}: Props) {
 
                     <Autocomplete
                       multiple
-                      id="tags-outlined"
+                      id="candidate-technologies"
                       options={techAndToolsOptions}
                       getOptionLabel={(option) => option.name}
                       value={techAndToolsOptions.filter((option) =>
@@ -448,7 +448,7 @@ function CandidatesPage({}: Props) {
                     />
 
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-summary"
                       label="Коротка біографія"
                       variant="outlined"
                       helperText="Розкажіть про себе"
@@ -521,7 +521,7 @@ function CandidatesPage({}: Props) {
                     />
 
                     <FormControlTextField
-                      id="outlined-basic"
+                      id="candidate-profile"
                       label="Профільна картинка"
                       variant="outlined"
                       helperText="Посилання на фото профілю"

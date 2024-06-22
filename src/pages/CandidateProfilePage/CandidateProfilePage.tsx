@@ -2,115 +2,82 @@ import React, { useState, useEffect } from "react";
 import { useParams, NavLink } from "react-router-dom";
 import ReactCountryFlag from "react-country-flag";
 import moment from "moment/moment";
-import { education } from "../../helpers/educationOptionsList";
-import { englishLevels } from "../../helpers/englishLevelsList";
-import { positions } from "../../helpers/positionOptionsList";
-import { workExps } from "../../helpers/workExpOptionsList";
-import { workAreas } from "../../helpers/workAreaOptionsList";
-import { salaries } from "../../helpers/salaryOptionsList";
-import { workplaces } from "../../helpers/workplaceOptionsList";
 import { LogoLinkedin } from "react-ionicons";
 import { LogoGithub } from "react-ionicons";
 import { LocationOutline, MailOutline, PhonePortraitOutline, CalendarOutline } from "react-ionicons";
 import "./CandidateProfilePage.css";
-
-interface Candidate {
-  id: number;
-  name: string;
-  surname: string;
-  profile_picture: string;
-  date_of_birth: string;
-  city: string;
-  region_id: number;
-  english_level_id: number;
-  education_level_id: number;
-  position_id: number;
-  work_area_id: number;
-  work_experience_id: number;
-  salary_id: number;
-  summary: string;
-  university: string;
-  specialty: string;
-  technologies_and_tools: string;
-  email: string;
-  mobile_number: string;
-  linkedin: string;
-  github: string;
-  workplace_id: number;
-}
-
-interface ResponseData {
-  regions: { id: number; region_name: string }[];
-  techAndTools: { id: number; name: string }[];
-}
+/* types */
+import { Response } from "../../types/Response";
+import { Candidate } from "../../types/Candidate.ts";
+import { mapApiResponseToCandidate } from "../../helpers/mapApiResponseToCandidate.tsx";
+import {
+  getMetaDataValue,
+  getEnglishLevel,
+  getEducationLevel,
+  getWorkplace,
+  getSalary,
+  getBirthday,
+  getRegion,
+  getWorkExperience,
+  getTechAndToolsNames,
+} from "../../helpers/getMetaDataValue.tsx";
 
 const CandidateProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [candidate, setCandidate] = useState<Candidate | null>(null);
-  const [response, setResponse] = useState<ResponseData | null>(null);
+  const [response, setResponse] = useState<Response>({
+    regions: [],
+    techAndTools: [],
+    english: [],
+    education: [],
+    position: [],
+    salary: [],
+    workArea: [],
+    workExp: [],
+    workplace: [],
+  });
 
   useEffect(() => {
-    fetch(`/api/business/get-candidate-details/${id}`)
-      .then((response) => response.json())
-      .then((data) => setCandidate(data.candidate[0]));
+    const fetchCandidateDetails = async () => {
+      try {
+        const response = await fetch(`/api/business/get-candidate-details/${id}`);
+        const data = await response.json();
+        setCandidate(mapApiResponseToCandidate(data.candidate[0]));
+      } catch (error) {
+        console.error('Failed to fetch candidate details:', error);
+      }
+    };
 
-    fetch("/api/get-meta-data")
-      .then((response) => response.json())
-      .then((data) => setResponse(data));
+    const fetchMetaData = async () => {
+      try {
+        const response = await fetch("/api/get-meta-data");
+        const data = await response.json();
+        setResponse(data);
+      } catch (error) {
+        console.error('Failed to fetch metadata:', error);
+      }
+    };
+
+    fetchCandidateDetails();
+    fetchMetaData();
   }, [id]);
 
   if (!candidate || !response) {
     return <div>Loading...</div>;
   }
 
-  const regions = response?.regions || [];
-  const techAndTools = response?.techAndTools || [];
+  const englishLevel = getEnglishLevel(candidate, response);
+  const position = getMetaDataValue(candidate, response, "candidatePosition", "position");
+  const workExperience = getWorkExperience(candidate, response);
+  const workArea = getMetaDataValue(candidate, response, "candidateWorkArea", "workArea");
+  const educationLevel = getEducationLevel(candidate, response);
+  const workplace = getWorkplace(candidate, response);
+  const salary = getSalary(candidate, response);
+  const birthday = getBirthday(candidate);
+  const region = getRegion(candidate, response);
 
-  const englishLevel = englishLevels[candidate.english_level_id - 1]?.name;
-  const educationLevel = education[candidate.education_level_id - 1]?.name;
-  const position = positions[candidate.position_id - 1]?.name;
-  const workArea = workAreas[candidate.work_area_id - 1]?.name;
-  const workplace = workplaces[candidate.workplace_id - 1]?.name;
-  const salary = salaries[candidate.salary_id - 1]?.name;
-
-  const dateOptions: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
-  const birthday = new Date(candidate.date_of_birth).toLocaleDateString("ukr-UA", dateOptions).slice(0, -3);
-  const region = regions[candidate.region_id - 1]?.region_name + " область";
-
-  let techAndToolsIds: number[] = [];
-  if (candidate.technologies_and_tools) {
-    techAndToolsIds = candidate.technologies_and_tools
-      .split(",")
-      .filter((el) => el !== "")
-      .map(Number);
-  }
-
-  const techAndToolsNames = techAndTools.filter((item) => techAndToolsIds.includes(item.id));
-
-  const studentWorkExpId = candidate.work_experience_id - 1;
-
-  let workExp = workExps[studentWorkExpId]?.name;
-  switch (studentWorkExpId) {
-    case 0:
-      workExp = "без досвіду";
-      break;
-    case 1:
-    case 3:
-      workExp += " року";
-      break;
-    case 2:
-      workExp += " рік";
-      break;
-    case 4:
-    case 5:
-      workExp += " роки";
-      break;
-    case 6:
-      workExp += " років";
-      break;
-    default:
-      break;
-  }
+  const techAndToolsNames = getTechAndToolsNames(candidate, response);
+  console.log(techAndToolsNames);
 
   return (
     <main className="page">
@@ -126,10 +93,10 @@ const CandidateProfilePage: React.FC = () => {
             <div className="profile-contacts-bg"></div>
 
             <div className="profile-picture-wrapper">
-              <img className="profile-picture" alt="" src={candidate.profile_picture} />
+              <img className="profile-picture" alt="" src={candidate.candidateProfilePic} />
             </div>
 
-            <div className="profile-name">{candidate.name + " " + candidate.surname}</div>
+            <div className="profile-name">{candidate.candidateName + " " + candidate.candidateSurname}</div>
 
             <div className="profile-contacts-details-wrapper">
               <div className="profile-contacts-details-div">
@@ -140,29 +107,29 @@ const CandidateProfilePage: React.FC = () => {
               <div className="profile-contacts-details-div">
                 <LocationOutline color={"#fff"} title={"location"} height="24px" width="24px" />
                 <div>
-                  <p className="profile-contacts-details">{candidate.city},</p>
+                  <p className="profile-contacts-details">{candidate.candidateCity},</p>
                   <p className="profile-contacts-details">{region}</p>
                 </div>
               </div>
 
               <div className="profile-contacts-details-div">
                 <MailOutline color={"#fff"} title={"mail"} height="24px" width="24px" />
-                <p className="profile-contacts-details">{candidate.email}</p>
+                <p className="profile-contacts-details">{candidate.candidateEmail}</p>
               </div>
 
               <div className="profile-contacts-details-div">
                 <PhonePortraitOutline color={"#fff"} title={"phone"} height="24px" width="24px" />
-                <p className="profile-contacts-details">{candidate.mobile_number}</p>
+                <p className="profile-contacts-details">{candidate.candidateMobNumber}</p>
               </div>
 
               <div className="profile-contacts-details-buttons">
-                {candidate.linkedin && (
-                  <a href={candidate.linkedin}>
+                {candidate.candidateLinkedin && (
+                  <a href={candidate.candidateLinkedin}>
                     <LogoLinkedin height="30px" width="30px" color={"#fff"}></LogoLinkedin>
                   </a>
                 )}
-                {candidate.github && (
-                  <a href={candidate.github}>
+                {candidate.candidateGithub && (
+                  <a href={candidate.candidateGithub}>
                     <LogoGithub height="30px" width="30px" color={"#fff"}></LogoGithub>
                   </a>
                 )}
@@ -173,7 +140,7 @@ const CandidateProfilePage: React.FC = () => {
           <div className="profile-first-section">
             <div className="profile-summary">
               <b className="profile-title">Про себе:</b>
-              <div className="profile-details">{candidate.summary}</div>
+              <div className="profile-details">{candidate.candidateSummary}</div>
             </div>
             <div className="profile-education">
               <b className="profile-title">Освіта: </b>
@@ -181,11 +148,11 @@ const CandidateProfilePage: React.FC = () => {
             </div>
             <div className="profile-unversity">
               <b className="profile-title">Заклад освіти:</b>
-              <div className="profile-details">{candidate.university}</div>
+              <div className="profile-details">{candidate.candidateUniversity}</div>
             </div>
             <div className="profile-specialty">
               <b className="profile-title">Спеціальність: </b>
-              <div className="profile-details">{candidate.specialty}</div>
+              <div className="profile-details">{candidate.candidateSpecialty}</div>
             </div>
             <div className="profile-english">
               <b className="profile-title">Рівень англійської: </b>
@@ -200,7 +167,7 @@ const CandidateProfilePage: React.FC = () => {
             </div>
             <div className="profile-exp">
               <b className="profile-title">Досвід роботи: </b>
-              <b className="profile-details">{workExp}</b>
+              <b className="profile-details">{workExperience}</b>
             </div>
             <div className="profile-workarea">
               <b className="profile-title">Область роботи: </b>

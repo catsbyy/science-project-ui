@@ -149,7 +149,7 @@ const BusinessPage: React.FC = () => {
 
                 <Autocomplete
                   multiple
-                  id="tags-outlined"
+                  id="candidate-technologies"
                   options={techAndToolsOptions}
                   getOptionLabel={(option) => option.name}
                   value={techAndToolsOptions.filter((option) => candidate.candidateTechAndTools.includes(option.id))}
@@ -200,7 +200,7 @@ const BusinessPage: React.FC = () => {
                 />
 
                 <FormControlTextField
-                  id="outlined-basic"
+                  id="candidate-city"
                   label="Місто"
                   variant="outlined"
                   helperText="Введіть місто"
