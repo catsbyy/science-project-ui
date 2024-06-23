@@ -125,7 +125,7 @@ function CandidatesPage({}: Props) {
         "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png",
     };
 
-    if (true) {
+    if (!isDataInvalid) {
       console.log(newCandidate);
       fetch("/api/candidates/add-candidate", {
         method: "POST",
@@ -426,6 +426,7 @@ function CandidatesPage({}: Props) {
                       onChange={handleTechAndToolsChange}
                       renderInput={(params) => (
                         <TextField
+                          required
                           {...params}
                           sx={{ width: 360 }}
                           label="Технології та інструменти"

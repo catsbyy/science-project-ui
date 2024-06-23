@@ -115,7 +115,7 @@ const BusinessPage: React.FC = () => {
           <header>Пошук кандидатів</header>
           <form action="#" method="post" onSubmit={searchCandidates}>
             <div className="form">
-              <div className="section-title">Основні параметри</div>
+              <div className="section-title"><span className="title">Основні параметри</span></div>
               <div className="fields">
                 <FormControlSelect
                   label="Посада"
@@ -187,7 +187,7 @@ const BusinessPage: React.FC = () => {
                 />
               </div>
 
-              <div className="section-title">Додаткові параметри</div>
+              <div className="section-title"><span className="title">Додаткові параметри</span></div>
               <div className="fields">
                 <FormControlSelect
                   label="Область"
