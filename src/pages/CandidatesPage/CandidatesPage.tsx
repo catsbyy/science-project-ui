@@ -537,7 +537,7 @@ function CandidatesPage({}: Props) {
 
             <div className="navigation-buttons">
               {page > 0 && (
-                <div>
+                <div className="buttons">
                   <button type="button" onClick={() => setPage(page - 1)} className="form-button">
                     Назад
                     <ArrowBackOutline color={"#00000"} title={"back"} height="25px" width="25px" />

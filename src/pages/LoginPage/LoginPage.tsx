@@ -2,44 +2,76 @@ import React, { ChangeEvent, useState } from "react";
 import { MailOutline, PersonCircleOutline, LockClosedOutline } from "react-ionicons";
 import "./LoginPage.css";
 import Button from "@mui/material/Button";
-import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent } from "@mui/material";
-
-import Form from "react-bootstrap/Form";
+import { TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
+import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
+import { CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
 
 interface Props {}
 
-interface Student {
-  studentRegion: string;
-  studentCity: string;
-  studentEducation: string;
-  studentTechAndTools: string;
-  studentEnglish: string;
-  studentPosition: string;
-  studentWorkExp: string;
-  studentWorkArea: string;
-  studentSalary: string;
-  studentWorkplace: string;
-}
+const initialCandidate: CandidateUser = {
+  name: "",
+  surname: "",
+  email: "",
+  password: "",
+  role: "candidate",
+};
+
+const initialBusiness: BusinessUser = {
+  name: "",
+  surname: "",
+  email: "",
+  password: "",
+  role: "business",
+  companyName: "",
+};
 
 function LoginPage({}: Props) {
   const [isSignIn, setIsSignIn] = useState(true);
 
-  const [student, setStudent] = useState<Student>({
-    studentRegion: "",
-    studentCity: "",
-    studentEducation: "",
-    studentTechAndTools: "",
-    studentEnglish: "",
-    studentPosition: "",
-    studentWorkExp: "",
-    studentWorkArea: "",
-    studentSalary: "",
-    studentWorkplace: "",
+  const [role, setRole] = useState<"candidate" | "business">("candidate");
+
+  const [candidate, setCandidate] = useState<CandidateUser>({
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+    role: "candidate",
   });
 
-  const handleChange = (event: ChangeEvent<HTMLSelectElement | HTMLInputElement> | SelectChangeEvent<string>) => {
-    const { name, value } = event.target as HTMLInputElement;  // Type assertion
-    setStudent({ ...student, [name]: value });
+  const [business, setBusiness] = useState<BusinessUser>({
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+    role: "business",
+    companyName: "",
+  });
+
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const handleRoleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newRole = event.target.value as "candidate" | "business";
+    setRole(newRole);
+    if (newRole === "candidate") {
+      setCandidate(initialCandidate);
+    } else {
+      setBusiness(initialBusiness);
+    }
+    setConfirmPassword("");
+  };
+
+  const handleCandidateChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setCandidate({ ...candidate, [name]: value });
+  };
+
+  const handleBusinessChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setBusiness({ ...business, [name]: value });
+  };
+
+  const handleConfirmPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(event.target.value);
   };
 
   return (
@@ -52,106 +84,112 @@ function LoginPage({}: Props) {
 
         <div className="login-container">
           <div className="header">
-            <div className="text">{isSignIn ? "Sign In" : "Sign Up"}</div>
+            <div className="text">{isSignIn ? "Увійти" : "Зареєструватися"}</div>
             <div className="underline"></div>
           </div>
 
-          <FormControl sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel color="secondary">Region</InputLabel>
-            <Select
-              color="secondary"
-              value={student.studentRegion}
-              label="Region"
-              name="studentRegion"  // Add the name attribute
-              onChange={handleChange}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl required  sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel color="secondary" size="small">City</InputLabel>
-            <Select
-              color="secondary"
-              value={student.studentCity}
-              label="City"
-              name="studentCity"  // Add the name attribute
-              onChange={handleChange}
-              size="small"
-              
-              MenuProps={{
-                disableScrollLock: true,
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Kyiv</MenuItem>
-              <MenuItem value={20}>Tokyo</MenuItem>
-              <MenuItem value={30}>Oslo</MenuItem>
-            </Select>
-          </FormControl>
-
           <div className="inputs">
             {!isSignIn && (
-              <div>
-                <div className="radio">
-                  <label>
-                    <input type="radio" value="option1" checked={true} />
-                    Option 1
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input type="radio" value="option2" />
-                    Option 2
-                  </label>
-                </div>
-              </div>
+              <FormControl required={true}>
+                <FormLabel id="demo-radio-buttons-group-label" color="secondary">
+                  Моя роль
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-required
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  value={role}
+                  name="radio-buttons-group"
+                  onChange={handleRoleChange}
+                >
+                  <FormControlLabel value="candidate" control={<Radio color="secondary" />} label="Кандидат" />
+                  <FormControlLabel value="business" control={<Radio color="secondary" />} label="Роботодавець" />
+                </RadioGroup>
+              </FormControl>
+            )}
+            {!isSignIn && (
+              <FormControlTextField
+                id="name"
+                label="Ім'я"
+                variant="outlined"
+                helperText="Введіть ваше ім'я"
+                name="name"
+                isRequired={true}
+                value={role === "candidate" ? candidate.name : business.name}
+                onChange={role === "candidate" ? handleCandidateChange : handleBusinessChange}
+              />
             )}
 
             {!isSignIn && (
-              <div className="input">
-                <PersonCircleOutline color={"#00000"} title={"person"} height="25px" width="25px" />
-                <input type="text" placeholder="Name" name="studentName" onChange={handleChange} />
-              </div>
+              <FormControlTextField
+                id="surname"
+                label="Прізвище"
+                variant="outlined"
+                helperText="Введіть ваше прізвище"
+                name="surname"
+                isRequired={true}
+                value={role === "candidate" ? candidate.surname : business.surname}
+                onChange={role === "candidate" ? handleCandidateChange : handleBusinessChange}
+              />
             )}
 
-            <div className="input">
-              <MailOutline color={"#00000"} title={"email"} height="25px" width="25px" />
-              <input type="email" placeholder="Email" name="studentEmail" onChange={handleChange} />
-            </div>
+            <FormControlTextField
+              id="email"
+              label="Електронна пошта"
+              variant="outlined"
+              helperText="Введіть електронну пошту"
+              name="email"
+              isRequired={true}
+              value={role === "candidate" ? candidate.email : business.email}
+              onChange={role === "candidate" ? handleCandidateChange : handleBusinessChange}
+            />
 
-            <div className="input">
-              <LockClosedOutline color={"#00000"} title={"password"} height="25px" width="25px" />
-              <input type="password" placeholder="Password" name="studentPassword" onChange={handleChange} />
-            </div>
+            {!isSignIn && role === "business" && (
+              <FormControlTextField
+                id="company-name"
+                label="Назва компанії"
+                variant="outlined"
+                helperText="Введіть назву компанії"
+                name="companyName"
+                isRequired={true}
+                value={business.companyName}
+                onChange={handleBusinessChange}
+              />
+            )}
+
+            <FormControlTextField
+              id="password"
+              label="Пароль"
+              variant="outlined"
+              helperText="Введіть пароль"
+              name="password"
+              isRequired={true}
+              value={role === "candidate" ? candidate.password : business.password}
+              onChange={role === "candidate" ? handleCandidateChange : handleBusinessChange}
+            />
 
             {!isSignIn && (
-              <div className="input">
-                <LockClosedOutline color={"#00000"} title={"password"} height="25px" width="25px" />
-                <input type="password" placeholder="Confirm Password" name="studentConfirmPassword" onChange={handleChange} />
-              </div>
+              <FormControlTextField
+                id="confirm-password"
+                label="Підтвердіть пароль"
+                variant="outlined"
+                helperText="Введіть пароль ще раз"
+                name="confirm-password"
+                isRequired={true}
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+              />
             )}
           </div>
 
-          {isSignIn && (
-            <div className="forgot-password">
-              Forget Password? <span>Click here</span>
-            </div>
-          )}
-
-          <div className="submit-container">
-            <div className={!isSignIn ? "submit grey" : "submit"} onClick={() => setIsSignIn(true)}>
-              Sign In
-            </div>
-            <div className={isSignIn ? "submit grey" : "submit"} onClick={() => setIsSignIn(false)}>
-              Sign Up
+          <div className="navigation-buttons">
+            <div className="buttons">
+              <div className={!isSignIn ? "form-button grey" : "form-button"} onClick={() => setIsSignIn(true)}>
+                Увійти
+              </div>
+              <div className={isSignIn ? "form-button grey" : "form-button"} onClick={() => setIsSignIn(false)}>
+                Зареєструватися
+              </div>{" "}
             </div>
           </div>
         </div>
