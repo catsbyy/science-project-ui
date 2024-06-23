@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, Routes, Route } from "react-router-dom";
 import { useAuth } from "../../auth/AuthWrapper";
 import { nav } from "../../routes/navigation";
@@ -29,6 +29,17 @@ export const RenderMenu = () => {
 
   const { pathname } = useLocation();
 
+  const [color, setColor] = useState<Boolean>(false);
+  const changeColor = () => {
+    if (window.scrollY >= 90) {
+      setColor(true);
+    } else {
+      setColor(false);
+    }
+  }
+
+  window.addEventListener('scroll', changeColor);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -42,7 +53,7 @@ export const RenderMenu = () => {
   };
 
   return (
-    <header className="site-header">
+    <header className={color ? "site-header-bg" : "site-header"}>
       <div className="site-branding">
         <NavLink to="/" className="logo">
           <span>T</span>

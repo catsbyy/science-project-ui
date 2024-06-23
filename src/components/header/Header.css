@@ -6,7 +6,7 @@
   
   /* Header */
   
-  .site-header {
+  .site-header, .site-header-bg {
     position: fixed;
     top: 0;
     left: 0;
@@ -19,6 +19,14 @@
     justify-content: space-between;
     align-items: center;
     padding-inline: 3rem;
+    transition: all 0.2s ease-out;
+  }
+
+  .site-header-bg {
+    background-color: rgba(106, 73, 250, 0.15);
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    transition: all 0.2s ease-out;
   }
   
   .nav-wrapper {
