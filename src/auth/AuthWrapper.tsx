@@ -1,17 +1,17 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { RenderMenu, RenderRoutes } from "../components/header/Header";
 import Footer from "../components/footer/Footer";
+import { BaseUser, CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
 
 // Define the shape of the user object
-interface User {
-  name: string;
+type User = BaseUser & {
   isAuthenticated: boolean;
-}
+};
 
 // Define the shape of the AuthContext
 interface AuthContextType {
   user: User;
-  login: (userName: string, password: string) => Promise<string>;
+  login: (email: string, password: string) => Promise<string>;
   logout: () => void;
 }
 
@@ -29,28 +29,59 @@ export const useAuth = () => {
 
 // AuthProvider component
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User>({ name: "", isAuthenticated: true });
+  const [user, setUser] = useState<User>({
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+    role: "candidate", // Default role, adjust as necessary
+    isAuthenticated: false,
+  });
 
-  const login = (userName: string, password: string) => {
-    return new Promise<string>((resolve, reject) => {
-      if (password === "password") {
-        setUser({ name: userName, isAuthenticated: true });
-        resolve("success");
-      } else {
-        reject("Incorrect password");
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await fetch('https://your-api.com/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
       }
-    });
+
+      const data = await response.json();
+      
+      // Assuming the response includes user data and a token
+      setUser({
+        name: data.name,
+        surname: data.surname,
+        email: data.email,
+        password: password, // Storing the password might not be necessary or safe, consider not storing it
+        role: data.role,
+        isAuthenticated: true,
+      });
+
+      return "success";
+    } catch (error) {
+      return Promise.reject("Incorrect email or password");
+    }
   };
 
   const logout = () => {
-    setUser({ name: "", isAuthenticated: false });
+    setUser({
+      name: "",
+      surname: "",
+      email: "",
+      password: "",
+      role: "candidate", // Default role, adjust as necessary
+      isAuthenticated: false,
+    });
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
 };
 
 // Main layout component
