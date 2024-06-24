@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { RenderMenu, RenderRoutes } from "../components/header/Header";
 import Footer from "../components/footer/Footer";
-import { BaseUser, CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
+import { BaseUser, CandidateUser, BusinessUser } from "../types/UserTypes.ts";
 
 // Define the shape of the user object
 type User = BaseUser & {
