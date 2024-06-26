@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 import { CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
+import { useAuth } from "../../auth/AuthWrapper.tsx"; // Import useAuth hook
 
 interface Props {}
 
@@ -27,27 +28,12 @@ const initialBusiness: BusinessUser = {
 
 function LoginPage({}: Props) {
   const [isSignIn, setIsSignIn] = useState(true);
-
   const [role, setRole] = useState<"candidate" | "business">("candidate");
-
-  const [candidate, setCandidate] = useState<CandidateUser>({
-    name: "",
-    surname: "",
-    email: "",
-    password: "",
-    role: "candidate",
-  });
-
-  const [business, setBusiness] = useState<BusinessUser>({
-    name: "",
-    surname: "",
-    email: "",
-    password: "",
-    role: "business",
-    companyName: "",
-  });
-
+  const [candidate, setCandidate] = useState<CandidateUser>(initialCandidate);
+  const [business, setBusiness] = useState<BusinessUser>(initialBusiness);
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const { login } = useAuth(); // Use login function from AuthContext
 
   const handleRoleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newRole = event.target.value as "candidate" | "business";
@@ -72,6 +58,17 @@ function LoginPage({}: Props) {
 
   const handleConfirmPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(event.target.value);
+  };
+
+  const handleSubmit = async () => {
+    const { email, password } = role === "candidate" ? candidate : business;
+    try {
+      await login(email, password);
+      // Redirect or show success message here
+    } catch (error) {
+      console.error(error);
+      // Show error message to user
+    }
   };
 
   return (
@@ -191,6 +188,9 @@ function LoginPage({}: Props) {
                 Зареєструватися
               </div>{" "}
             </div>
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
+              {isSignIn ? "Увійти" : "Зареєструватися"}
+            </Button>
           </div>
         </div>
       </div>

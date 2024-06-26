@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { RenderMenu, RenderRoutes } from "../components/header/Header";
 import Footer from "../components/footer/Footer";
-import { BaseUser, CandidateUser, BusinessUser } from "../types/UserTypes.ts";
+import { BaseUser } from "../types/UserTypes.ts";
 
 // Define the shape of the user object
 type User = BaseUser & {
@@ -34,27 +34,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     surname: "",
     email: "",
     password: "",
-    role: "candidate", // Default role, adjust as necessary
+    role: "candidate",
     isAuthenticated: false,
   });
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch('https://your-api.com/auth/login', {
-        method: 'POST',
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        throw new Error("Login failed");
       }
 
       const data = await response.json();
-      
-      // Assuming the response includes user data and a token
+
       setUser({
         name: data.name,
         surname: data.surname,
@@ -76,7 +75,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       surname: "",
       email: "",
       password: "",
-      role: "candidate", // Default role, adjust as necessary
+      role: "candidate",
       isAuthenticated: false,
     });
   };
@@ -94,3 +93,4 @@ export const MainLayout: React.FC = () => {
     </>
   );
 };
+
