@@ -33,7 +33,7 @@ function LoginPage({}: Props) {
   const [business, setBusiness] = useState<BusinessUser>(initialBusiness);
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  const { login } = useAuth(); // Use login function from AuthContext
+  const { login, register } = useAuth(); // Use login and register functions from AuthContext
 
   const handleRoleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newRole = event.target.value as "candidate" | "business";
@@ -61,13 +61,31 @@ function LoginPage({}: Props) {
   };
 
   const handleSubmit = async () => {
-    const { email, password } = role === "candidate" ? candidate : business;
-    try {
-      await login(email, password);
-      // Redirect or show success message here
-    } catch (error) {
-      console.error(error);
-      // Show error message to user
+    if (isSignIn) {
+      const { email, password } = role === "candidate" ? candidate : business;
+      try {
+        const response = await login(email, password);
+        console.log(response); // Log success response
+        // Redirect or show success message here
+      } catch (error) {
+        console.error("Login error:", error);
+        // Show error message to user
+      }
+    } else {
+      const user = role === "candidate" ? candidate : business;
+      if (user.password !== confirmPassword) {
+        console.error("Passwords do not match.");
+        // Show error message to user
+        return;
+      }
+      try {
+        const response = await register(user);
+        console.log(response); // Log success response
+        // Redirect or show success message here
+      } catch (error) {
+        console.error("Registration error:", error);
+        // Show error message to user
+      }
     }
   };
 
@@ -181,16 +199,19 @@ function LoginPage({}: Props) {
 
           <div className="navigation-buttons">
             <div className="buttons">
-              <div className={!isSignIn ? "form-button grey" : "form-button"} onClick={() => setIsSignIn(true)}>
+              <div
+                className={!isSignIn ? "form-button grey" : "form-button"}
+                onClick={() => (isSignIn ? handleSubmit() : setIsSignIn(true))}
+              >
                 Увійти
               </div>
-              <div className={isSignIn ? "form-button grey" : "form-button"} onClick={() => setIsSignIn(false)}>
+              <div
+                className={isSignIn ? "form-button grey" : "form-button"}
+                onClick={() => (!isSignIn ? handleSubmit() : setIsSignIn(false))}
+              >
                 Зареєструватися
               </div>{" "}
             </div>
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
-              {isSignIn ? "Увійти" : "Зареєструватися"}
-            </Button>
           </div>
         </div>
       </div>

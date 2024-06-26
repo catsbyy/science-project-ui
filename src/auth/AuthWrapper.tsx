@@ -12,6 +12,7 @@ type User = BaseUser & {
 interface AuthContextType {
   user: User;
   login: (email: string, password: string) => Promise<string>;
+  register: (user: BaseUser) => Promise<string>;
   logout: () => void;
 }
 
@@ -69,6 +70,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const register = async (user: BaseUser) => {
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (!response.ok) {
+        throw new Error("Registration failed");
+      }
+
+      const data = await response.json();
+
+      setUser({
+        name: data.name,
+        surname: data.surname,
+        email: data.email,
+        password: "", // Do not store the password in state
+        role: data.role,
+        isAuthenticated: true,
+      });
+
+      return "success";
+    } catch (error) {
+      return Promise.reject("Registration failed");
+    }
+  };
+
   const logout = () => {
     setUser({
       name: "",
@@ -80,7 +112,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
   };
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, register, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 // Main layout component
@@ -93,4 +129,3 @@ export const MainLayout: React.FC = () => {
     </>
   );
 };
-
