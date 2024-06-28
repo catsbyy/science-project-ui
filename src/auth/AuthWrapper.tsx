@@ -56,11 +56,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const data = await response.json();
 
       setUser({
-        name: data.name,
-        surname: data.surname,
-        email: data.email,
+        name: data.user.name,
+        surname: data.user.surname,
+        email: data.user.email,
         password: password, // Storing the password might not be necessary or safe, consider not storing it
-        role: data.role,
+        role: data.user.role,
         isAuthenticated: true,
       });
 
@@ -85,6 +85,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       const data = await response.json();
+
+      console.log(data);
 
       setUser({
         name: data.name,

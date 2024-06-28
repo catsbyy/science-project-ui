@@ -2,6 +2,7 @@ import React, { ChangeEvent, useState } from "react";
 import { MailOutline, PersonCircleOutline, LockClosedOutline } from "react-ionicons";
 import "./LoginPage.css";
 import Button from "@mui/material/Button";
+import { useNavigate, createSearchParams } from "react-router-dom";
 import { TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 import { CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
@@ -27,6 +28,8 @@ const initialBusiness: BusinessUser = {
 };
 
 function LoginPage({}: Props) {
+  const navigate = useNavigate();
+
   const [isSignIn, setIsSignIn] = useState(true);
   const [role, setRole] = useState<"candidate" | "business">("candidate");
   const [candidate, setCandidate] = useState<CandidateUser>(initialCandidate);
@@ -43,6 +46,7 @@ function LoginPage({}: Props) {
     } else {
       setBusiness(initialBusiness);
     }
+    console.log("role: " + newRole);
     setConfirmPassword("");
   };
 
@@ -66,6 +70,7 @@ function LoginPage({}: Props) {
       try {
         const response = await login(email, password);
         console.log(response); // Log success response
+        navigate(role === "candidate" ? "/candidates" : "/business");
         // Redirect or show success message here
       } catch (error) {
         console.error("Login error:", error);
@@ -80,6 +85,7 @@ function LoginPage({}: Props) {
       }
       try {
         const response = await register(user);
+        navigate(role === "candidate" ? "/candidates" : "/business");
         console.log(response); // Log success response
         // Redirect or show success message here
       } catch (error) {

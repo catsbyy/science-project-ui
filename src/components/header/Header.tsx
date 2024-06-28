@@ -10,10 +10,14 @@ import "./Header.css";
 export const RenderRoutes = () => {
   const { user } = useAuth();
 
+  console.log(user.role);
+  console.log(user.email);
+  console.log(user.isAuthenticated);
+
   return (
     <Routes>
       {nav.map((r, i) => {
-        if (r.isPrivate && user.isAuthenticated) {
+        if (r.isPrivate && user.isAuthenticated && r.roles?.includes(user.role)) {
           return <Route key={i} path={r.path} element={r.element} />;
         } else if (!r.isPrivate) {
           return <Route key={i} path={r.path} element={r.element} />;
@@ -73,7 +77,7 @@ export const RenderMenu = () => {
             {nav.map((r, i) => {
               if (!r.isPrivate && r.isMenu) {
                 return <MenuItem key={i} r={r} />;
-              } else if (user.isAuthenticated && r.isMenu) {
+              } else if (user.isAuthenticated && r.isMenu && r.roles?.includes(user.role)) {
                 return <MenuItem key={i} r={r} />;
               } else return null;
             })}

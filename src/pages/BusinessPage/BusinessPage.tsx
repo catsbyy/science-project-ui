@@ -1,12 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate, createSearchParams } from "react-router-dom";
-import { education } from "../../helpers/educationOptionsList";
-import { englishLevels } from "../../helpers/englishLevelsList";
-import { positions } from "../../helpers/positionOptionsList";
-import { workExps } from "../../helpers/workExpOptionsList";
-import { workAreas } from "../../helpers/workAreaOptionsList";
-import { salaries } from "../../helpers/salaryOptionsList";
-import { workplaces } from "../../helpers/workplaceOptionsList";
 import { SearchOutline } from "react-ionicons";
 import "./BusinessPage.css";
 import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Autocomplete } from "@mui/material";
