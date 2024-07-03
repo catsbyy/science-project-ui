@@ -86,13 +86,13 @@ export const RenderMenu = () => {
               } else return null;
             })}
             {user.isAuthenticated ? (
-              <div className="login">
+              <div className="logout">
                 <NavLink to={"#"} onClick={logout}>
                   Вийти
                 </NavLink>
               </div>
             ) : (
-              <div className="logout">
+              <div className="login">
                 <NavLink to={"login"}>Увійти</NavLink>
               </div>
             )}
