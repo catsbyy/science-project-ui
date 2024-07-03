@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import { RenderMenu, RenderRoutes } from "../components/header/Header";
 import Footer from "../components/footer/Footer";
 import { BaseUser } from "../types/UserTypes.ts";
+import { useNavigate } from "react-router-dom";
 
 // Define the shape of the user object
 type User = BaseUser & {
@@ -30,6 +31,8 @@ export const useAuth = () => {
 
 // AuthProvider component
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const navigate = useNavigate();
+
   const [user, setUser] = useState<User>({
     name: "",
     surname: "",
@@ -129,15 +132,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const logout = () => {
-    setUser({
-      name: "",
-      surname: "",
-      email: "",
-      password: "",
-      role: "candidate",
-      isAuthenticated: false,
-    });
+  const logout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Logout failed");
+      }
+
+      setUser({
+        name: "",
+        surname: "",
+        email: "",
+        password: "",
+        role: "candidate",
+        isAuthenticated: false,
+      });
+
+      navigate("/");
+    } catch (error) {
+      console.error("Error logging out: ", error);
+    }
   };
 
   return <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>;
