@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { NavLink, Routes, Route } from "react-router-dom";
 import { useAuth } from "../../auth/AuthWrapper";
 import { nav } from "../../routes/navigation";
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "./Header.css";
 
 // Function to render routes
@@ -40,9 +40,9 @@ export const RenderMenu = () => {
     } else {
       setColor(false);
     }
-  }
+  };
 
-  window.addEventListener('scroll', changeColor);
+  window.addEventListener("scroll", changeColor);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -53,8 +53,10 @@ export const RenderMenu = () => {
   const MenuItem = ({ r }: { r: (typeof nav)[0] }) => {
     return (
       <li className="menu-item">
-        <NavLink to={r.path}>{r.name === "Профіль" ? `${user.name} ${user.surname?.substring(0,1)}.` : r.name}</NavLink>
-      </li>
+      <NavLink to={r.path}>
+        {r.name === "Профіль" ? `${user.name} ${user.surname?.charAt(0)}.` : r.name}
+      </NavLink>
+    </li>
     );
   };
 
