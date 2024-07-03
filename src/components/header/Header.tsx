@@ -48,10 +48,12 @@ export const RenderMenu = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  console.log("user details: ", user);
+
   const MenuItem = ({ r }: { r: (typeof nav)[0] }) => {
     return (
       <li className="menu-item">
-        <NavLink to={r.path}>{r.name}</NavLink>
+        <NavLink to={r.path}>{r.name === "Профіль" ? `${user.name} ${user.surname?.substring(0,1)}.` : r.name}</NavLink>
       </li>
     );
   };

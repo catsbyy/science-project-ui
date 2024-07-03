@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { RenderMenu, RenderRoutes } from "../components/header/Header";
 import Footer from "../components/footer/Footer";
 import { BaseUser } from "../types/UserTypes.ts";
@@ -38,6 +38,32 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     role: "candidate",
     isAuthenticated: false,
   });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("/api/auth/me", {
+          method: "GET",
+          credentials: "include", // This ensures cookies are sent
+        });
+
+        const data = await response.json();
+
+        setUser({
+          name: data.user.name,
+          surname: data.user.surname,
+          email: data.user.email,
+          password: "", // Storing the password might not be necessary or safe, consider not storing it
+          role: data.user.role,
+          isAuthenticated: true,
+        });
+      } catch (err) {
+        console.error("Error fetching user: ", err);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const login = async (email: string, password: string) => {
     try {
@@ -114,11 +140,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>;
 };
 
 // Main layout component
