@@ -34,6 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const navigate = useNavigate();
 
   const [user, setUser] = useState<User>({
+    id: null,
     name: "",
     surname: "",
     email: "",
@@ -53,6 +54,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const data = await response.json();
 
         setUser({
+          id: data.user.id,
           name: data.user.name,
           surname: data.user.surname,
           email: data.user.email,
@@ -85,6 +87,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const data = await response.json();
 
       setUser({
+        id: data.user.id,
         name: data.user.name,
         surname: data.user.surname,
         email: data.user.email,
@@ -118,6 +121,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.log(data);
 
       setUser({
+        id: data.user.id,
         name: data.name,
         surname: data.surname,
         email: data.email,
@@ -143,6 +147,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       setUser({
+        id: null,
         name: "",
         surname: "",
         email: "",

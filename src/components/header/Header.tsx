@@ -10,10 +10,6 @@ import "./Header.css";
 export const RenderRoutes = () => {
   const { user } = useAuth();
 
-  console.log(user.role);
-  console.log(user.email);
-  console.log(user.isAuthenticated);
-
   return (
     <Routes>
       {nav.map((r, i) => {

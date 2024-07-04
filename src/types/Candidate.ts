@@ -26,4 +26,5 @@ export interface Candidate {
   candidateSalary?: string;
   candidateWorkplace?: string;
   candidateProfilePic?: string;
+  userId: number | null;
 }

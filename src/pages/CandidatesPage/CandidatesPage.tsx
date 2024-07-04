@@ -29,10 +29,12 @@ import { Candidate } from "../../types/Candidate";
 import { ArrowForwardOutline, ArrowBackOutline, CheckmarkOutline } from "react-ionicons";
 
 import warning from "../../img/icons/warning.svg";
+import { useAuth } from "../../auth/AuthWrapper";
 
 interface Props {}
 
 function CandidatesPage({}: Props) {
+  const { user } = useAuth();
   const [response, setResponse] = useState<Response>({
     regions: [],
     techAndTools: [],
@@ -91,6 +93,7 @@ function CandidatesPage({}: Props) {
     candidateLinkedin: "",
     candidateGithub: "",
     candidateTechAndTools: [] as number[],
+    userId: user.id
   });
 
   const handleSelect = (event: SelectChangeEvent<string>) => {
