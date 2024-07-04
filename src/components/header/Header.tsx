@@ -44,8 +44,6 @@ export const RenderMenu = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  console.log("user details: ", user);
-
   const MenuItem = ({ r }: { r: (typeof nav)[0] }) => {
     return (
       <li className="menu-item">

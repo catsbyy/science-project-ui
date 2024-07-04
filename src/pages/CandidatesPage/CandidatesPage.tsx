@@ -30,6 +30,7 @@ import { ArrowForwardOutline, ArrowBackOutline, CheckmarkOutline } from "react-i
 
 import warning from "../../img/icons/warning.svg";
 import { useAuth } from "../../auth/AuthWrapper";
+import { mapApiResponseToCandidate } from "../../helpers/mapApiResponseToCandidate";
 
 interface Props {}
 
@@ -52,9 +53,29 @@ function CandidatesPage({}: Props) {
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
   useEffect(() => {
-    fetch("/api/get-meta-data")
-      .then((response) => response.json())
-      .then((response) => setResponse(response));
+    const fetchCandidateDetails = async () => {
+      try {
+        const response = await fetch(`/api/business/get-candidate-details/${user.id}/true`);
+        const data = await response.json();
+        setCandidate(mapApiResponseToCandidate(data.candidate[0]));
+        console.log("user: ", candidate)
+      } catch (error) {
+        console.error('Failed to fetch candidate details:', error);
+      }
+    };
+
+    const fetchMetaData = async () => {
+      try {
+        const response = await fetch("/api/get-meta-data");
+        const data = await response.json();
+        setResponse(data);
+      } catch (error) {
+        console.error('Failed to fetch metadata:', error);
+      }
+    };
+
+    fetchCandidateDetails();
+    fetchMetaData();
   }, []);
 
   console.log(response);
@@ -74,12 +95,12 @@ function CandidatesPage({}: Props) {
 
   const [candidate, setCandidate] = useState<Candidate>({
     candidateId: null,
-    candidateSurname: "",
-    candidateName: "",
+    candidateSurname: user.surname,
+    candidateName: user.name,
     candidatePatronymic: "",
     candidateDateOfBirth: null,
     candidateMobNumber: "",
-    candidateEmail: "",
+    candidateEmail: user.email,
     candidateRegion: "",
     candidateCity: "",
     candidateStreet: "",
