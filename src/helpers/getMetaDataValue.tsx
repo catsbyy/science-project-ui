@@ -15,8 +15,18 @@ export const getMetaDataValue = (
   key: MetadataKey, 
   defaultValue: string = "Unknown"
 ): string => {
-  const index = Number(candidate[property]) - 1;
+   // Ensure property exists and is valid
+  if (!candidate[property]) {
+    return defaultValue;
+  }
+
+  const index = Number(candidate[property]) - 1; // Ensure correct conversion and index calculation
   const metadataItem = getMetadataItem(response, key, index);
+
+  // Debugging output to check metadataItem
+  console.log(`Metadata item for ${key} at index ${index}:`, metadataItem);
+  console.log(`key in Metadata item for ${key} at index ${index}:`, metadataItem);
+
   return metadataItem && key in metadataItem ? String(metadataItem[key]) : defaultValue;
 }
 
@@ -27,7 +37,15 @@ export const getEnglishLevel = (candidate: Candidate, response: Response): strin
 }
 
 export const getEducationLevel = (candidate: Candidate, response: Response): string => {
-  return getMetaDataValue(candidate, response, 'candidateEducation', 'education');
+  const index = Number(candidate.candidateEducation) - 1;
+  const educationLevel = response.education[index]?.education_level;
+  return educationLevel ? educationLevel : "Unknown";
+}
+
+export const getWorkArea = (candidate: Candidate, response: Response): string => {
+  const index = Number(candidate.candidateWorkArea) - 1;
+  const workArea = response.workArea[index]?.work_area;
+  return workArea ? workArea : "Unknown";
 }
 
 export const getWorkplace = (candidate: Candidate, response: Response): string => {
@@ -36,6 +54,10 @@ export const getWorkplace = (candidate: Candidate, response: Response): string =
 
 export const getSalary = (candidate: Candidate, response: Response): string => {
   return getMetaDataValue(candidate, response, 'candidateSalary', 'salary');
+}
+
+export const getPosition = (candidate: Candidate, response: Response): string => {
+  return getMetaDataValue(candidate, response, 'candidatePosition', 'position');
 }
 
 export const getBirthday = (candidate: Candidate): string => {
@@ -51,7 +73,7 @@ export const getRegion = (candidate: Candidate, response: Response): string => {
 
 export const getWorkExperience = (candidate: Candidate, response: Response): string => {
   const index = Number(candidate.candidateWorkExp) - 1;
-  let workExp = getMetaDataValue(candidate, response, 'candidateWorkExp', 'workExp');
+  let workExp = response.workExp[index]?.work_experience;
   switch (index) {
     case 0:
       workExp = "без досвіду";

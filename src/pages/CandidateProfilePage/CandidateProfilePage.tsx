@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ReactCountryFlag from "react-country-flag";
 import moment from "moment/moment";
-import { LogoLinkedin } from "react-ionicons";
-import { LogoGithub } from "react-ionicons";
-import { LocationOutline, MailOutline, PhonePortraitOutline, CalendarOutline } from "react-ionicons";
+import {
+  LogoLinkedin,
+  LogoGithub,
+  LocationOutline,
+  MailOutline,
+  PhonePortraitOutline,
+  CalendarOutline,
+} from "react-ionicons";
 import "./CandidateProfilePage.css";
 /* types */
 import { Response } from "../../types/Response";
@@ -13,6 +18,8 @@ import { mapApiResponseToCandidate } from "../../helpers/mapApiResponseToCandida
 import {
   getMetaDataValue,
   getEnglishLevel,
+  getWorkArea,
+  getPosition,
   getEducationLevel,
   getWorkplace,
   getSalary,
@@ -22,7 +29,11 @@ import {
   getTechAndToolsNames,
 } from "../../helpers/getMetaDataValue.tsx";
 
-const CandidateProfilePage: React.FC = () => {
+interface CandidateProfilePageProps {
+  userId?: number | null;
+}
+
+const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ userId }) => {
   const { id } = useParams<{ id: string }>();
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [response, setResponse] = useState<Response>({
@@ -40,11 +51,11 @@ const CandidateProfilePage: React.FC = () => {
   useEffect(() => {
     const fetchCandidateDetails = async () => {
       try {
-        const response = await fetch(`/api/business/get-candidate-details/${id}`);
+        const response = await fetch(`/api/business/get-candidate-details/${userId || id}${userId ? "/true" : ""}`);
         const data = await response.json();
         setCandidate(mapApiResponseToCandidate(data.candidate[0]));
       } catch (error) {
-        console.error('Failed to fetch candidate details:', error);
+        console.error("Failed to fetch candidate details:", error);
       }
     };
 
@@ -54,22 +65,22 @@ const CandidateProfilePage: React.FC = () => {
         const data = await response.json();
         setResponse(data);
       } catch (error) {
-        console.error('Failed to fetch metadata:', error);
+        console.error("Failed to fetch metadata:", error);
       }
     };
 
     fetchCandidateDetails();
     fetchMetaData();
-  }, [id]);
+  }, [userId, id]);
 
   if (!candidate || !response) {
     return <div>Loading...</div>;
   }
 
   const englishLevel = getEnglishLevel(candidate, response);
-  const position = getMetaDataValue(candidate, response, "candidatePosition", "position");
+  const position = getPosition(candidate, response);
   const workExperience = getWorkExperience(candidate, response);
-  const workArea = getMetaDataValue(candidate, response, "candidateWorkArea", "workArea");
+  const workArea = getWorkArea(candidate, response);
   const educationLevel = getEducationLevel(candidate, response);
   const workplace = getWorkplace(candidate, response);
   const salary = getSalary(candidate, response);

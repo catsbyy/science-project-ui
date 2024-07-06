@@ -9,11 +9,8 @@ import { Candidate } from "../../types/Candidate.ts";
 import {
   getMetaDataValue,
   getEnglishLevel,
-  getEducationLevel,
-  getWorkplace,
-  getSalary,
-  getBirthday,
-  getRegion,
+  getPosition,
+  getWorkArea,
   getWorkExperience,
   getTechAndToolsNames,
 } from "../../helpers/getMetaDataValue.tsx";
@@ -29,9 +26,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) =>
   const email = "mailto:" + candidate.candidateEmail;
 
   const englishLevel = getEnglishLevel(candidate, metaData);
-  const position = getMetaDataValue(candidate, metaData, "candidatePosition", "position");
+  const position = getPosition(candidate, metaData);
   const workExperience = getWorkExperience(candidate, metaData);
-  const workArea = getMetaDataValue(candidate, metaData, "candidateWorkArea", "workArea");
+  const workArea = getWorkArea(candidate, metaData);
 
   const techAndToolsNames = getTechAndToolsNames(candidate, metaData);
   

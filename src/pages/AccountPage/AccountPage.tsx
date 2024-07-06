@@ -1,11 +1,16 @@
-import React from 'react'
+import React from 'react';
+import { useAuth } from "../../auth/AuthWrapper";
+import CandidateProfilePage from "../CandidateProfilePage/CandidateProfilePage";
 
 interface Props {}
 
-function AccountPage({}: Props) {
+const AccountPage: React.FC<Props> = () => {
+  const { user } = useAuth();
   return (
-    <div>AccountPage</div>
-  )
-}
+    <div>
+      <CandidateProfilePage userId={user.id} />
+    </div>
+  );
+};
 
-export default AccountPage
+export default AccountPage;
