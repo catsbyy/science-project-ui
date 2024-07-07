@@ -69,8 +69,7 @@ function LoginPage({}: Props) {
       const { email, password } = role === "candidate" ? candidate : business;
       try {
         const response = await login(email, password);
-        console.log(response); // Log success response
-        navigate(role === "candidate" ? "/candidates" : "/business");
+        navigate(response.user.role === "candidate" ? "/candidates" : "/business");
         // Redirect or show success message here
       } catch (error) {
         console.error("Login error:", error);
@@ -85,7 +84,7 @@ function LoginPage({}: Props) {
       }
       try {
         const response = await register(user);
-        navigate(role === "candidate" ? "/candidates" : "/business");
+        navigate(response.user.role === "candidate" ? "/candidates" : "/business");
         console.log(response); // Log success response
         // Redirect or show success message here
       } catch (error) {

@@ -96,7 +96,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isAuthenticated: true,
       });
 
-      return "success";
+      return data;
     } catch (error) {
       return Promise.reject("Incorrect email or password");
     }
@@ -130,7 +130,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isAuthenticated: true,
       });
 
-      return "success";
+      return data;
     } catch (error) {
       return Promise.reject("Registration failed");
     }
