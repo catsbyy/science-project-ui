@@ -23,10 +23,6 @@ export const getMetaDataValue = (
   const index = Number(candidate[property]) - 1; // Ensure correct conversion and index calculation
   const metadataItem = getMetadataItem(response, key, index);
 
-  // Debugging output to check metadataItem
-  console.log(`Metadata item for ${key} at index ${index}:`, metadataItem);
-  console.log(`key in Metadata item for ${key} at index ${index}:`, metadataItem);
-
   return metadataItem && key in metadataItem ? String(metadataItem[key]) : defaultValue;
 }
 

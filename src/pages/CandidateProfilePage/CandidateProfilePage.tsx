@@ -48,6 +48,8 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ userId }) =
     workplace: [],
   });
 
+  const [isProfileTab, setIsProfileTab] = useState<boolean>(true);
+
   useEffect(() => {
     const fetchCandidateDetails = async () => {
       try {
@@ -98,109 +100,125 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ userId }) =
           <div className="wave -two"></div>
         </div>
       </div>
+
       <div className="profile-container">
         <div className="profile-section-wrapper">
-          <div className="profile-contacts">
-            <div className="profile-contacts-bg"></div>
+          {userId && (
+            <ul className="small-menu">
+              <li className={isProfileTab ? "selected-item" : ""} onClick={() => setIsProfileTab(true)}>
+                Мій профіль
+              </li>
+              <li className={!isProfileTab ? "selected-item" : ""} onClick={() => setIsProfileTab(false)}>
+                Редагувати дані
+              </li>
+            </ul>
+          )}
+          {
+            isProfileTab && 
+            <>
+              <div className="profile-contacts">
+                <div className="profile-contacts-bg"></div>
 
-            <div className="profile-picture-wrapper">
-              <img className="profile-picture" alt="" src={candidate.candidateProfilePic} />
-            </div>
+                <div className="profile-picture-wrapper">
+                  <img className="profile-picture" alt="" src={candidate.candidateProfilePic} />
+                </div>
 
-            <div className="profile-name">{candidate.candidateName + " " + candidate.candidateSurname}</div>
+                <div className="profile-name">{candidate.candidateName + " " + candidate.candidateSurname}</div>
 
-            <div className="profile-contacts-details-wrapper">
-              <div className="profile-contacts-details-div">
-                <CalendarOutline color={"#fff"} title={"birthday"} height="24px" width="24px" />
-                <p className="profile-contacts-details">{birthday}</p>
-              </div>
+                <div className="profile-contacts-details-wrapper">
+                  <div className="profile-contacts-details-div">
+                    <CalendarOutline color={"#fff"} title={"birthday"} height="24px" width="24px" />
+                    <p className="profile-contacts-details">{birthday}</p>
+                  </div>
 
-              <div className="profile-contacts-details-div">
-                <LocationOutline color={"#fff"} title={"location"} height="24px" width="24px" />
-                <div>
-                  <p className="profile-contacts-details">{candidate.candidateCity},</p>
-                  <p className="profile-contacts-details">{region}</p>
+                  <div className="profile-contacts-details-div">
+                    <LocationOutline color={"#fff"} title={"location"} height="24px" width="24px" />
+                    <div>
+                      <p className="profile-contacts-details">{candidate.candidateCity},</p>
+                      <p className="profile-contacts-details">{region}</p>
+                    </div>
+                  </div>
+
+                  <div className="profile-contacts-details-div">
+                    <MailOutline color={"#fff"} title={"mail"} height="24px" width="24px" />
+                    <p className="profile-contacts-details">{candidate.candidateEmail}</p>
+                  </div>
+
+                  <div className="profile-contacts-details-div">
+                    <PhonePortraitOutline color={"#fff"} title={"phone"} height="24px" width="24px" />
+                    <p className="profile-contacts-details">{candidate.candidateMobNumber}</p>
+                  </div>
+
+                  <div className="profile-contacts-details-buttons">
+                    {candidate.candidateLinkedin && (
+                      <a href={candidate.candidateLinkedin}>
+                        <LogoLinkedin height="30px" width="30px" color={"#fff"}></LogoLinkedin>
+                      </a>
+                    )}
+                    {candidate.candidateGithub && (
+                      <a href={candidate.candidateGithub}>
+                        <LogoGithub height="30px" width="30px" color={"#fff"}></LogoGithub>
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div className="profile-contacts-details-div">
-                <MailOutline color={"#fff"} title={"mail"} height="24px" width="24px" />
-                <p className="profile-contacts-details">{candidate.candidateEmail}</p>
+              <div className="profile-first-section">
+                <div className="profile-summary">
+                  <b className="profile-title">Про себе:</b>
+                  <div className="profile-details">{candidate.candidateSummary}</div>
+                </div>
+                <div className="profile-education">
+                  <b className="profile-title">Освіта: </b>
+                  <b className="profile-details">{educationLevel}</b>
+                </div>
+                <div className="profile-unversity">
+                  <b className="profile-title">Заклад освіти:</b>
+                  <div className="profile-details">{candidate.candidateUniversity}</div>
+                </div>
+                <div className="profile-specialty">
+                  <b className="profile-title">Спеціальність: </b>
+                  <div className="profile-details">{candidate.candidateSpecialty}</div>
+                </div>
+                <div className="profile-english">
+                  <b className="profile-title">Рівень англійської: </b>
+                  <div className="profile-details">{englishLevel}</div>
+                </div>
               </div>
 
-              <div className="profile-contacts-details-div">
-                <PhonePortraitOutline color={"#fff"} title={"phone"} height="24px" width="24px" />
-                <p className="profile-contacts-details">{candidate.candidateMobNumber}</p>
+              <div className="profile-second-section">
+                <div className="profile-position">
+                  <b className="profile-title">Посада: </b>
+                  <b className="profile-details">{position}</b>
+                </div>
+                <div className="profile-exp">
+                  <b className="profile-title">Досвід роботи: </b>
+                  <b className="profile-details">{workExperience}</b>
+                </div>
+                <div className="profile-workarea">
+                  <b className="profile-title">Область роботи: </b>
+                  <b className="profile-details">{workArea}</b>
+                </div>
+                <div className="profile-workplace">
+                  <b className="profile-title">Бажане місце роботи: </b>
+                  <b className="profile-details">{workplace}</b>
+                </div>
+                <div className="profile-salary">
+                  <b className="profile-title">Бажана заробітня плата: </b>
+                  <b className="profile-details">$ {salary}</b>
+                </div>
+                <div className="profile-skills">
+                  <b className="profile-title">Технології та інструменти:</b>
+                  <ul className="skills-section-profile">
+                    {techAndToolsNames.map((techAndTool) => (
+                      <li key={techAndTool.id}>{techAndTool.name}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-
-              <div className="profile-contacts-details-buttons">
-                {candidate.candidateLinkedin && (
-                  <a href={candidate.candidateLinkedin}>
-                    <LogoLinkedin height="30px" width="30px" color={"#fff"}></LogoLinkedin>
-                  </a>
-                )}
-                {candidate.candidateGithub && (
-                  <a href={candidate.candidateGithub}>
-                    <LogoGithub height="30px" width="30px" color={"#fff"}></LogoGithub>
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="profile-first-section">
-            <div className="profile-summary">
-              <b className="profile-title">Про себе:</b>
-              <div className="profile-details">{candidate.candidateSummary}</div>
-            </div>
-            <div className="profile-education">
-              <b className="profile-title">Освіта: </b>
-              <b className="profile-details">{educationLevel}</b>
-            </div>
-            <div className="profile-unversity">
-              <b className="profile-title">Заклад освіти:</b>
-              <div className="profile-details">{candidate.candidateUniversity}</div>
-            </div>
-            <div className="profile-specialty">
-              <b className="profile-title">Спеціальність: </b>
-              <div className="profile-details">{candidate.candidateSpecialty}</div>
-            </div>
-            <div className="profile-english">
-              <b className="profile-title">Рівень англійської: </b>
-              <div className="profile-details">{englishLevel}</div>
-            </div>
-          </div>
-
-          <div className="profile-second-section">
-            <div className="profile-position">
-              <b className="profile-title">Посада: </b>
-              <b className="profile-details">{position}</b>
-            </div>
-            <div className="profile-exp">
-              <b className="profile-title">Досвід роботи: </b>
-              <b className="profile-details">{workExperience}</b>
-            </div>
-            <div className="profile-workarea">
-              <b className="profile-title">Область роботи: </b>
-              <b className="profile-details">{workArea}</b>
-            </div>
-            <div className="profile-workplace">
-              <b className="profile-title">Бажане місце роботи: </b>
-              <b className="profile-details">{workplace}</b>
-            </div>
-            <div className="profile-salary">
-              <b className="profile-title">Бажана заробітня плата: </b>
-              <b className="profile-details">$ {salary}</b>
-            </div>
-            <div className="profile-skills">
-              <b className="profile-title">Технології та інструменти:</b>
-              <ul className="skills-section-profile">
-                {techAndToolsNames.map((techAndTool) => (
-                  <li key={techAndTool.id}>{techAndTool.name}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
+            </>
+          }
         </div>
       </div>
     </main>

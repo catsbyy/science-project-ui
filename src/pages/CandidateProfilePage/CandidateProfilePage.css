@@ -1,158 +1,192 @@
 /* Candidate Profile */
 .profile-body {
-    align-items: center;
-    justify-content: center;
-    background: #edeff0;
-  }
-  
-  .profile-section-wrapper {
-    margin-top: calc(35vh - 150px); /* Adjust as needed */
-    margin-bottom: calc(35vh - 150px); /* Adjust as needed */
-    display: grid;
-    max-width: 1200px;
-    min-height: 611px;
-    grid-template-columns: 0.8fr 1fr 1fr;
-    grid-template-rows: 1fr;
-    grid-auto-columns: 1fr;
-    gap: 0px 50px;
-    grid-auto-flow: row;
-    grid-template-areas: "profile-contacts profile-first-section profile-second-section";
-    position: relative;
-  }
-  
-  .profile-contacts {
-    grid-area: profile-contacts;
-    border-radius: 0 6px 0 6px;
-    background-color: rgba(106, 73, 250, 0.8);
-    width: 330px;
-    height: 482px;
-    font-size: 16px;
-    color: #fff;
-    position: absolute;
-    bottom: 0px;
-  }
-  
-  .profile-first-section {
-    grid-area: profile-first-section;
-    position: absolute;
-    top: 129px;
-  }
-  
-  .profile-first-section div {
-    margin-bottom: 10px;
-  }
-  
-  .profile-second-section {
-    grid-area: profile-second-section;
-    position: absolute;
-    top: 129px;
-  }
-  
-  .profile-second-section div {
-    margin-bottom: 10px;
-  }
-  
-  .skills-section-profile {
-    list-style: none;
-    display: flex;
-    justify-content: left;
-    flex-wrap: wrap;
-    column-gap: 5px;
-    row-gap: 5px;
-  }
-  
-  .skills-section-profile li {
-    background: rgba(106, 73, 250, 0.6);
-    opacity: 0.75;
-    color: white;
-    border-radius: 6px;
-    padding: 4px 8px;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: 500;
-  }
-  
-  .profile-name {
-    font-size: 20px;
-    height: 29px;
-    color: #fff;
-    text-align: center;
-    margin-bottom: 30px;
-    margin-top: 16px;
-  }
-  
-  .profile-name,
-  .profile-contacts-details {
-    font-weight: bold;
-  }
-  
-  .profile-contacts-details {
-    padding-left: 16px;
-    padding-top: 3px;
-  }
-  
-  .profile-contacts-details-div {
-    display: flex;
-    margin-bottom: 30px;
-  }
-  
-  .profile-picture-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: -21%;
-  }
-  
-  .profile-contacts-details-wrapper {
-    padding: 0px 42px 16px 42px;
-  }
-  
-  .profile-contacts-details-buttons {
-    display: flex;
-    justify-content: space-around;
-    gap: 36px;
-    align-items: center;
-    margin: 20% 20% 0 20%;
-  }
-  
-  .profile-contacts-details-buttons a {
-    transition: all 0.2s ease-in;
-  }
-  
-  .profile-contacts-details-buttons a:hover {
-    transform: translateY(-8px);
-    transition: all 0.2s ease-in;
-  }
+  align-items: center;
+  justify-content: center;
+  background: #edeff0;
+}
 
-  .profile-picture {
-    border-radius: 50%;
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-  }
-  
-  .profile-container {
-    position: relative;
-    max-width: 1200px;
-    width: 100%;
-    border-radius: 6px;
-    margin: 0 auto;
-    background-color: #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
-  }
-  
-  .profile-title {
-    font-weight: bold;
-    font-size: 18px;
-  }
-  
-  .profile-details {
-    font-weight: 300;
-    font-size: 18px;
-  }
-  
-  .profile-summary div,
-  .profile-unversity div,
-  .profile-specialty div,
-  .profile-english div {
-    padding-top: 5px;
-  }
+.profile-section-wrapper {
+  margin-top: calc(35vh - 150px); /* Adjust as needed */
+  margin-bottom: calc(35vh - 150px); /* Adjust as needed */
+  display: grid;
+  max-width: 1200px;
+  min-height: 611px;
+  grid-template-columns: 0.8fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-auto-columns: 1fr;
+  gap: 0px 50px;
+  grid-auto-flow: row;
+  grid-template-areas: "profile-contacts profile-first-section profile-second-section";
+  position: relative;
+}
+
+.profile-contacts {
+  grid-area: profile-contacts;
+  border-radius: 0 6px 0 6px;
+  background-color: rgba(106, 73, 250, 0.8);
+  width: 330px;
+  height: 482px;
+  font-size: 16px;
+  color: #fff;
+  position: absolute;
+  bottom: 0px;
+}
+
+.profile-first-section {
+  grid-area: profile-first-section;
+  position: absolute;
+  top: 129px;
+}
+
+.profile-first-section div {
+  margin-bottom: 10px;
+}
+
+.profile-second-section {
+  grid-area: profile-second-section;
+  position: absolute;
+  top: 129px;
+}
+
+.profile-second-section div {
+  margin-bottom: 10px;
+}
+
+.skills-section-profile {
+  list-style: none;
+  display: flex;
+  justify-content: left;
+  flex-wrap: wrap;
+  column-gap: 5px;
+  row-gap: 5px;
+}
+
+.skills-section-profile li {
+  background: rgba(106, 73, 250, 0.6);
+  opacity: 0.75;
+  color: white;
+  border-radius: 6px;
+  padding: 4px 8px;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.profile-name {
+  font-size: 20px;
+  height: 29px;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 16px;
+}
+
+.profile-name,
+.profile-contacts-details {
+  font-weight: bold;
+}
+
+.profile-contacts-details {
+  padding-left: 16px;
+  padding-top: 3px;
+}
+
+.profile-contacts-details-div {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.profile-picture-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: -21%;
+}
+
+.profile-contacts-details-wrapper {
+  padding: 0px 42px 16px 42px;
+}
+
+.profile-contacts-details-buttons {
+  display: flex;
+  justify-content: space-around;
+  gap: 36px;
+  align-items: center;
+  margin: 20% 20% 0 20%;
+}
+
+.profile-contacts-details-buttons a {
+  transition: all 0.2s ease-in;
+}
+
+.profile-contacts-details-buttons a:hover {
+  transform: translateY(-8px);
+  transition: all 0.2s ease-in;
+}
+
+.profile-picture {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.profile-container {
+  position: relative;
+  max-width: 1200px;
+  width: 100%;
+  border-radius: 6px;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+}
+
+.profile-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.profile-details {
+  font-weight: 300;
+  font-size: 18px;
+}
+
+.profile-summary div,
+.profile-unversity div,
+.profile-specialty div,
+.profile-english div {
+  padding-top: 5px;
+}
+
+.small-menu {
+  position: relative;
+  font-size: 18px;
+  left: -180px;
+  list-style: none;
+  width: 180px;
+  height: 126px;
+  border: 1px solid rgba(106, 73, 250, 0.4);
+  border-radius: 6px;
+  color: white;
+}
+
+.small-menu li {
+  padding: 20px 20px;
+  background-color: rgba(106, 73, 250, 0.4);
+  transition: all 0.3s linear;
+}
+
+.small-menu li:hover {
+  padding: 20px 20px;
+  background-color: rgba(106, 73, 250, 0.8);
+  transition: all 0.3s linear;
+  cursor: pointer;
+}
+
+
+.small-menu li:last-child {
+  border-bottom: none;
+} 
+
+.selected-item {
+  background-color: rgba(106, 73, 250, 0.8) !important;
+}
