@@ -1,7 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useParams } from "react-router-dom";
-import ReactCountryFlag from "react-country-flag";
-import moment from "moment/moment";
+import { LockClosedOutline, LockOpenOutline } from "react-ionicons";
 import {
   LogoLinkedin,
   LogoGithub,
@@ -10,16 +9,15 @@ import {
   PhonePortraitOutline,
   CalendarOutline,
 } from "react-ionicons";
-
 import { TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
-import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 import "./CandidateProfilePage.css";
 /* types */
-import { Response } from "../../types/Response";
+import { Response } from "../../types/Response.ts";
 import { Candidate } from "../../types/Candidate.ts";
-import { mapApiResponseToCandidate } from "../../helpers/mapApiResponseToCandidate.tsx";
+import { CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
+
+import { mapApiResponseToCandidate } from "../../helpers/mapApiResponseToCandidate";
 import {
-  getMetaDataValue,
   getEnglishLevel,
   getWorkArea,
   getPosition,
@@ -30,17 +28,17 @@ import {
   getRegion,
   getWorkExperience,
   getTechAndToolsNames,
-} from "../../helpers/getMetaDataValue.tsx";
-
-import { CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
+} from "../../helpers/getMetaDataValue";
+import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 
 interface CandidateProfilePageProps {
-  user?: CandidateUser | BusinessUser | null | undefined;
+  user?: CandidateUser | BusinessUser | null;
 }
 
 const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => {
   const { id } = useParams<{ id: string }>();
   const [candidate, setCandidate] = useState<Candidate | null>(null);
+  const [currentUser, setCurrentUser] = useState<CandidateUser | BusinessUser | null>(user);
   const [response, setResponse] = useState<Response>({
     regions: [],
     techAndTools: [],
@@ -52,10 +50,10 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
     workExp: [],
     workplace: [],
   });
-
   const [isProfileTab, setIsProfileTab] = useState<boolean>(true);
+  const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
 
-  let isBusinessUser = user?.role === "business";
+  const isBusinessUser = user?.role === "business";
 
   useEffect(() => {
     if (!isBusinessUser) {
@@ -95,7 +93,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
   let salary = "";
   let birthday = "";
   let region = "";
-  let techAndToolsNames = [];
+  let techAndToolsNames: string[] = [];
 
   if (!isBusinessUser && candidate) {
     englishLevel = getEnglishLevel(candidate, response);
@@ -107,19 +105,41 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
     salary = getSalary(candidate, response);
     birthday = getBirthday(candidate);
     region = getRegion(candidate, response);
-
     techAndToolsNames = getTechAndToolsNames(candidate, response);
   }
 
-  const handleUserChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName: string) => {
+  const handleUserChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    fieldName: string
+  ) => {
     const value = event.target.value;
-    // Assuming 'user' is mutable, you can update it directly
-    if (user) {
-      // Use spread operator to maintain immutability
-      const updatedUser = { ...user, [fieldName]: value };
-      // Update state with the new user object
-      // Replace 'user' with 'updatedUser' in the useState setter if needed
-    }
+    if (!currentUser) return;
+
+    // Create a new user object with the updated field
+    const updatedUser = {
+      ...currentUser,
+      [fieldName]: value, // Update the specified field
+    };
+
+    // Update the state with the new user object
+    setCurrentUser(updatedUser);
+  };
+
+  const handlePasswordChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    fieldName: string
+  ) => {
+    const value = event.target.value;
+    if (!currentUser) return;
+
+    // Update password-related fields separately
+    const updatedUser = {
+      ...currentUser,
+      [fieldName]: value,
+    };
+
+    // Update the state with the new user object
+    setCurrentUser(updatedUser);
   };
 
   return (
@@ -135,10 +155,16 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
         <div className="profile-section-wrapper">
           {user?.id && (
             <ul className="small-menu">
-              <li className={isProfileTab ? "selected-item" : ""} onClick={() => setIsProfileTab(true)}>
+              <li
+                className={isProfileTab ? "selected-item" : ""}
+                onClick={() => setIsProfileTab(true)}
+              >
                 Мій профіль
               </li>
-              <li className={!isProfileTab ? "selected-item" : ""} onClick={() => setIsProfileTab(false)}>
+              <li
+                className={!isProfileTab ? "selected-item" : ""}
+                onClick={() => setIsProfileTab(false)}
+              >
                 Редагувати дані
               </li>
             </ul>
@@ -149,44 +175,84 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                 <div className="profile-contacts-bg"></div>
 
                 <div className="profile-picture-wrapper">
-                  <img className="profile-picture" alt="" src={candidate.candidateProfilePic} />
+                  <img
+                    className="profile-picture"
+                    alt=""
+                    src={candidate.candidateProfilePic}
+                  />
                 </div>
 
-                <div className="profile-name">{candidate.candidateName + " " + candidate.candidateSurname}</div>
+                <div className="profile-name">
+                  {candidate.candidateName + " " + candidate.candidateSurname}
+                </div>
 
                 <div className="profile-contacts-details-wrapper">
                   <div className="profile-contacts-details-div">
-                    <CalendarOutline color={"#fff"} title={"birthday"} height="24px" width="24px" />
+                    <CalendarOutline
+                      color={"#fff"}
+                      title={"birthday"}
+                      height="24px"
+                      width="24px"
+                    />
                     <p className="profile-contacts-details">{birthday}</p>
                   </div>
 
                   <div className="profile-contacts-details-div">
-                    <LocationOutline color={"#fff"} title={"location"} height="24px" width="24px" />
+                    <LocationOutline
+                      color={"#fff"}
+                      title={"location"}
+                      height="24px"
+                      width="24px"
+                    />
                     <div>
-                      <p className="profile-contacts-details">{candidate.candidateCity},</p>
+                      <p className="profile-contacts-details">
+                        {candidate.candidateCity},
+                      </p>
                       <p className="profile-contacts-details">{region}</p>
                     </div>
                   </div>
 
                   <div className="profile-contacts-details-div">
-                    <MailOutline color={"#fff"} title={"mail"} height="24px" width="24px" />
-                    <p className="profile-contacts-details">{candidate.candidateEmail}</p>
+                    <MailOutline
+                      color={"#fff"}
+                      title={"mail"}
+                      height="24px"
+                      width="24px"
+                    />
+                    <p className="profile-contacts-details">
+                      {candidate.candidateEmail}
+                    </p>
                   </div>
 
                   <div className="profile-contacts-details-div">
-                    <PhonePortraitOutline color={"#fff"} title={"phone"} height="24px" width="24px" />
-                    <p className="profile-contacts-details">{candidate.candidateMobNumber}</p>
+                    <PhonePortraitOutline
+                      color={"#fff"}
+                      title={"phone"}
+                      height="24px"
+                      width="24px"
+                    />
+                    <p className="profile-contacts-details">
+                      {candidate.candidateMobNumber}
+                    </p>
                   </div>
 
                   <div className="profile-contacts-details-buttons">
                     {candidate.candidateLinkedin && (
                       <a href={candidate.candidateLinkedin}>
-                        <LogoLinkedin height="30px" width="30px" color={"#fff"}></LogoLinkedin>
+                        <LogoLinkedin
+                          height="30px"
+                          width="30px"
+                          color={"#fff"}
+                        ></LogoLinkedin>
                       </a>
                     )}
                     {candidate.candidateGithub && (
                       <a href={candidate.candidateGithub}>
-                        <LogoGithub height="30px" width="30px" color={"#fff"}></LogoGithub>
+                        <LogoGithub
+                          height="30px"
+                          width="30px"
+                          color={"#fff"}
+                        ></LogoGithub>
                       </a>
                     )}
                   </div>
@@ -196,7 +262,9 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
               <div className="profile-first-section">
                 <div className="profile-summary">
                   <b className="profile-title">Про себе:</b>
-                  <div className="profile-details">{candidate.candidateSummary}</div>
+                  <div className="profile-details">
+                    {candidate.candidateSummary}
+                  </div>
                 </div>
                 <div className="profile-education">
                   <b className="profile-title">Освіта: </b>
@@ -204,11 +272,15 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                 </div>
                 <div className="profile-unversity">
                   <b className="profile-title">Заклад освіти:</b>
-                  <div className="profile-details">{candidate.candidateUniversity}</div>
+                  <div className="profile-details">
+                    {candidate.candidateUniversity}
+                  </div>
                 </div>
                 <div className="profile-specialty">
                   <b className="profile-title">Спеціальність: </b>
-                  <div className="profile-details">{candidate.candidateSpecialty}</div>
+                  <div className="profile-details">
+                    {candidate.candidateSpecialty}
+                  </div>
                 </div>
                 <div className="profile-english">
                   <b className="profile-title">Рівень англійської: </b>
@@ -252,45 +324,55 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
             <>
               <div className="inputs">
                 <FormControl required={true}>
-                  <FormLabel id="demo-radio-buttons-group-label" color="secondary">
+                  <FormLabel
+                    id="demo-radio-buttons-group-label"
+                    color="secondary"
+                  >
                     Моя роль
                   </FormLabel>
                   <RadioGroup
                     row
                     aria-required
                     aria-labelledby="demo-radio-buttons-group-label"
-                    value={user?.role}
+                    value={currentUser?.role || "candidate"}
                     name="radio-buttons-group"
                   >
-                    <FormControlLabel value="candidate" control={<Radio color="secondary" />} label="Кандидат" />
-                    <FormControlLabel value="business" control={<Radio color="secondary" />} label="Роботодавець" />
+                    <FormControlLabel
+                      value="candidate"
+                      control={<Radio color="secondary" />}
+                      label="Кандидат"
+                      disabled
+                    />
+                    <FormControlLabel
+                      value="business"
+                      control={<Radio color="secondary" />}
+                      label="Роботодавець"
+                      disabled
+                    />
                   </RadioGroup>
                 </FormControl>
-                {
-                  <FormControlTextField
-                    id="name"
-                    label="Ім'я"
-                    variant="outlined"
-                    helperText="Введіть ваше ім'я"
-                    name="name"
-                    isRequired={true}
-                    value={user?.name || ""}
-                    onChange={(e) => handleUserChange(e, "name")}
-                  />
-                }
 
-                {
-                  <FormControlTextField
-                    id="surname"
-                    label="Прізвище"
-                    variant="outlined"
-                    helperText="Введіть ваше прізвище"
-                    name="surname"
-                    isRequired={true}
-                    value={user?.surname || ""}
-                    onChange={(e) => handleUserChange(e, "surname")}
-                  />
-                }
+                <FormControlTextField
+                  id="name"
+                  label="Ім'я"
+                  variant="outlined"
+                  helperText="Введіть ваше ім'я"
+                  name="name"
+                  isRequired={true}
+                  value={currentUser?.name || ""}
+                  onChange={(e) => handleUserChange(e, "name")}
+                />
+
+                <FormControlTextField
+                  id="surname"
+                  label="Прізвище"
+                  variant="outlined"
+                  helperText="Введіть ваше прізвище"
+                  name="surname"
+                  isRequired={true}
+                  value={currentUser?.surname || ""}
+                  onChange={(e) => handleUserChange(e, "surname")}
+                />
 
                 <FormControlTextField
                   id="email"
@@ -299,11 +381,11 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                   helperText="Введіть електронну пошту"
                   name="email"
                   isRequired={true}
-                  value={user?.email || ""}
+                  value={currentUser?.email || ""}
                   onChange={(e) => handleUserChange(e, "email")}
                 />
 
-                {
+                {isBusinessUser && (
                   <FormControlTextField
                     id="company-name"
                     label="Назва компанії"
@@ -311,34 +393,73 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                     helperText="Введіть назву компанії"
                     name="companyName"
                     isRequired={true}
-                    value={user?.companyName || ""}
+                    value={currentUser?.companyName || ""}
                     onChange={(e) => handleUserChange(e, "companyName")}
                   />
-                }
+                )}
 
-                <FormControlTextField
-                  id="password"
-                  label="Пароль"
-                  variant="outlined"
-                  helperText="Введіть пароль"
-                  name="password"
-                  isRequired={true}
-                  value={user?.password || ""}
-                  onChange={(e) => handleUserChange(e, "password")}
-                />
+                <button
+                  type="button"
+                  onClick={() => setIsChangePassword(!isChangePassword)}
+                  className="form-button"
+                >
+                  Змінити пароль
+                  {!isChangePassword ? (
+                    <LockClosedOutline
+                      color={"#00000"}
+                      title={"forward"}
+                      height="25px"
+                      width="25px"
+                    />
+                  ) : (
+                    <LockOpenOutline
+                      color={"#00000"}
+                      title={"forward"}
+                      height="25px"
+                      width="25px"
+                    />
+                  )}
+                </button>
 
-                {
-                  <FormControlTextField
-                    id="confirm-password"
-                    label="Підтвердіть пароль"
-                    variant="outlined"
-                    helperText="Введіть пароль ще раз"
-                    name="confirm-password"
-                    isRequired={true}
-                    value={user?.password || ""}
-                    onChange={(e) => handleUserChange(e, "password")}
-                  />
-                }
+                {isChangePassword && (
+                  <>
+                    <FormControlTextField
+                      id="current-password"
+                      label="Поточний пароль"
+                      variant="outlined"
+                      helperText="Введіть поточний пароль"
+                      name="current-password"
+                      isRequired={true}
+                      type="password"
+                      value={currentUser?.password || ""}
+                      onChange={(e) => handlePasswordChange(e, "currentPassword")}
+                    />
+
+                    <FormControlTextField
+                      id="new-password"
+                      label="Новий пароль"
+                      variant="outlined"
+                      helperText="Введіть новий пароль"
+                      name="new-password"
+                      isRequired={true}
+                      type="password"
+                      value={currentUser?.password || ""}
+                      onChange={(e) => handlePasswordChange(e, "newPassword")}
+                    />
+
+                    <FormControlTextField
+                      id="confirm-password"
+                      label="Підтвердіть пароль"
+                      variant="outlined"
+                      helperText="Введіть пароль ще раз"
+                      name="confirm-password"
+                      isRequired={true}
+                      type="password"
+                      value={currentUser?.password || ""}
+                      onChange={(e) => handlePasswordChange(e, "confirmPassword")}
+                    />
+                  </>
+                )}
               </div>
             </>
           )}
