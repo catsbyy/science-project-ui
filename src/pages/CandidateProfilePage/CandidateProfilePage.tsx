@@ -50,10 +50,10 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
     workExp: [],
     workplace: [],
   });
-  const [isProfileTab, setIsProfileTab] = useState<boolean>(true);
-  const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
 
   const isBusinessUser = user?.role === "business";
+  const [isProfileTab, setIsProfileTab] = useState<boolean>(!isBusinessUser);
+  const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
 
   console.log("current user: ", currentUser);
 
@@ -151,7 +151,10 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
         <div className="profile-section-wrapper">
           {user?.id && (
             <ul className="small-menu">
-              <li className={isProfileTab ? "selected-item" : ""} onClick={() => setIsProfileTab(true)}>
+              <li
+                className={isProfileTab ? "selected-item" : ""}
+                onClick={() => (isBusinessUser ? setIsProfileTab(false) : setIsProfileTab(true))}
+              >
                 Мій профіль
               </li>
               <li className={!isProfileTab ? "selected-item" : ""} onClick={() => setIsProfileTab(false)}>
