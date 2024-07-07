@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { useParams } from "react-router-dom";
 import ReactCountryFlag from "react-country-flag";
 import moment from "moment/moment";
@@ -10,6 +10,9 @@ import {
   PhonePortraitOutline,
   CalendarOutline,
 } from "react-ionicons";
+
+import { TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
+import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 import "./CandidateProfilePage.css";
 /* types */
 import { Response } from "../../types/Response";
@@ -29,11 +32,13 @@ import {
   getTechAndToolsNames,
 } from "../../helpers/getMetaDataValue.tsx";
 
+import { CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
+
 interface CandidateProfilePageProps {
-  userId?: number | null;
+  user?: CandidateUser | BusinessUser | null | undefined;
 }
 
-const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ userId }) => {
+const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => {
   const { id } = useParams<{ id: string }>();
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [response, setResponse] = useState<Response>({
@@ -50,47 +55,72 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ userId }) =
 
   const [isProfileTab, setIsProfileTab] = useState<boolean>(true);
 
+  let isBusinessUser = user?.role === "business";
+
   useEffect(() => {
-    const fetchCandidateDetails = async () => {
-      try {
-        const response = await fetch(`/api/business/get-candidate-details/${userId || id}${userId ? "/true" : ""}`);
-        const data = await response.json();
-        setCandidate(mapApiResponseToCandidate(data.candidate[0]));
-      } catch (error) {
-        console.error("Failed to fetch candidate details:", error);
-      }
-    };
+    if (!isBusinessUser) {
+      const fetchCandidateDetails = async () => {
+        try {
+          const response = await fetch(
+            `/api/business/get-candidate-details/${user?.id || id}${user?.id ? "/true" : ""}`
+          );
+          const data = await response.json();
+          setCandidate(mapApiResponseToCandidate(data.candidate[0]));
+        } catch (error) {
+          console.error("Failed to fetch candidate details:", error);
+        }
+      };
 
-    const fetchMetaData = async () => {
-      try {
-        const response = await fetch("/api/get-meta-data");
-        const data = await response.json();
-        setResponse(data);
-      } catch (error) {
-        console.error("Failed to fetch metadata:", error);
-      }
-    };
+      const fetchMetaData = async () => {
+        try {
+          const response = await fetch("/api/get-meta-data");
+          const data = await response.json();
+          setResponse(data);
+        } catch (error) {
+          console.error("Failed to fetch metadata:", error);
+        }
+      };
 
-    fetchCandidateDetails();
-    fetchMetaData();
-  }, [userId, id]);
+      fetchCandidateDetails();
+      fetchMetaData();
+    }
+  }, [user?.id, id]);
 
-  if (!candidate || !response) {
-    return <div>Loading...</div>;
+  let englishLevel = "";
+  let position = "";
+  let workExperience = "";
+  let workArea = "";
+  let educationLevel = "";
+  let workplace = "";
+  let salary = "";
+  let birthday = "";
+  let region = "";
+  let techAndToolsNames = [];
+
+  if (!isBusinessUser && candidate) {
+    englishLevel = getEnglishLevel(candidate, response);
+    position = getPosition(candidate, response);
+    workExperience = getWorkExperience(candidate, response);
+    workArea = getWorkArea(candidate, response);
+    educationLevel = getEducationLevel(candidate, response);
+    workplace = getWorkplace(candidate, response);
+    salary = getSalary(candidate, response);
+    birthday = getBirthday(candidate);
+    region = getRegion(candidate, response);
+
+    techAndToolsNames = getTechAndToolsNames(candidate, response);
   }
 
-  const englishLevel = getEnglishLevel(candidate, response);
-  const position = getPosition(candidate, response);
-  const workExperience = getWorkExperience(candidate, response);
-  const workArea = getWorkArea(candidate, response);
-  const educationLevel = getEducationLevel(candidate, response);
-  const workplace = getWorkplace(candidate, response);
-  const salary = getSalary(candidate, response);
-  const birthday = getBirthday(candidate);
-  const region = getRegion(candidate, response);
-
-  const techAndToolsNames = getTechAndToolsNames(candidate, response);
-  console.log(techAndToolsNames);
+  const handleUserChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName: string) => {
+    const value = event.target.value;
+    // Assuming 'user' is mutable, you can update it directly
+    if (user) {
+      // Use spread operator to maintain immutability
+      const updatedUser = { ...user, [fieldName]: value };
+      // Update state with the new user object
+      // Replace 'user' with 'updatedUser' in the useState setter if needed
+    }
+  };
 
   return (
     <main className="page">
@@ -103,7 +133,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ userId }) =
 
       <div className="profile-container">
         <div className="profile-section-wrapper">
-          {userId && (
+          {user?.id && (
             <ul className="small-menu">
               <li className={isProfileTab ? "selected-item" : ""} onClick={() => setIsProfileTab(true)}>
                 Мій профіль
@@ -113,8 +143,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ userId }) =
               </li>
             </ul>
           )}
-          {
-            isProfileTab && 
+          {isProfileTab && !isBusinessUser && candidate && (
             <>
               <div className="profile-contacts">
                 <div className="profile-contacts-bg"></div>
@@ -218,7 +247,101 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ userId }) =
                 </div>
               </div>
             </>
-          }
+          )}
+          {!isProfileTab && (
+            <>
+              <div className="inputs">
+                <FormControl required={true}>
+                  <FormLabel id="demo-radio-buttons-group-label" color="secondary">
+                    Моя роль
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    aria-required
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={user?.role}
+                    name="radio-buttons-group"
+                  >
+                    <FormControlLabel value="candidate" control={<Radio color="secondary" />} label="Кандидат" />
+                    <FormControlLabel value="business" control={<Radio color="secondary" />} label="Роботодавець" />
+                  </RadioGroup>
+                </FormControl>
+                {
+                  <FormControlTextField
+                    id="name"
+                    label="Ім'я"
+                    variant="outlined"
+                    helperText="Введіть ваше ім'я"
+                    name="name"
+                    isRequired={true}
+                    value={user?.name || ""}
+                    onChange={(e) => handleUserChange(e, "name")}
+                  />
+                }
+
+                {
+                  <FormControlTextField
+                    id="surname"
+                    label="Прізвище"
+                    variant="outlined"
+                    helperText="Введіть ваше прізвище"
+                    name="surname"
+                    isRequired={true}
+                    value={user?.surname || ""}
+                    onChange={(e) => handleUserChange(e, "surname")}
+                  />
+                }
+
+                <FormControlTextField
+                  id="email"
+                  label="Електронна пошта"
+                  variant="outlined"
+                  helperText="Введіть електронну пошту"
+                  name="email"
+                  isRequired={true}
+                  value={user?.email || ""}
+                  onChange={(e) => handleUserChange(e, "email")}
+                />
+
+                {
+                  <FormControlTextField
+                    id="company-name"
+                    label="Назва компанії"
+                    variant="outlined"
+                    helperText="Введіть назву компанії"
+                    name="companyName"
+                    isRequired={true}
+                    value={user?.companyName || ""}
+                    onChange={(e) => handleUserChange(e, "companyName")}
+                  />
+                }
+
+                <FormControlTextField
+                  id="password"
+                  label="Пароль"
+                  variant="outlined"
+                  helperText="Введіть пароль"
+                  name="password"
+                  isRequired={true}
+                  value={user?.password || ""}
+                  onChange={(e) => handleUserChange(e, "password")}
+                />
+
+                {
+                  <FormControlTextField
+                    id="confirm-password"
+                    label="Підтвердіть пароль"
+                    variant="outlined"
+                    helperText="Введіть пароль ще раз"
+                    name="confirm-password"
+                    isRequired={true}
+                    value={user?.password || ""}
+                    onChange={(e) => handleUserChange(e, "password")}
+                  />
+                }
+              </div>
+            </>
+          )}
         </div>
       </div>
     </main>

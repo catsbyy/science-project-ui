@@ -8,7 +8,7 @@ interface Props {}
 const AccountPage: React.FC<Props> = () => {
   const { user } = useAuth();
   return (
-    <CandidateProfilePage userId={user.id} />
+    <CandidateProfilePage user={user} />
   );
 };
 
