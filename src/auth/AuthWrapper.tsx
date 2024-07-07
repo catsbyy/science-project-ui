@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 // Define the shape of the user object
 type User = BaseUser & {
+  companyName?: string;
   isAuthenticated: boolean;
 };
 
@@ -39,6 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     surname: "",
     email: "",
     password: "",
+    companyName: "",
     role: "candidate",
     isAuthenticated: false,
   });
@@ -58,6 +60,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           name: data.user.name,
           surname: data.user.surname,
           email: data.user.email,
+          companyName: data.user.company_name,
           password: "", // Storing the password might not be necessary or safe, consider not storing it
           role: data.user.role,
           isAuthenticated: true,
@@ -91,6 +94,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         name: data.user.name,
         surname: data.user.surname,
         email: data.user.email,
+        companyName: data.user.company_name,
         password: password, // Storing the password might not be necessary or safe, consider not storing it
         role: data.user.role,
         isAuthenticated: true,
@@ -125,6 +129,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         name: data.name,
         surname: data.surname,
         email: data.email,
+        companyName: data.company_name,
         password: "", // Do not store the password in state
         role: data.role,
         isAuthenticated: true,
@@ -152,6 +157,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         surname: "",
         email: "",
         password: "",
+        companyName: "",
         role: "candidate",
         isAuthenticated: false,
       });
