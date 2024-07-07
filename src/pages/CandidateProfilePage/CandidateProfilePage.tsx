@@ -38,7 +38,15 @@ interface CandidateProfilePageProps {
 const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => {
   const { id } = useParams<{ id: string }>();
   const [candidate, setCandidate] = useState<Candidate | null>(null);
-  const [currentUser, setCurrentUser] = useState<CandidateUser | BusinessUser | null>(user);
+  const [currentUser, setCurrentUser] = useState({
+    ...user,
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [updateError, setUpdateError] = useState<string>("");
+  const [updateSuccess, setUpdateSuccess] = useState<string>("");
+
   const [response, setResponse] = useState<Response>({
     regions: [],
     techAndTools: [],
@@ -111,17 +119,65 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
   }
 
   const handleUserChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName: string) => {
-    const value = event.target.value;
     if (!currentUser) return;
+
+    const value = event.target.value;
 
     // Create a new user object with the updated field
     const updatedUser = {
       ...currentUser,
-      [fieldName]: value, // Update the specified field
+      [fieldName]: value,
     };
 
     // Update the state with the new user object
     setCurrentUser(updatedUser);
+  };
+
+  const handleUpdateSubmit = async () => {
+    if (!currentUser) return;
+
+    // Validation: Ensure no field is blank
+    if (
+      !currentUser.name ||
+      !currentUser.surname ||
+      !currentUser.email ||
+      (currentUser.role === "business" && !currentUser.companyName)
+    ) {
+      setUpdateError("Всі поля повинні бути заповнені");
+      return;
+    }
+
+    try {
+      // Call API to update user details
+      const response = await fetch(`/api/user/update-user-details/${currentUser.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: currentUser.name,
+          surname: currentUser.surname,
+          email: currentUser.email,
+          companyName: isBusinessUser ? currentUser.companyName : undefined,
+          currentPassword: currentUser.currentPassword,
+          newPassword: currentUser.newPassword,
+          confirmPassword: currentUser.confirmPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.message === "User details updated successfully") {
+        setUpdateSuccess("Дані успішно оновлені");
+        setUpdateError("");
+      } else {
+        setUpdateError(data.message || "Не вдалося оновити дані");
+        setUpdateSuccess("");
+      }
+    } catch (error) {
+      setUpdateError("Не вдалося оновити дані, спробуйте ще раз пізніше");
+      setUpdateSuccess("");
+    }
   };
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName: string) => {
@@ -341,7 +397,10 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                   />
                 )}
 
-                <button type="button" onClick={() => setIsChangePassword(!isChangePassword)} className="form-button">
+                {updateError && <div className="error-message">{updateError}</div>}
+                {updateSuccess && <div className="success-message">{updateSuccess}</div>}
+
+                <button type="button" onClick={handleUpdateSubmit} className="form-button">
                   Зберегти зміни
                   <CheckmarkOutline color={"#00000"} title={"submit"} height="25px" width="25px" />
                 </button>
@@ -367,7 +426,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                       name="current-password"
                       isRequired={true}
                       type="password"
-                      value={currentUser?.password || ""}
+                      value={currentUser.currentPassword}
                       onChange={(e) => handlePasswordChange(e, "currentPassword")}
                     />
 
@@ -379,7 +438,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                       name="new-password"
                       isRequired={true}
                       type="password"
-                      value={currentUser?.password || ""}
+                      value={currentUser.newPassword}
                       onChange={(e) => handlePasswordChange(e, "newPassword")}
                     />
 
@@ -391,7 +450,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                       name="confirm-password"
                       isRequired={true}
                       type="password"
-                      value={currentUser?.password || ""}
+                      value={currentUser.confirmPassword}
                       onChange={(e) => handlePasswordChange(e, "confirmPassword")}
                     />
                   </>
