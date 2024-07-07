@@ -182,11 +182,29 @@
   cursor: pointer;
 }
 
-
 .small-menu li:last-child {
   border-bottom: none;
-} 
+}
 
 .selected-item {
   background-color: rgba(106, 73, 250, 0.8) !important;
+}
+
+.edit-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  grid-area: profile-contacts;
+  position: absolute;
+  padding: 30px;
+}
+
+.edit-password {
+  margin-left: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  grid-area: profile-first-section;
+  padding: 0px 30px;
+  position: absolute;
 }

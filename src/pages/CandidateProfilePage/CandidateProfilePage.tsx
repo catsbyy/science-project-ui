@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useParams } from "react-router-dom";
-import { LockClosedOutline, LockOpenOutline } from "react-ionicons";
+import { CheckmarkOutline, LockClosedOutline, LockOpenOutline } from "react-ionicons";
 import {
   LogoLinkedin,
   LogoGithub,
@@ -55,6 +55,8 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
 
   const isBusinessUser = user?.role === "business";
 
+  console.log("current user: ", currentUser);
+
   useEffect(() => {
     if (!isBusinessUser) {
       const fetchCandidateDetails = async () => {
@@ -108,10 +110,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
     techAndToolsNames = getTechAndToolsNames(candidate, response);
   }
 
-  const handleUserChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    fieldName: string
-  ) => {
+  const handleUserChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName: string) => {
     const value = event.target.value;
     if (!currentUser) return;
 
@@ -125,10 +124,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
     setCurrentUser(updatedUser);
   };
 
-  const handlePasswordChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    fieldName: string
-  ) => {
+  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, fieldName: string) => {
     const value = event.target.value;
     if (!currentUser) return;
 
@@ -155,16 +151,10 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
         <div className="profile-section-wrapper">
           {user?.id && (
             <ul className="small-menu">
-              <li
-                className={isProfileTab ? "selected-item" : ""}
-                onClick={() => setIsProfileTab(true)}
-              >
+              <li className={isProfileTab ? "selected-item" : ""} onClick={() => setIsProfileTab(true)}>
                 Мій профіль
               </li>
-              <li
-                className={!isProfileTab ? "selected-item" : ""}
-                onClick={() => setIsProfileTab(false)}
-              >
+              <li className={!isProfileTab ? "selected-item" : ""} onClick={() => setIsProfileTab(false)}>
                 Редагувати дані
               </li>
             </ul>
@@ -175,84 +165,44 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                 <div className="profile-contacts-bg"></div>
 
                 <div className="profile-picture-wrapper">
-                  <img
-                    className="profile-picture"
-                    alt=""
-                    src={candidate.candidateProfilePic}
-                  />
+                  <img className="profile-picture" alt="" src={candidate.candidateProfilePic} />
                 </div>
 
-                <div className="profile-name">
-                  {candidate.candidateName + " " + candidate.candidateSurname}
-                </div>
+                <div className="profile-name">{candidate.candidateName + " " + candidate.candidateSurname}</div>
 
                 <div className="profile-contacts-details-wrapper">
                   <div className="profile-contacts-details-div">
-                    <CalendarOutline
-                      color={"#fff"}
-                      title={"birthday"}
-                      height="24px"
-                      width="24px"
-                    />
+                    <CalendarOutline color={"#fff"} title={"birthday"} height="24px" width="24px" />
                     <p className="profile-contacts-details">{birthday}</p>
                   </div>
 
                   <div className="profile-contacts-details-div">
-                    <LocationOutline
-                      color={"#fff"}
-                      title={"location"}
-                      height="24px"
-                      width="24px"
-                    />
+                    <LocationOutline color={"#fff"} title={"location"} height="24px" width="24px" />
                     <div>
-                      <p className="profile-contacts-details">
-                        {candidate.candidateCity},
-                      </p>
+                      <p className="profile-contacts-details">{candidate.candidateCity},</p>
                       <p className="profile-contacts-details">{region}</p>
                     </div>
                   </div>
 
                   <div className="profile-contacts-details-div">
-                    <MailOutline
-                      color={"#fff"}
-                      title={"mail"}
-                      height="24px"
-                      width="24px"
-                    />
-                    <p className="profile-contacts-details">
-                      {candidate.candidateEmail}
-                    </p>
+                    <MailOutline color={"#fff"} title={"mail"} height="24px" width="24px" />
+                    <p className="profile-contacts-details">{candidate.candidateEmail}</p>
                   </div>
 
                   <div className="profile-contacts-details-div">
-                    <PhonePortraitOutline
-                      color={"#fff"}
-                      title={"phone"}
-                      height="24px"
-                      width="24px"
-                    />
-                    <p className="profile-contacts-details">
-                      {candidate.candidateMobNumber}
-                    </p>
+                    <PhonePortraitOutline color={"#fff"} title={"phone"} height="24px" width="24px" />
+                    <p className="profile-contacts-details">{candidate.candidateMobNumber}</p>
                   </div>
 
                   <div className="profile-contacts-details-buttons">
                     {candidate.candidateLinkedin && (
                       <a href={candidate.candidateLinkedin}>
-                        <LogoLinkedin
-                          height="30px"
-                          width="30px"
-                          color={"#fff"}
-                        ></LogoLinkedin>
+                        <LogoLinkedin height="30px" width="30px" color={"#fff"}></LogoLinkedin>
                       </a>
                     )}
                     {candidate.candidateGithub && (
                       <a href={candidate.candidateGithub}>
-                        <LogoGithub
-                          height="30px"
-                          width="30px"
-                          color={"#fff"}
-                        ></LogoGithub>
+                        <LogoGithub height="30px" width="30px" color={"#fff"}></LogoGithub>
                       </a>
                     )}
                   </div>
@@ -262,9 +212,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
               <div className="profile-first-section">
                 <div className="profile-summary">
                   <b className="profile-title">Про себе:</b>
-                  <div className="profile-details">
-                    {candidate.candidateSummary}
-                  </div>
+                  <div className="profile-details">{candidate.candidateSummary}</div>
                 </div>
                 <div className="profile-education">
                   <b className="profile-title">Освіта: </b>
@@ -272,15 +220,11 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                 </div>
                 <div className="profile-unversity">
                   <b className="profile-title">Заклад освіти:</b>
-                  <div className="profile-details">
-                    {candidate.candidateUniversity}
-                  </div>
+                  <div className="profile-details">{candidate.candidateUniversity}</div>
                 </div>
                 <div className="profile-specialty">
                   <b className="profile-title">Спеціальність: </b>
-                  <div className="profile-details">
-                    {candidate.candidateSpecialty}
-                  </div>
+                  <div className="profile-details">{candidate.candidateSpecialty}</div>
                 </div>
                 <div className="profile-english">
                   <b className="profile-title">Рівень англійської: </b>
@@ -322,12 +266,9 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
           )}
           {!isProfileTab && (
             <>
-              <div className="inputs">
+              <div className="edit-inputs">
                 <FormControl required={true}>
-                  <FormLabel
-                    id="demo-radio-buttons-group-label"
-                    color="secondary"
-                  >
+                  <FormLabel id="demo-radio-buttons-group-label" color="secondary">
                     Моя роль
                   </FormLabel>
                   <RadioGroup
@@ -373,7 +314,6 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                   value={currentUser?.surname || ""}
                   onChange={(e) => handleUserChange(e, "surname")}
                 />
-
                 <FormControlTextField
                   id="email"
                   label="Електронна пошта"
@@ -398,26 +338,19 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
                   />
                 )}
 
-                <button
-                  type="button"
-                  onClick={() => setIsChangePassword(!isChangePassword)}
-                  className="form-button"
-                >
+                <button type="button" onClick={() => setIsChangePassword(!isChangePassword)} className="form-button">
+                  Зберегти зміни
+                  <CheckmarkOutline color={"#00000"} title={"submit"} height="25px" width="25px" />
+                </button>
+              </div>
+
+              <div className="edit-password">
+                <button type="button" onClick={() => setIsChangePassword(!isChangePassword)} className="form-button">
                   Змінити пароль
                   {!isChangePassword ? (
-                    <LockClosedOutline
-                      color={"#00000"}
-                      title={"forward"}
-                      height="25px"
-                      width="25px"
-                    />
+                    <LockClosedOutline color={"#00000"} title={"forward"} height="25px" width="25px" />
                   ) : (
-                    <LockOpenOutline
-                      color={"#00000"}
-                      title={"forward"}
-                      height="25px"
-                      width="25px"
-                    />
+                    <LockOpenOutline color={"#00000"} title={"forward"} height="25px" width="25px" />
                   )}
                 </button>
 
