@@ -70,6 +70,7 @@ function LoginPage({}: Props) {
       try {
         const response = await login(email, password);
         navigate(response.user.role === "candidate" ? "/candidates" : "/business");
+
         // Redirect or show success message here
       } catch (error) {
         console.error("Login error:", error);

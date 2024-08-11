@@ -47,10 +47,8 @@ export const RenderMenu = () => {
   const MenuItem = ({ r }: { r: (typeof nav)[0] }) => {
     return (
       <li className="menu-item">
-      <NavLink to={r.path}>
-        {r.name === "Профіль" ? `${user.name} ${user.surname?.charAt(0)}.` : r.name}
-      </NavLink>
-    </li>
+        <NavLink to={r.path}>{r.name === "Профіль" ? `${user.name} ${user.surname?.charAt(0)}.` : r.name}</NavLink>
+      </li>
     );
   };
 
