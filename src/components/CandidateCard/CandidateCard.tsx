@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import ReactCountryFlag from "react-country-flag";
 import "./CandidateCard.css";
@@ -14,14 +14,23 @@ import {
   getWorkExperience,
   getTechAndToolsNames,
 } from "../../helpers/getMetaDataValue.tsx";
+import { HeartOutline, Heart } from "react-ionicons";
+import { useAuth } from "../../auth/AuthWrapper.tsx"; // Import useAuth hook
 
-  
-  export interface CandidateCardProps {
-    candidate: Candidate;
-    metaData: Response;
-  }
+export interface CandidateCardProps {
+  candidate: Candidate;
+  metaData: Response;
+  isFavorite: boolean;
+}
 
-const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) => {
+const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData, isFavorite: initialFavorite }) => {
+  const { user } = useAuth(); // Use login and register functions from AuthContext
+  const [isFavorite, setIsFavorite] = useState(initialFavorite);
+
+  useEffect(() => {
+    setIsFavorite(initialFavorite);
+  }, [initialFavorite]);
+
   const mobileNumber = "tel:" + candidate.candidateMobNumber;
   const email = "mailto:" + candidate.candidateEmail;
 
@@ -31,12 +40,59 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) =>
   const workArea = getWorkArea(candidate, metaData);
 
   const techAndToolsNames = getTechAndToolsNames(candidate, metaData);
+
+  // Function to toggle favorite status
+  const toggleFavorite = async (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent click from propagating to the parent NavLink
+
+    const url = isFavorite ? "/api/business/favorites" : "/api/business/favorites";
+    const method = isFavorite ? "DELETE" : "POST";
   
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          businessUserId: user.id,
+          candidateId: candidate.candidateId,
+        }),
+      });
+  
+      // Check if response is successful
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        setIsFavorite(!isFavorite);
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error("Failed to update favorite status:", error);
+    }
+  };
+
   return (
     <div className="result-card">
+      <div className="favorite">
+        {isFavorite ? (
+          <Heart color={"#6a49fa"} onClick={toggleFavorite} height="25px" width="25px" />
+        ) : (
+          <HeartOutline color={"#6a49fa"} onClick={toggleFavorite} height="25px" width="25px" />
+        )}
+      </div>
       <NavLink to={`/candidate/${candidate.candidateId}`} className="result-card-link">
         <div className="picture">
-          <img className="img-fluid" src={candidate.candidateProfilePic} alt={`${candidate.candidateName} ${candidate.candidateSurname}`} />
+          <img
+            className="img-fluid"
+            src={candidate.candidateProfilePic}
+            alt={`${candidate.candidateName} ${candidate.candidateSurname}`}
+          />
         </div>
         <div className="result-content">
           <h3 className="name">
@@ -44,8 +100,8 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData }) =>
           </h3>
           <h4 className="position">{position}</h4>
           <p className="info">
-            &#128187; {workArea} / &#128188; {workExperience} /{" "}
-            <ReactCountryFlag countryCode="GB" svg /> {englishLevel}
+            &#128187; {workArea} / &#128188; {workExperience} / <ReactCountryFlag countryCode="GB" svg />{" "}
+            {englishLevel}
           </p>
         </div>
         <br />

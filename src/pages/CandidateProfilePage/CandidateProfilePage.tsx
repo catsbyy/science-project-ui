@@ -7,7 +7,7 @@ import {
   LocationOutline,
   MailOutline,
   PhonePortraitOutline,
-  CalendarOutline,
+  CalendarOutline
 } from "react-ionicons";
 import { TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
 import "./CandidateProfilePage.css";
@@ -46,6 +46,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
   });
   const [updateError, setUpdateError] = useState<string>("");
   const [updateSuccess, setUpdateSuccess] = useState<string>("");
+
 
   const [response, setResponse] = useState<Response>({
     regions: [],

@@ -18,6 +18,8 @@
   
   .result-card-link {
     display: block;
+    position: relative;
+    top:-25px;
   }
   
   .result-card .picture {
@@ -143,4 +145,11 @@
   
   .result-summary {
     padding: 0 5px 0 5px;
+  }
+
+  .favorite {
+    position: relative;
+    right: -150px;
+    z-index: 10000;
+    pointer-events: auto; /* Ensure the heart icon is clickable */
   }

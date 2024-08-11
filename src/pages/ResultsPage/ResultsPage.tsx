@@ -7,6 +7,7 @@ import { mapApiResponseToCandidate } from "../../helpers/mapApiResponseToCandida
 import { Response } from "../../types/Response";
 import { Option } from "../../types/Option";
 import { Candidate } from "../../types/Candidate.ts";
+import { useAuth } from "../../auth/AuthWrapper.tsx"; // Import useAuth hook
 
 interface Props {}
 
@@ -24,6 +25,10 @@ const Results: React.FC = () => {
     workExp: [],
     workplace: [],
   });
+
+  const [favorites, setFavorites] = useState([]);
+  
+  const { user } = useAuth(); // Use login and register functions from AuthContext
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -49,8 +54,24 @@ const Results: React.FC = () => {
       }
     };
 
+    const fetchFavoriteStatus = async () => {
+      try {
+        const response = await fetch(`/api/business/favorites/${user.id}`);
+        const data = await response.json();
+        console.log(data.favorites);
+        if (data.success) {
+          setFavorites(data.favorites);
+        } else {
+          console.error("Failed to fetch favorites:", data.message);
+        }
+      } catch (error) {
+        console.error("Failed to fetch favorite status:", error);
+      }
+    };
+
     fetchResults();
     fetchMetaData();
+    fetchFavoriteStatus();
   }, [searchParams]);
 
   return (
@@ -64,9 +85,17 @@ const Results: React.FC = () => {
       <div className="results-section">
         <h2 className="landing-title">Рекомендовані кандидати</h2>
         <ul className="result-candidates">
-          {candidates.map((candidate) => (
-            <CandidateCard key={candidate.candidateId} candidate={candidate} metaData={response} />
-          ))}
+        {candidates.map((candidate) => {
+            const isFavorite = favorites.some(fav => fav.candidate_id === candidate.candidateId);
+            return (
+              <CandidateCard
+                key={candidate.candidateId}
+                candidate={candidate}
+                metaData={response}
+                isFavorite={isFavorite} 
+              />
+            );
+          })}
         </ul>
       </div>
     </main>
