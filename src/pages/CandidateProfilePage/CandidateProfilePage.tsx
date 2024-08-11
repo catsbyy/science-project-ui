@@ -43,7 +43,6 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
   const { id } = useParams<{ id: string }>();
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const { user } = useAuth();
-  const authUser = propUser ?? user;
   const [currentUser, setCurrentUser] = useState({
     ...propUser,
     currentPassword: "",
@@ -100,7 +99,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
 
       const fetchFavoriteStatus = async () => {
         try {
-          const response = await fetch(`/api/business/favorites/${authUser.id}`);
+          const response = await fetch(`/api/business/favorites/${user.id}`);
           const data = await response.json();
           console.log(data.favorites);
           if (data.success) {
@@ -238,7 +237,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          businessUserId: authUser.id,
+          businessUserId: user.id,
           candidateId: candidate.candidateId,
         }),
       });
