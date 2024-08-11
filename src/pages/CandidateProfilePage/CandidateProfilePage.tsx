@@ -7,7 +7,9 @@ import {
   LocationOutline,
   MailOutline,
   PhonePortraitOutline,
-  CalendarOutline
+  CalendarOutline,
+  HeartOutline,
+  Heart,
 } from "react-ionicons";
 import { TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
 import "./CandidateProfilePage.css";
@@ -30,23 +32,28 @@ import {
   getTechAndToolsNames,
 } from "../../helpers/getMetaDataValue";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
+import { useAuth } from "../../auth/AuthWrapper.tsx"; // Import useAuth hook
 
 interface CandidateProfilePageProps {
   user?: CandidateUser | BusinessUser | null;
+  isFavorite?: boolean;
 }
 
-const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => {
+const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propUser }) => {
   const { id } = useParams<{ id: string }>();
   const [candidate, setCandidate] = useState<Candidate | null>(null);
+  const { user } = useAuth();
+  const authUser = propUser ?? user;
   const [currentUser, setCurrentUser] = useState({
-    ...user,
+    ...propUser,
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
   const [updateError, setUpdateError] = useState<string>("");
   const [updateSuccess, setUpdateSuccess] = useState<string>("");
-
+  const [isFavorite, setIsFavorite] = useState(true);
+  const [favorites, setFavorites] = useState([]);
 
   const [response, setResponse] = useState<Response>({
     regions: [],
@@ -60,18 +67,19 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
     workplace: [],
   });
 
-  const isBusinessUser = user?.role === "business";
+  const isBusinessUser = propUser?.role === "business";
   const [isProfileTab, setIsProfileTab] = useState<boolean>(!isBusinessUser);
   const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
 
-  console.log("current user: ", currentUser);
+
+  console.log("current propUser: ", currentUser);
 
   useEffect(() => {
     if (!isBusinessUser) {
       const fetchCandidateDetails = async () => {
         try {
           const response = await fetch(
-            `/api/business/get-candidate-details/${user?.id || id}${user?.id ? "/true" : ""}`
+            `/api/business/get-candidate-details/${propUser?.id || id}${propUser?.id ? "/true" : ""}`
           );
           const data = await response.json();
           setCandidate(mapApiResponseToCandidate(data.candidate[0]));
@@ -90,10 +98,31 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
         }
       };
 
+      const fetchFavoriteStatus = async () => {
+        try {
+          const response = await fetch(`/api/business/favorites/${authUser.id}`);
+          const data = await response.json();
+          console.log(data.favorites);
+          if (data.success) {
+            setFavorites(data.favorites);
+          } else {
+            console.error("Failed to fetch favorites:", data.message);
+          }
+        } catch (error) {
+          console.error("Failed to fetch favorite status:", error);
+        }
+      };
+
       fetchCandidateDetails();
       fetchMetaData();
+      fetchFavoriteStatus();
     }
-  }, [user?.id, id]);
+  }, [propUser?.id, id]);
+
+  useEffect(() => {
+    const isCandidateFavorite = favorites.some(fav => fav.candidate_id === candidate.candidateId);
+    setIsFavorite(isCandidateFavorite);
+  }, [favorites])
 
   let englishLevel = "";
   let position = "";
@@ -195,6 +224,42 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
     setCurrentUser(updatedUser);
   };
 
+  // Function to toggle favorite status
+  const toggleFavorite = async (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent click from propagating to the parent NavLink
+
+    const url = "/api/business/favorites";
+    const method = isFavorite ? "DELETE" : "POST";
+  
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          businessUserId: authUser.id,
+          candidateId: candidate.candidateId,
+        }),
+      });
+  
+      // Check if response is successful
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        setIsFavorite(!isFavorite);
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error("Failed to update favorite status:", error);
+    }
+  };
+
   return (
     <main className="page">
       <div className="intro">
@@ -206,7 +271,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
 
       <div className="profile-container">
         <div className="profile-section-wrapper">
-          {user?.id && (
+          {propUser?.id && (
             <ul className="small-menu">
               <li
                 className={isProfileTab ? "selected-item" : ""}
@@ -221,6 +286,13 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user }) => 
           )}
           {isProfileTab && !isBusinessUser && candidate && (
             <>
+              <div className="favorite-profile">
+                {isFavorite ? (
+                  <Heart color={"#6a49fa"} onClick={toggleFavorite} height="25px" width="25px" />
+                ) : (
+                  <HeartOutline color={"#6a49fa"} onClick={toggleFavorite} height="25px" width="25px" />
+                )}
+              </div>
               <div className="profile-contacts">
                 <div className="profile-contacts-bg"></div>
 
