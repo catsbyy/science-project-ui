@@ -45,7 +45,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData, isFa
   const toggleFavorite = async (event: React.MouseEvent) => {
     event.stopPropagation(); // Prevent click from propagating to the parent NavLink
 
-    const url = isFavorite ? "/api/business/favorites" : "/api/business/favorites";
+    const url = "/api/business/favorites";
     const method = isFavorite ? "DELETE" : "POST";
   
     try {
