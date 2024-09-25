@@ -1,9 +1,7 @@
-import React, { ChangeEvent, useState } from "react";
-import { MailOutline, PersonCircleOutline, LockClosedOutline } from "react-ionicons";
+import { ChangeEvent, useState } from "react";
 import "./LoginPage.css";
-import Button from "@mui/material/Button";
-import { useNavigate, createSearchParams } from "react-router-dom";
-import { TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
+import { useNavigate} from "react-router-dom";
+import { FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 import { CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
 import { useAuth } from "../../auth/AuthWrapper.tsx"; // Import useAuth hook

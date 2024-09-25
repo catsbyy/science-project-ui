@@ -1,24 +1,18 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { inputRegex } from "../../helpers/inputRegex";
 import { emailRegex } from "../../helpers/emailRegex";
 import { linkRegex } from "../../helpers/linkRegex";
 import { phoneRegex } from "../../helpers/phoneRegex";
 import {
   TextField,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
   SelectChangeEvent,
-  TextareaAutosize,
   Autocomplete,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import FormControlSelect from "../../components/FormControlSelect/FormControlSelect";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 /* types */
@@ -86,12 +80,6 @@ function CandidatesPage({}: Props) {
         name: techAndTool.name,
       }))
     : [];
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<Candidate>({ mode: "all" });
 
   const [candidate, setCandidate] = useState<Candidate>({
     candidateId: null,
@@ -443,7 +431,7 @@ function CandidatesPage({}: Props) {
                       multiple
                       id="candidate-technologies"
                       options={techAndToolsOptions}
-                      getOptionLabel={(option) => option.name}
+                      getOptionLabel={(option) => String(option.name)}
                       value={techAndToolsOptions.filter((option) =>
                         candidate.candidateTechAndTools.includes(option.id)
                       )}
@@ -478,7 +466,7 @@ function CandidatesPage({}: Props) {
                       variant="outlined"
                       helperText="Розкажіть про себе"
                       name="candidateSummary"
-                      value={candidate.candidateSummary}
+                      value={candidate.candidateSummary || ""}
                       onChange={handleChange}
                       isRequired={false}
                       isTextArea={true}

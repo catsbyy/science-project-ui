@@ -11,7 +11,7 @@ import {
   HeartOutline,
   Heart,
 } from "react-ionicons";
-import { TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
+import { FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
 import "./CandidateProfilePage.css";
 /* types */
 import { Response } from "../../types/Response.ts";

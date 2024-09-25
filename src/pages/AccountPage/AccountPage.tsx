@@ -6,9 +6,9 @@ import "./AccountPage.css"; // Create and import a CSS file for AccountPage-spec
 interface Props {}
 
 const AccountPage: React.FC<Props> = () => {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
   return (
-    <CandidateProfilePage user={user} setUser={setUser} />
+    <CandidateProfilePage user={user} />
   );
 };
 

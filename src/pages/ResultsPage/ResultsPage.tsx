@@ -5,11 +5,8 @@ import "./ResultsPage.css";
 import { mapApiResponseToCandidate } from "../../helpers/mapApiResponseToCandidate.tsx";
 /* types */
 import { Response } from "../../types/Response";
-import { Option } from "../../types/Option";
 import { Candidate } from "../../types/Candidate.ts";
 import { useAuth } from "../../auth/AuthWrapper.tsx"; // Import useAuth hook
-
-interface Props {}
 
 const Results: React.FC = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);

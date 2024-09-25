@@ -1,13 +1,6 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { MailOutline, PersonCircleOutline, LockClosedOutline } from "react-ionicons";
+import { useEffect, useState } from "react";
 import "./FavoritesPage.css";
-import Button from "@mui/material/Button";
-import { useNavigate, createSearchParams } from "react-router-dom";
-import { TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
-import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
-import { CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
 import { useAuth } from "../../auth/AuthWrapper.tsx"; // Import useAuth hook
-import confused from "../../assets/confused.gif";
 import { Response } from "../../types/Response";
 import { Candidate } from "../../types/Candidate.ts";
 import { mapApiResponseToCandidate } from "../../helpers/mapApiResponseToCandidate.tsx";

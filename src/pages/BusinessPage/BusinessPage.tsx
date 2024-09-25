@@ -1,8 +1,8 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { useNavigate, createSearchParams } from "react-router-dom";
+import React, { useState, useEffect, ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { SearchOutline } from "react-ionicons";
 import "./BusinessPage.css";
-import { TextField, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Autocomplete } from "@mui/material";
+import { TextField, SelectChangeEvent, Autocomplete } from "@mui/material";
 import FormControlSelect from "../../components/FormControlSelect/FormControlSelect";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 /* types */
@@ -71,31 +71,21 @@ const BusinessPage: React.FC = () => {
   const goToResults = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   
-    // Filter out properties with empty values
-    const queryParams: Record<string, string | string[]> = Object.fromEntries(
-      Object.entries(candidate).filter(([key, value]) => {
+    // Reduce candidate data to remove empty values and convert arrays to strings
+    const queryParams = Object.entries(candidate)
+      .reduce((acc: [string, string][], [key, value]) => {
         if (Array.isArray(value)) {
-          return value.length > 0; // Filter out empty arrays
+          acc.push([key, value.join(";")]);
+        } else if (value) {
+          acc.push([key, value as string]);
         }
-        return value !== ""; // Filter out empty strings
-      })
-    );
-  
-    // Convert candidateTechAndTools to comma-separated string
-    if (queryParams.candidateTechAndTools) {
-      queryParams.candidateTechAndTools = queryParams.candidateTechAndTools.join(";");
-    }
+        return acc;
+      }, []);
   
     const searchParams = new URLSearchParams(queryParams).toString();
-  
     navigate(`/results?${searchParams}`);
   };
-
-  const searchCandidates = (e: FormEvent) => {
-    e.preventDefault();
-    console.log("candidate", candidate);
-  };
-
+  
   return (
     <main className="page">
       <div className="intro">
@@ -106,7 +96,7 @@ const BusinessPage: React.FC = () => {
 
         <div className="container">
           <header>Пошук кандидатів</header>
-          <form action="#" method="post" onSubmit={searchCandidates}>
+          <form action="#" method="post" onSubmit={goToResults}>
             <div className="form">
               <div className="section-title"><span className="title">Основні параметри</span></div>
               <div className="fields">
@@ -144,7 +134,7 @@ const BusinessPage: React.FC = () => {
                   multiple
                   id="candidate-technologies"
                   options={techAndToolsOptions}
-                  getOptionLabel={(option) => option.name}
+                  getOptionLabel={(option) => String(option.name)}
                   value={techAndToolsOptions.filter((option) => candidate.candidateTechAndTools.includes(option.id))}
                   onChange={handleTechAndToolsChange}
                   renderInput={(params) => (
@@ -206,7 +196,7 @@ const BusinessPage: React.FC = () => {
                   label="Місце роботи"
                   name="candidateWorkplace"
                   placeholder="Оберіть місце роботи"
-                  value={candidate.candidateWorkplace}
+                  value={candidate.candidateWorkplace || ""}
                   options={response.workplace}
                   displayKey="workplace"
                   onChange={handleSelect}
@@ -216,7 +206,7 @@ const BusinessPage: React.FC = () => {
                   label="Заробітна плата"
                   name="candidateSalary"
                   placeholder="Оберіть заробітну плату ($)"
-                  value={candidate.candidateSalary}
+                  value={candidate.candidateSalary || ""}
                   options={response.salary}
                   displayKey="salary"
                   onChange={handleSelect}
@@ -224,7 +214,7 @@ const BusinessPage: React.FC = () => {
               </div>
 
               <div className="button-container">
-                <button className="sumbit form-button" type="submit" onClick={goToResults}>
+                <button className="sumbit form-button" type="submit">
                   Знайти
                   <SearchOutline width="20px" height="20px" color={"000000"} />
                 </button>
