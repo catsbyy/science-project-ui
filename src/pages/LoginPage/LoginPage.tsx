@@ -1,6 +1,6 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import "./LoginPage.css";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 import { CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
@@ -33,8 +33,14 @@ function LoginPage({}: Props) {
   const [candidate, setCandidate] = useState<CandidateUser>(initialCandidate);
   const [business, setBusiness] = useState<BusinessUser>(initialBusiness);
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { login, register } = useAuth(); // Use login and register functions from AuthContext
+
+  useEffect(() => {
+    setErrorMessage(null);
+  }, [isSignIn]);
 
   const handleRoleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newRole = event.target.value as "candidate" | "business";
@@ -68,27 +74,34 @@ function LoginPage({}: Props) {
       try {
         const response = await login(email, password);
         navigate(response.user.role === "candidate" ? "/candidates" : "/business");
-
-        // Redirect or show success message here
-      } catch (error) {
+      } catch (error: any) {
         console.error("Login error:", error);
-        // Show error message to user
+        setErrorMessage(error.response?.data?.error || "Failed to login. Please check your credentials.");
       }
     } else {
       const user = role === "candidate" ? candidate : business;
       if (user.password !== confirmPassword) {
-        console.error("Passwords do not match.");
-        // Show error message to user
+        setErrorMessage("Passwords do not match.");
         return;
       }
+  
       try {
         const response = await register(user);
-        navigate(response.user.role === "candidate" ? "/candidates" : "/business");
-        console.log(response); // Log success response
-        // Redirect or show success message here
-      } catch (error) {
+        console.log("Registration response:", response);  // Выводим, что именно возвращает register
+  
+        // Проверяем успешный ответ
+        if (response?.message === "User registered successfully") {
+          console.log("Registration success:", response);
+          setIsSignIn(true);  // Переключаемся на форму входа
+          setRegistrationSuccess(true);
+          setErrorMessage(null);
+        } else {
+          console.error("Unexpected response:", response);
+          setErrorMessage("Failed to register. Please try again.");
+        }
+      } catch (error: any) {
         console.error("Registration error:", error);
-        // Show error message to user
+        setErrorMessage("Registration failed. Please try again.");
       }
     }
   };
@@ -106,6 +119,8 @@ function LoginPage({}: Props) {
             <div className="text">{isSignIn ? "Увійти" : "Зареєструватися"}</div>
             <div className="underline"></div>
           </div>
+
+          {registrationSuccess && <div className="success-message">Успішно зареєстровано! Тепер ви можете увійти.</div>}
 
           <div className="inputs">
             {!isSignIn && (
@@ -217,6 +232,8 @@ function LoginPage({}: Props) {
               </div>{" "}
             </div>
           </div>
+
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
         </div>
       </div>
     </div>

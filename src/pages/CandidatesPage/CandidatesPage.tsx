@@ -12,7 +12,8 @@ import {
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
+
 import FormControlSelect from "../../components/FormControlSelect/FormControlSelect";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 /* types */
@@ -116,8 +117,8 @@ function CandidatesPage({}: Props) {
   };
 
   const handleDateChange = (date: Dayjs | null) => {
-    if (date !== null) {
-      setCandidate({ ...candidate, candidateDateOfBirth: date });
+    if (date) {
+      setCandidate({ ...candidate, candidateDateOfBirth: date.format('YYYY-MM-DD') });
     }
   };
 
@@ -129,15 +130,23 @@ function CandidatesPage({}: Props) {
   const addNewCandidate = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(candidate);
+
+    const formattedDateOfBirth = candidate.candidateDateOfBirth
+    ? dayjs(candidate.candidateDateOfBirth).format('YYYY-MM-DD')
+    : null;
+
     const newCandidate: Candidate = {
       ...candidate,
+      candidateDateOfBirth: formattedDateOfBirth,
+      userId: user.id,
       candidateWorkplace: candidate.candidateWorkplace || "3",
       candidateProfilePic:
         candidate.candidateProfilePic ||
         "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png",
     };
 
-    if (!isDataInvalid) {
+    //if (!isDataInvalid) {
+      if (true) {
       console.log(newCandidate);
       fetch("/api/candidates/add-candidate", {
         method: "POST",
@@ -163,15 +172,15 @@ function CandidatesPage({}: Props) {
       "candidateSalary",
       "candidateWorkplace",
       "candidateProfilePic",
+      "candidatePatronymic",
+      "candidateCity",
+      "candidateStreet",
+      "candidateHouseNum"
     ];
 
     const textFields = [
       "candidateSurname",
       "candidateName",
-      "candidatePatronymic",
-      "candidateCity",
-      "candidateStreet",
-      "candidateHouseNum",
       "candidateEducation",
       "candidateUniversity",
     ];
@@ -181,39 +190,53 @@ function CandidatesPage({}: Props) {
     for (const [key, value] of Object.entries(candidate)) {
       const isValueNotEmpty = value !== "" && value !== null && value !== undefined;
 
+      console.log('incorrect ', key);
+
       if (!optionalFields.includes(key)) {
         if (isValueNotEmpty) {
           if (textFields.includes(key)) {
             if (!inputRegex.test(value)) {
+              console.log('incorrect ', key);
               isInvalid = true;
             }
           } else if (key === "candidateDateOfBirth") {
             if (new Date(value) >= new Date()) {
+              console.log('incorrect ', key);
               isInvalid = true;
             }
           } else if (key === "candidateMobNumber") {
             if (!phoneRegex.test(value)) {
+              console.log('incorrect ', key);
               isInvalid = true;
             }
           } else if (key === "candidateEmail") {
             if (!emailRegex.test(value)) {
+              console.log('incorrect ', key);
               isInvalid = true;
             }
           }
         } else {
+          console.log('incorrect ', key);
           isInvalid = true;
         }
       } else {
         if (isValueNotEmpty && ["candidateLinkedin", "candidateGithub", "candidateProfilePic"].includes(key)) {
           if (!linkRegex.test(value)) {
+            console.log('incorrect ', key);
             isInvalid = true;
           }
         } else if (isValueNotEmpty && ["candidateSpecialty", "candidateSummary"].includes(key)) {
           if (!inputRegex.test(value)) {
+            console.log('incorrect ', key);
             isInvalid = true;
           }
         }
       }
+    }
+
+    if (candidate.candidateTechAndTools.length === 0) {
+      console.log("priehali");
+      isInvalid = true;
     }
 
     return isInvalid;
@@ -272,7 +295,7 @@ function CandidatesPage({}: Props) {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         label="Дата народження"
-                        value={candidate.candidateDateOfBirth}
+                        value={candidate.candidateDateOfBirth ? dayjs(candidate.candidateDateOfBirth, 'YYYY-MM-DD') : null}
                         onChange={handleDateChange}
                         slotProps={{
                           textField: {
@@ -438,10 +461,9 @@ function CandidatesPage({}: Props) {
                       onChange={handleTechAndToolsChange}
                       renderInput={(params) => (
                         <TextField
-                          required
                           {...params}
                           sx={{ width: 360 }}
-                          label="Технології та інструменти"
+                          label="Технології та інструменти *"
                           helperText="Оберіть технології та інструменти"
                           color="secondary"
                           size="small"

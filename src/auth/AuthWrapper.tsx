@@ -115,31 +115,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         },
         body: JSON.stringify(user),
       });
-
-      if (!response.ok) {
-        throw new Error("Registration failed");
-      }
-
+  
       const data = await response.json();
-
-      console.log(data);
-
-      setUser({
-        id: data.user.id,
-        name: data.name,
-        surname: data.surname,
-        email: data.email,
-        companyName: data.company_name,
-        password: "", // Do not store the password in state
-        role: data.role,
-        isAuthenticated: true,
-      });
-
+  
+      console.log("Server response:", data);
+  
+      if (!response.ok) {
+        console.error("Response not OK:", response.status);
+        throw new Error(data.error || "Registration failed"); 
+      }
+  
       return data;
     } catch (error) {
-      return Promise.reject("Registration failed");
+      console.error("Error in register:", error); 
+      return Promise.reject(error);  
     }
   };
+  
 
   const logout = async () => {
     try {

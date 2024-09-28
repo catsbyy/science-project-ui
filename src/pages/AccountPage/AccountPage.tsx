@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "../../auth/AuthWrapper";
 import CandidateProfilePage from "../CandidateProfilePage/CandidateProfilePage";
-import "./AccountPage.css"; // Create and import a CSS file for AccountPage-specific styles
+import "./AccountPage.css"; 
 
 interface Props {}
 

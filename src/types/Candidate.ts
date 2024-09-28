@@ -1,11 +1,9 @@
-import { Dayjs } from 'dayjs';
-
 export interface Candidate {
   candidateId?: number | null;
   candidateSurname: string;
   candidateName: string;
   candidatePatronymic: string;
-  candidateDateOfBirth: Dayjs | null;
+  candidateDateOfBirth: string | null;
   candidateMobNumber: string;
   candidateEmail: string;
   candidateRegion: string;
