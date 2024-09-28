@@ -509,7 +509,6 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
                       helperText="Введіть новий пароль"
                       name="new-password"
                       isRequired={true}
-                      type="password"
                       value={currentUser.newPassword}
                       onChange={(e) => handlePasswordChange(e, "newPassword")}
                     />
@@ -521,7 +520,6 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
                       helperText="Введіть пароль ще раз"
                       name="confirm-password"
                       isRequired={true}
-                      type="password"
                       value={currentUser.confirmPassword}
                       onChange={(e) => handlePasswordChange(e, "confirmPassword")}
                     />
