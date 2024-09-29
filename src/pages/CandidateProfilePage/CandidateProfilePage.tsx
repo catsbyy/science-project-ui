@@ -30,6 +30,7 @@ import {
   getRegion,
   getWorkExperience,
   getTechAndToolsNames,
+  getFullEnglishLevel,
 } from "../../helpers/getMetaDataValue";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 import { useAuth } from "../../auth/AuthWrapper.tsx"; // Import useAuth hook
@@ -69,7 +70,6 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
   const isBusinessUser = propUser?.role === "business";
   const [isProfileTab, setIsProfileTab] = useState<boolean>(!isBusinessUser);
   const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
-
 
   console.log("current propUser: ", currentUser);
 
@@ -119,10 +119,11 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
   }, [propUser?.id, id]);
 
   useEffect(() => {
-    const isCandidateFavorite = favorites.some(fav => fav.candidate_id === candidate.candidateId);
+    const isCandidateFavorite = favorites.some((fav) => fav.candidate_id === candidate.candidateId);
     setIsFavorite(isCandidateFavorite);
-  }, [favorites])
+  }, [favorites]);
 
+  let fullEnglishLevel = "";
   let englishLevel = "";
   let position = "";
   let workExperience = "";
@@ -136,6 +137,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
 
   if (!isBusinessUser && candidate) {
     englishLevel = getEnglishLevel(candidate, response);
+    fullEnglishLevel = getFullEnglishLevel(candidate, response);
     position = getPosition(candidate, response);
     workExperience = getWorkExperience(candidate, response);
     workArea = getWorkArea(candidate, response);
@@ -229,7 +231,7 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
 
     const url = "/api/business/favorites";
     const method = isFavorite ? "DELETE" : "POST";
-  
+
     try {
       const response = await fetch(url, {
         method,
@@ -241,14 +243,13 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
           candidateId: candidate.candidateId,
         }),
       });
-  
-      // Check if response is successful
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
+
       const data = await response.json();
-  
+
       if (data.success) {
         setIsFavorite(!isFavorite);
       } else {
@@ -302,10 +303,12 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
                 <div className="profile-name">{candidate.candidateName + " " + candidate.candidateSurname}</div>
 
                 <div className="profile-contacts-details-wrapper">
-                  <div className="profile-contacts-details-div">
-                    <CalendarOutline color={"#fff"} title={"birthday"} height="24px" width="24px" />
-                    <p className="profile-contacts-details">{birthday}</p>
-                  </div>
+                  {birthday && (
+                    <div className="profile-contacts-details-div">
+                      <CalendarOutline color={"#fff"} title={"birthday"} height="24px" width="24px" />
+                      <p className="profile-contacts-details">{birthday}</p>
+                    </div>
+                  )}
 
                   <div className="profile-contacts-details-div">
                     <LocationOutline color={"#fff"} title={"location"} height="24px" width="24px" />
@@ -341,10 +344,12 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
               </div>
 
               <div className="profile-first-section">
-                <div className="profile-summary">
-                  <b className="profile-title">Про себе:</b>
-                  <div className="profile-details">{candidate.candidateSummary}</div>
-                </div>
+                {candidate.candidateSummary && (
+                  <div className="profile-summary">
+                    <b className="profile-title">Про себе:</b>
+                    <div className="profile-details">{candidate.candidateSummary}</div>
+                  </div>
+                )}
                 <div className="profile-education">
                   <b className="profile-title">Освіта: </b>
                   <b className="profile-details">{educationLevel}</b>
@@ -353,13 +358,15 @@ const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ user: propU
                   <b className="profile-title">Заклад освіти:</b>
                   <div className="profile-details">{candidate.candidateUniversity}</div>
                 </div>
-                <div className="profile-specialty">
-                  <b className="profile-title">Спеціальність: </b>
-                  <div className="profile-details">{candidate.candidateSpecialty}</div>
-                </div>
+                {candidate.candidateSpecialty && (
+                  <div className="profile-specialty">
+                    <b className="profile-title">Спеціальність: </b>
+                    <div className="profile-details">{candidate.candidateSpecialty}</div>
+                  </div>
+                )}
                 <div className="profile-english">
                   <b className="profile-title">Рівень англійської: </b>
-                  <div className="profile-details">{englishLevel}</div>
+                  <div className="profile-details">{fullEnglishLevel}</div>
                 </div>
               </div>
 

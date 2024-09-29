@@ -25,7 +25,7 @@ const Results: React.FC = () => {
 
   const [favorites, setFavorites] = useState([]);
   
-  const { user } = useAuth(); // Use login and register functions from AuthContext
+  const { user } = useAuth(); 
 
   useEffect(() => {
     const fetchResults = async () => {

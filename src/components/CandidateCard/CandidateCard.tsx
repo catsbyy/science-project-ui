@@ -4,10 +4,8 @@ import ReactCountryFlag from "react-country-flag";
 import "./CandidateCard.css";
 /* types */
 import { Response } from "../../types/Response";
-import { Option } from "../../types/Option";
 import { Candidate } from "../../types/Candidate.ts";
 import {
-  getMetaDataValue,
   getEnglishLevel,
   getPosition,
   getWorkArea,
@@ -15,7 +13,7 @@ import {
   getTechAndToolsNames,
 } from "../../helpers/getMetaDataValue.tsx";
 import { HeartOutline, Heart } from "react-ionicons";
-import { useAuth } from "../../auth/AuthWrapper.tsx"; // Import useAuth hook
+import { useAuth } from "../../auth/AuthWrapper.tsx";
 
 export interface CandidateCardProps {
   candidate: Candidate;
@@ -24,7 +22,7 @@ export interface CandidateCardProps {
 }
 
 const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData, isFavorite: initialFavorite }) => {
-  const { user } = useAuth(); // Use login and register functions from AuthContext
+  const { user } = useAuth(); 
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
 
   useEffect(() => {
@@ -41,9 +39,8 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData, isFa
 
   const techAndToolsNames = getTechAndToolsNames(candidate, metaData);
 
-  // Function to toggle favorite status
   const toggleFavorite = async (event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent click from propagating to the parent NavLink
+    event.stopPropagation();
 
     const url = "/api/business/favorites";
     const method = isFavorite ? "DELETE" : "POST";
@@ -60,7 +57,6 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, metaData, isFa
         }),
       });
   
-      // Check if response is successful
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }

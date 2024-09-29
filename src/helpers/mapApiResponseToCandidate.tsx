@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { Candidate } from '../types/Candidate';
 
 const mapApiResponseToCandidate = (apiCandidate: any): Candidate => {
@@ -7,7 +6,7 @@ const mapApiResponseToCandidate = (apiCandidate: any): Candidate => {
     candidateSurname: apiCandidate.surname,
     candidateName: apiCandidate.name,
     candidatePatronymic: apiCandidate.patronymic,
-    candidateDateOfBirth: dayjs(apiCandidate.date_of_birth),
+    candidateDateOfBirth: apiCandidate.date_of_birth,
     candidateMobNumber: apiCandidate.mobile_number,
     candidateEmail: apiCandidate.email,
     candidateRegion: apiCandidate.region_id,
@@ -29,6 +28,7 @@ const mapApiResponseToCandidate = (apiCandidate: any): Candidate => {
     candidateSalary: apiCandidate.salary_id,
     candidateWorkplace: apiCandidate.workplace_id,
     candidateProfilePic: apiCandidate.profile_picture,
+    userId: apiCandidate.userId
   };
 };
 

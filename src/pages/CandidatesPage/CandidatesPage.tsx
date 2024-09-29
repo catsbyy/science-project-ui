@@ -4,11 +4,7 @@ import { inputRegex } from "../../helpers/inputRegex";
 import { emailRegex } from "../../helpers/emailRegex";
 import { linkRegex } from "../../helpers/linkRegex";
 import { phoneRegex } from "../../helpers/phoneRegex";
-import {
-  TextField,
-  SelectChangeEvent,
-  Autocomplete,
-} from "@mui/material";
+import { TextField, SelectChangeEvent, Autocomplete } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -46,6 +42,7 @@ function CandidatesPage({}: Props) {
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const [isFormInvalid, setIsFormInvalid] = useState(false);
+  const [isSaveSuccess, setIsSaveSuccess] = useState(false);
 
   useEffect(() => {
     const fetchCandidateDetails = async () => {
@@ -53,9 +50,9 @@ function CandidatesPage({}: Props) {
         const response = await fetch(`/api/business/get-candidate-details/${user.id}/true`);
         const data = await response.json();
         setCandidate(mapApiResponseToCandidate(data.candidate[0]));
-        console.log("user: ", candidate)
+        console.log("user: ", candidate);
       } catch (error) {
-        console.error('Failed to fetch candidate details:', error);
+        console.error("Failed to fetch candidate details:", error);
       }
     };
 
@@ -65,7 +62,7 @@ function CandidatesPage({}: Props) {
         const data = await response.json();
         setResponse(data);
       } catch (error) {
-        console.error('Failed to fetch metadata:', error);
+        console.error("Failed to fetch metadata:", error);
       }
     };
 
@@ -103,7 +100,7 @@ function CandidatesPage({}: Props) {
     candidateLinkedin: "",
     candidateGithub: "",
     candidateTechAndTools: [] as number[],
-    userId: user.id
+    userId: user.id,
   });
 
   const handleSelect = (event: SelectChangeEvent<string>) => {
@@ -118,7 +115,7 @@ function CandidatesPage({}: Props) {
 
   const handleDateChange = (date: Dayjs | null) => {
     if (date) {
-      setCandidate({ ...candidate, candidateDateOfBirth: date.format('YYYY-MM-DD') });
+      setCandidate({ ...candidate, candidateDateOfBirth: date.format("YYYY-MM-DD") });
     }
   };
 
@@ -127,13 +124,13 @@ function CandidatesPage({}: Props) {
     setCandidate({ ...candidate, candidateTechAndTools: ids });
   };
 
-  const addNewCandidate = (event: React.FormEvent<HTMLFormElement>) => {
+  const addNewCandidate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(candidate);
 
     const formattedDateOfBirth = candidate.candidateDateOfBirth
-    ? dayjs(candidate.candidateDateOfBirth).format('YYYY-MM-DD')
-    : null;
+      ? dayjs(candidate.candidateDateOfBirth).format("YYYY-MM-DD")
+      : null;
 
     const newCandidate: Candidate = {
       ...candidate,
@@ -146,18 +143,27 @@ function CandidatesPage({}: Props) {
     };
 
     //if (!isDataInvalid) {
-      if (true) {
+    if (true) {
       console.log(newCandidate);
-      fetch("/api/candidates/add-candidate", {
-        method: "POST",
-        body: JSON.stringify(newCandidate),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((e) => {
-        console.log(e);
-      });
-      navigate("/success");
+
+      try {
+        const response = await fetch("/api/candidates/add-candidate", {
+          method: "POST",
+          body: JSON.stringify(newCandidate),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          setIsSaveSuccess(true);
+        } else {
+          console.error("Failed to save candidate");
+        }
+      } catch (error) {
+        console.error("Error saving candidate:", error);
+        setIsFormInvalid(true);
+      }
     } else {
       setIsFormInvalid(true);
     }
@@ -175,59 +181,54 @@ function CandidatesPage({}: Props) {
       "candidatePatronymic",
       "candidateCity",
       "candidateStreet",
-      "candidateHouseNum"
+      "candidateHouseNum",
     ];
 
-    const textFields = [
-      "candidateSurname",
-      "candidateName",
-      "candidateEducation",
-      "candidateUniversity",
-    ];
+    const textFields = ["candidateSurname", "candidateName", "candidateEducation", "candidateUniversity"];
 
     let isInvalid = false;
 
     for (const [key, value] of Object.entries(candidate)) {
       const isValueNotEmpty = value !== "" && value !== null && value !== undefined;
 
-      console.log('incorrect ', key);
+      console.log("incorrect ", key);
 
       if (!optionalFields.includes(key)) {
         if (isValueNotEmpty) {
           if (textFields.includes(key)) {
             if (!inputRegex.test(value)) {
-              console.log('incorrect ', key);
+              console.log("incorrect ", key);
               isInvalid = true;
             }
           } else if (key === "candidateDateOfBirth") {
             if (new Date(value) >= new Date()) {
-              console.log('incorrect ', key);
+              console.log("incorrect ", key);
               isInvalid = true;
             }
           } else if (key === "candidateMobNumber") {
             if (!phoneRegex.test(value)) {
-              console.log('incorrect ', key);
+              console.log("incorrect ", key);
               isInvalid = true;
             }
           } else if (key === "candidateEmail") {
             if (!emailRegex.test(value)) {
-              console.log('incorrect ', key);
+              console.log("incorrect ", key);
               isInvalid = true;
             }
           }
         } else {
-          console.log('incorrect ', key);
+          console.log("incorrect ", key);
           isInvalid = true;
         }
       } else {
         if (isValueNotEmpty && ["candidateLinkedin", "candidateGithub", "candidateProfilePic"].includes(key)) {
           if (!linkRegex.test(value)) {
-            console.log('incorrect ', key);
+            console.log("incorrect ", key);
             isInvalid = true;
           }
         } else if (isValueNotEmpty && ["candidateSpecialty", "candidateSummary"].includes(key)) {
           if (!inputRegex.test(value)) {
-            console.log('incorrect ', key);
+            console.log("incorrect ", key);
             isInvalid = true;
           }
         }
@@ -295,7 +296,9 @@ function CandidatesPage({}: Props) {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         label="Дата народження"
-                        value={candidate.candidateDateOfBirth ? dayjs(candidate.candidateDateOfBirth, 'YYYY-MM-DD') : null}
+                        value={
+                          candidate.candidateDateOfBirth ? dayjs(candidate.candidateDateOfBirth, "YYYY-MM-DD") : null
+                        }
                         onChange={handleDateChange}
                         slotProps={{
                           textField: {
@@ -592,6 +595,8 @@ function CandidatesPage({}: Props) {
               )}
             </div>
           </form>
+
+          {isSaveSuccess && <div className="success-message">Дані успішно збережено.</div>}
 
           {isFormInvalid && (
             <div className="form-invalid">

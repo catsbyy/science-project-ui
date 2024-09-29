@@ -32,6 +32,12 @@ export const getEnglishLevel = (candidate: Candidate, response: Response): strin
   return englishLevel ? englishLevel.split(" - ")[1] : "Unknown";
 }
 
+export const getFullEnglishLevel = (candidate: Candidate, response: Response): string => {
+  const index = Number(candidate.candidateEnglish) - 1;
+  const englishLevel = response.english[index]?.english_level;
+  return englishLevel ? englishLevel : "Unknown";
+}
+
 export const getEducationLevel = (candidate: Candidate, response: Response): string => {
   const index = Number(candidate.candidateEducation) - 1;
   const educationLevel = response.education[index]?.education_level;

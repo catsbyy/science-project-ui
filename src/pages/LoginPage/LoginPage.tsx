@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FormControl, FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
 import FormControlTextField from "../../components/FormControlTextField/FormControlTextFields";
 import { CandidateUser, BusinessUser } from "../../types/UserTypes.ts";
-import { useAuth } from "../../auth/AuthWrapper.tsx"; // Import useAuth hook
+import { useAuth } from "../../auth/AuthWrapper.tsx";
 
 interface Props {}
 
@@ -36,7 +36,7 @@ function LoginPage({}: Props) {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { login, register } = useAuth(); // Use login and register functions from AuthContext
+  const { login, register } = useAuth(); 
 
   useEffect(() => {
     setErrorMessage(null);
@@ -87,12 +87,11 @@ function LoginPage({}: Props) {
   
       try {
         const response = await register(user);
-        console.log("Registration response:", response);  // Выводим, что именно возвращает register
+        console.log("Registration response:", response);  
   
-        // Проверяем успешный ответ
         if (response?.message === "User registered successfully") {
           console.log("Registration success:", response);
-          setIsSignIn(true);  // Переключаемся на форму входа
+          setIsSignIn(true); 
           setRegistrationSuccess(true);
           setErrorMessage(null);
         } else {

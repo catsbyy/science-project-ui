@@ -144,8 +144,6 @@
     animation-delay: 0.35s;
   }
   
-  /* Add animation-delay for other letters as needed */
-  
   @keyframes wave {
     0% {
       transform: translateY(0);
