@@ -61,7 +61,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           surname: data.user.surname,
           email: data.user.email,
           companyName: data.user.company_name,
-          password: "", // Storing the password might not be necessary or safe, consider not storing it
+          password: "", 
           role: data.user.role,
           isAuthenticated: true,
         });
@@ -95,7 +95,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         surname: data.user.surname,
         email: data.user.email,
         companyName: data.user.company_name,
-        password: password, // Storing the password might not be necessary or safe, consider not storing it
+        password: password,
         role: data.user.role,
         isAuthenticated: true,
       });

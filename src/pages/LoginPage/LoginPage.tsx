@@ -76,12 +76,12 @@ function LoginPage({}: Props) {
         navigate(response.user.role === "candidate" ? "/candidates" : "/business");
       } catch (error: any) {
         console.error("Login error:", error);
-        setErrorMessage(error.response?.data?.error || "Failed to login. Please check your credentials.");
+        setErrorMessage(error.response?.data?.error || "Будь ласка, перевірте ваші облікові дані.");
       }
     } else {
       const user = role === "candidate" ? candidate : business;
       if (user.password !== confirmPassword) {
-        setErrorMessage("Passwords do not match.");
+        setErrorMessage("Паролі не збігаються.");
         return;
       }
   
@@ -96,11 +96,11 @@ function LoginPage({}: Props) {
           setErrorMessage(null);
         } else {
           console.error("Unexpected response:", response);
-          setErrorMessage("Failed to register. Please try again.");
+          setErrorMessage("Невдала реєстрація. Будь ласка, спробуйте ще.");
         }
       } catch (error: any) {
         console.error("Registration error:", error);
-        setErrorMessage("Registration failed. Please try again.");
+        setErrorMessage("Невдала реєстрація. Будь ласка, спробуйте ще.");
       }
     }
   };

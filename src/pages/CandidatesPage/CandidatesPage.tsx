@@ -143,9 +143,7 @@ function CandidatesPage({}: Props) {
     };
 
     //if (!isDataInvalid) {
-    if (true) {
-      console.log(newCandidate);
-
+      if (true) {
       try {
         const response = await fetch("/api/candidates/add-candidate", {
           method: "POST",
@@ -191,52 +189,24 @@ function CandidatesPage({}: Props) {
     for (const [key, value] of Object.entries(candidate)) {
       const isValueNotEmpty = value !== "" && value !== null && value !== undefined;
 
-      console.log("incorrect ", key);
-
       if (!optionalFields.includes(key)) {
         if (isValueNotEmpty) {
-          if (textFields.includes(key)) {
-            if (!inputRegex.test(value)) {
-              console.log("incorrect ", key);
-              isInvalid = true;
-            }
-          } else if (key === "candidateDateOfBirth") {
-            if (new Date(value) >= new Date()) {
-              console.log("incorrect ", key);
-              isInvalid = true;
-            }
-          } else if (key === "candidateMobNumber") {
-            if (!phoneRegex.test(value)) {
-              console.log("incorrect ", key);
-              isInvalid = true;
-            }
-          } else if (key === "candidateEmail") {
-            if (!emailRegex.test(value)) {
-              console.log("incorrect ", key);
-              isInvalid = true;
-            }
+          if (textFields.includes(key) && !inputRegex.test(value)) {
+            isInvalid = true;
+          } else if (key === "candidateDateOfBirth" && new Date(value) >= new Date()) {
+            isInvalid = true;
+          } else if (key === "candidateMobNumber" && !phoneRegex.test(value)) {
+            isInvalid = true;
+          } else if (key === "candidateEmail" && !emailRegex.test(value)) {
+            isInvalid = true;
           }
         } else {
-          console.log("incorrect ", key);
           isInvalid = true;
-        }
-      } else {
-        if (isValueNotEmpty && ["candidateLinkedin", "candidateGithub", "candidateProfilePic"].includes(key)) {
-          if (!linkRegex.test(value)) {
-            console.log("incorrect ", key);
-            isInvalid = true;
-          }
-        } else if (isValueNotEmpty && ["candidateSpecialty", "candidateSummary"].includes(key)) {
-          if (!inputRegex.test(value)) {
-            console.log("incorrect ", key);
-            isInvalid = true;
-          }
         }
       }
     }
 
     if (candidate.candidateTechAndTools.length === 0) {
-      console.log("priehali");
       isInvalid = true;
     }
 
